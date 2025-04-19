@@ -6,7 +6,8 @@
       "Controllers\\": "controllers/"
     },
     "files": [
-      "core/utils/utils.php"
+      "core/utils/utils.php",
+      "core/utils/response-methods.php"
     ]
   },
   "authors": [

@@ -5,7 +5,10 @@ use Core\Router;
 
 $router = new Router();
 
-$router->get('/products/{id}/images/{imageId}', [Controller::class, 'index']);
+$router->get('/users/{id}', function () {
+    echo 'list of all users';
+});
 
-$router->get('/products/{id}', [Controller::class, 'index']);
-$router->get('/{id}', [Controller::class, 'index']);
+$router->post('/users/{id}', function () {
+    echo 'post request users';
+});

@@ -53,15 +53,16 @@ class Router implements HTTPMethodInterface
                             $params,
                             explode(":", $reqTokens[$i])[0]
                         );
-                        continue;
+                    } else {
+                        array_push($tokens, $mTokens[$i]);
                     }
-
-                    array_push($tokens, $mTokens[$i]);
                 }
 
-                if (implode("/", $tokens) === $requestRoute) {
-                    $this->dispatch($match, $params);
-                }
+                print_r(implode("/", $tokens));
+
+                // if (implode("/", $tokens) === $requestRoute) {
+                //     $this->dispatch($match, $params);
+                // }
             }
         }
     }
