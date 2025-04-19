@@ -1,0 +1,21 @@
+{
+  "name": "zorncbllr/api",
+  "autoload": {
+    "psr-4": {
+      "Core\\": "core/",
+      "Controllers\\": "controllers/"
+    },
+    "files": [
+      "core/utils/utils.php"
+    ]
+  },
+  "authors": [
+    {
+      "name": "Manuel",
+      "email": "caballeromanuel203@gmail.com"
+    }
+  ],
+  "require": {
+    "vlucas/phpdotenv": "^5.6"
+  }
+}
