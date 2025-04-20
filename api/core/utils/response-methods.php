@@ -7,3 +7,8 @@ function json(mixed $data)
     echo json_encode($data);
     exit;
 }
+
+function status(int $code)
+{
+    http_response_code($code);
+}
