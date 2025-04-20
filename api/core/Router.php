@@ -41,7 +41,9 @@ class Router implements HTTPMethodInterface
                 $reqTokens = explode("/", $requestRoute);
                 $mTokens = explode("/", $match);
 
-                if (sizeof($reqTokens) !== sizeof($mTokens)) continue;
+                $reqMethod = explode(":", $requestRoute)[1];
+
+                if (sizeof($reqTokens) !== sizeof($mTokens) || !preg_match("/:$reqMethod/", $match)) continue;
 
                 $tokens = [];
                 $params = [];
@@ -58,11 +60,9 @@ class Router implements HTTPMethodInterface
                     }
                 }
 
-                print_r(implode("/", $tokens));
-
-                // if (implode("/", $tokens) === $requestRoute) {
-                //     $this->dispatch($match, $params);
-                // }
+                if (implode("/", $tokens) === $requestRoute) {
+                    $this->dispatch($match, $params);
+                }
             }
         }
     }
