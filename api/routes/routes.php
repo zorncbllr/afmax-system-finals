@@ -1,18 +1,22 @@
 <?php
 
-use Controllers\Controller;
-use Core\Middleware;
 use Core\Request;
 use Core\Router;
 
 $router = new Router();
 
-class Auth extends Middleware
-{
-    function runnable(Request $request, callable $next)
-    {
-        $next();
-    }
-}
+$router->get('/', function () {
+    return redirect()->patch('/update');
+});
 
-$router::middleware(Auth::class)->get('/api', [Controller::class, 'index']);
+$router->post('/', function () {
+    return json(['msg' => 'post requested']);
+});
+
+
+$router->patch('/update', function (Request $request) {
+    return json([
+        'msg' => 'on update patch request',
+        'request' => $request
+    ]);
+});
