@@ -10,7 +10,7 @@ class Request
 
     function __construct()
     {
-        $this->body = new Body;
+        $this->body = json_decode(file_get_contents("php://input"), associative: false);
         $this->query = $_GET;
         $this->method = $_SERVER['REQUEST_METHOD'];
         $this->baseUrl = 'http://' . $_SERVER['HTTP_HOST'];

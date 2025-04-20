@@ -10,10 +10,7 @@ $router->get('/users/{id}', function () {
 
 $router->post('/users/{id}/images/{imageId}', function ($id, $body, $params) {
 
-    status(200);
-    return json([
-        'id' => $id,
-        'body' => $body->description,
-        'imageId' => $params->imageId
+    json([
+        'body' => $body
     ]);
 });
