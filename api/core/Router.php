@@ -19,10 +19,9 @@ interface HTTPMethodInterface
 class Router implements HTTPMethodInterface
 {
     protected Request $request;
-    protected array $routes;
-    protected string $base;
-    protected $middlewares;
-    protected $_404;
+    public array $routes, $middlewares;
+    public string $base;
+    public $_404;
 
     function __construct(string $base = "", array $middlewares = [])
     {
@@ -119,6 +118,56 @@ class Router implements HTTPMethodInterface
             base: $this->base,
             middlewares: [...$this->middlewares, ...$middleware]
         );
+    }
+
+    function route(string $route)
+    {
+        return new class($route, $this) {
+            function __construct(
+                protected string $route,
+                protected Router $router
+            ) {}
+
+            function middleware(string ...$middleware)
+            {
+                $this->router = new Router(
+                    base: $this->router->base,
+                    middlewares: [...$this->router->middlewares, ...$middleware]
+                );
+
+                return $this;
+            }
+
+            function get(callable|string $dispatcher)
+            {
+                $this->router->get($this->route, $dispatcher);
+                return $this;
+            }
+
+            function post(callable|string $dispatcher)
+            {
+                $this->router->post($this->route, $dispatcher);
+                return $this;
+            }
+
+            function patch(callable|string $dispatcher)
+            {
+                $this->router->patch($this->route, $dispatcher);
+                return $this;
+            }
+
+            function put(callable|string $dispatcher)
+            {
+                $this->router->put($this->route, $dispatcher);
+                return $this;
+            }
+
+            function delete(callable|string $dispatcher)
+            {
+                $this->router->delete($this->route, $dispatcher);
+                return $this;
+            }
+        };
     }
 
     function resource(string $resource, string $controller)

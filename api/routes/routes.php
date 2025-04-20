@@ -17,6 +17,12 @@ $router
         return json(['msg' => 'test']);
     });
 
+$router->route('/books')
+    ->middleware(AuthMiddleware::class)
+    ->get(fn() => json(['books' => 'some books']))
+    ->post(fn() => json(['method' => 'post books']))
+    ->patch(fn() => json(['method' => 'patch books']));
+
 $router->_404(function () {
     status(404);
     return json(['msg' => '404 resource not found.']);
