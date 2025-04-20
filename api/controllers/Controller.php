@@ -2,23 +2,16 @@
 
 namespace Controllers;
 
+use Core\Request;
+
 class Controller
 {
-    function index($id, $imageId)
+    function index(Request $request)
     {
-        header('Content-Type: application/json');
 
-        echo json_encode([
-            'msg' => 'this is get method',
-            'id' => $id,
-            'imageID' => $imageId
+        return json([
+            'message' => 'damn shawty so fine, shyt',
+            'request' => $request
         ]);
-    }
-
-    function create()
-    {
-        header('Content-Type: application/json');
-
-        echo json_encode(['msg' => 'this is post method']);
     }
 }

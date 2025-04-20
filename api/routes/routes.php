@@ -1,16 +1,15 @@
 <?php
 
+use Controllers\Controller;
+use Core\Middleware;
+use Core\Request;
 use Core\Router;
 
 $router = new Router();
 
-$router->get('/users/{id}', function () {
-    echo 'list of all users';
-});
+class Auth extends Middleware
+{
+    function runnable(Request $request, callable $next) {}
+}
 
-$router->post('/users/{id}/images/{imageId}', function ($id, $body, $params) {
-
-    json([
-        'body' => $body
-    ]);
-});
+$router->get('/api', [Controller::class, 'index']);

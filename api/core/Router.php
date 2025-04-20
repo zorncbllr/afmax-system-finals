@@ -20,11 +20,13 @@ class Router implements HTTPMethodInterface
 {
     protected Request $request;
     protected array $routes;
+    protected $middlewares;
 
-    function __construct()
+    function __construct(array $middlewares = [])
     {
         $this->request = new Request([]);
         $this->routes = [];
+        $this->middlewares = $middlewares;
     }
 
     function __destruct()
@@ -74,7 +76,7 @@ class Router implements HTTPMethodInterface
         }
     }
 
-    protected function dispatch(string $requestRoute, array $params = [])
+    protected function dispatch(string $requestRoute, array $params = [], int $index = 0)
     {
         $dispatcher = $this->routes[$requestRoute];
 
@@ -88,22 +90,22 @@ class Router implements HTTPMethodInterface
             'query' => $this->request->query
         ];
 
-        if (is_callable($dispatcher)) {
-            $reflection = new ReflectionFunction($dispatcher);
+        is_callable($dispatcher) ?
+            $reflection = new ReflectionFunction($dispatcher) :
+            $reflection = new ReflectionMethod($dispatcher[0], $dispatcher[1]);
 
-            $params = array_map(fn($param) => $param->name, $reflection->getParameters());
+        $params = array_map(fn($param) => $param->name, $reflection->getParameters());
 
-            $args = array_filter(
-                $args,
-                fn($val, $key) => in_array($key, $params),
-                ARRAY_FILTER_USE_BOTH
-            );
+        $args = array_filter(
+            $args,
+            fn($val, $key) => in_array($key, $params),
+            ARRAY_FILTER_USE_BOTH
+        );
 
-            $reflection->invokeArgs($args);
-            exit;
-        }
+        is_callable($dispatcher) ?
+            $reflection->invokeArgs($args) :
+            $reflection->invokeArgs(new $dispatcher[0], $args);
 
-        call_user_func_array([new $dispatcher[0], $dispatcher[1]], [...$params]);
         exit;
     }
 
@@ -112,7 +114,10 @@ class Router implements HTTPMethodInterface
         $this->routes["$route:$method"] = $dispatcher;
     }
 
-    function middleware(string $middleware) {}
+    static function middleware(string ...$middleware)
+    {
+        return new Router([...$middleware]);
+    }
 
     function resource(string $controller) {}
 
