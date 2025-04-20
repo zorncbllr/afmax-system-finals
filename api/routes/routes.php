@@ -9,7 +9,10 @@ $router = new Router();
 
 class Auth extends Middleware
 {
-    function runnable(Request $request, callable $next) {}
+    function runnable(Request $request, callable $next)
+    {
+        $next();
+    }
 }
 
-$router->get('/api', [Controller::class, 'index']);
+$router::middleware(Auth::class)->get('/api', [Controller::class, 'index']);

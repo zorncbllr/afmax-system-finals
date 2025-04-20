@@ -78,8 +78,6 @@ class Router implements HTTPMethodInterface
 
     protected function dispatch(string $requestRoute, array $params = [], int $index = 0)
     {
-        $dispatcher = $this->routes[$requestRoute];
-
         $this->request->setParams($params);
 
         $args = [
@@ -89,6 +87,22 @@ class Router implements HTTPMethodInterface
             'params' => $this->request->params,
             'query' => $this->request->query
         ];
+
+        $dispatcher = $this->routes[$requestRoute];
+
+        if (!empty($this->middlewares) && $index < sizeof($this->middlewares)) {
+            $middleware = $this->middlewares[$index];
+            $reflection = new ReflectionMethod($middleware, 'runnable');
+
+            $reflection->invokeArgs(new $middleware, [
+                'request' => $this->request,
+                'next' => function () use ($index, $requestRoute, $params) {
+                    $this->dispatch($requestRoute, $params, $index + 1);
+                }
+            ]);
+
+            exit;
+        }
 
         is_callable($dispatcher) ?
             $reflection = new ReflectionFunction($dispatcher) :
