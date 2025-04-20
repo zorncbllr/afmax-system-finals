@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Core;
 
+use ArrayAccess;
 use ReflectionFunction;
 use ReflectionMethod;
 
@@ -21,6 +22,7 @@ class Router implements HTTPMethodInterface
     protected Request $request;
     protected array $routes;
     protected $middlewares;
+    protected $_404;
 
     function __construct(array $middlewares = [])
     {
@@ -74,6 +76,8 @@ class Router implements HTTPMethodInterface
                 }
             }
         }
+
+        $this->use($this->_404);
     }
 
     protected function dispatch(string $requestRoute, array $params = [], int $index = 0)
@@ -101,26 +105,11 @@ class Router implements HTTPMethodInterface
                 }
             ]);
 
-            exit;
+            return exit;
         }
 
-        is_callable($dispatcher) ?
-            $reflection = new ReflectionFunction($dispatcher) :
-            $reflection = new ReflectionMethod($dispatcher[0], $dispatcher[1]);
-
-        $params = array_map(fn($param) => $param->name, $reflection->getParameters());
-
-        $args = array_filter(
-            $args,
-            fn($val, $key) => in_array($key, $params),
-            ARRAY_FILTER_USE_BOTH
-        );
-
-        is_callable($dispatcher) ?
-            $reflection->invokeArgs($args) :
-            $reflection->invokeArgs(new $dispatcher[0], $args);
-
-        exit;
+        $this->use($dispatcher);
+        return exit;
     }
 
     protected function register(string $method, string $route, callable|array $dispatcher)
@@ -133,7 +122,45 @@ class Router implements HTTPMethodInterface
         return new Router([...$middleware]);
     }
 
-    function resource(string $controller) {}
+    function resource(string $resource, string $controller)
+    {
+        $this->get("/$resource", [$controller, 'getAll']);
+        $this->get("/$resource/{id}", [$controller, 'getById']);
+        $this->post("/$resource", [$controller, 'create']);
+        $this->patch("/$resource/{id}", [$controller, 'update']);
+        $this->delete("/$resource/{id}", [$controller, 'delete']);
+    }
+
+    function use(callable|array $dispatcher)
+    {
+        is_callable($dispatcher) ?
+            $reflection = new ReflectionFunction($dispatcher) :
+            $reflection = new ReflectionMethod($dispatcher[0], $dispatcher[1]);
+
+        $args = [
+            'request' => $this->request,
+            'body' => $this->request->body,
+            'params' => $this->request->params,
+            'query' => $this->request->query
+        ];
+
+        $params = array_map(fn($param) => $param->name, $reflection->getParameters());
+
+        $args = array_filter(
+            $args,
+            fn($val, $key) => in_array($key, $params),
+            ARRAY_FILTER_USE_BOTH
+        );
+
+        is_callable($dispatcher) ?
+            $reflection->invokeArgs($args) :
+            $reflection->invokeArgs(new $dispatcher[0], $args);
+    }
+
+    function _404(callable|array $dispatcher)
+    {
+        $this->_404 = $dispatcher;
+    }
 
     function get(string $route, callable|array $dispatcher)
     {

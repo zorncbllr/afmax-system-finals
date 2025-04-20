@@ -1,22 +1,13 @@
 <?php
 
-use Core\Request;
+use Controllers\Controller;
 use Core\Router;
 
 $router = new Router();
 
-$router->get('/', function () {
-    return redirect()->patch('/update');
-});
+$router->resource('users', Controller::class);
 
-$router->post('/', function () {
-    return json(['msg' => 'post requested']);
-});
-
-
-$router->patch('/update', function (Request $request) {
-    return json([
-        'msg' => 'on update patch request',
-        'request' => $request
-    ]);
+$router->_404(function () {
+    status(404);
+    return json(['msg' => '404 resource not found.']);
 });
