@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Core;
 
+use ReflectionFunction;
+use ReflectionMethod;
+
 interface HTTPMethodInterface
 {
     function get(string $route, callable | array $dispatcher);
@@ -15,17 +18,19 @@ interface HTTPMethodInterface
 
 class Router implements HTTPMethodInterface
 {
-    function __construct(protected $routes = []) {}
+    protected Request $request;
+    protected array $routes;
+
+    function __construct()
+    {
+        $this->request = new Request([]);
+        $this->routes = [];
+    }
 
     function __destruct()
     {
-        $requestRoute = str_replace("/index.php", "", $_SERVER['PHP_SELF']);
-
-        if (empty($requestRoute)) {
-            $requestRoute = "/";
-        }
-
-        $requestRoute .= ":" . $_SERVER['REQUEST_METHOD'];
+        $this->request->uri = $_SERVER['PATH_INFO'] ?? "/";
+        $requestRoute = $this->request->uri . ":" . $_SERVER['REQUEST_METHOD'];
 
         if (isset($this->routes[$requestRoute])) {
             $this->dispatch($requestRoute);
@@ -49,12 +54,14 @@ class Router implements HTTPMethodInterface
                 $params = [];
 
                 for ($i = 0; $i < sizeof($reqTokens); $i++) {
+                    $key = null;
+
                     if (preg_match("/{\w+}/", $mTokens[$i])) {
                         array_push($tokens, $reqTokens[$i]);
-                        array_push(
-                            $params,
-                            explode(":", $reqTokens[$i])[0]
-                        );
+
+                        preg_match("/\w+/", $mTokens[$i], $key);
+
+                        $params[$key[0]] = explode(":", $reqTokens[$i])[0];
                     } else {
                         array_push($tokens, $mTokens[$i]);
                     }
@@ -71,8 +78,28 @@ class Router implements HTTPMethodInterface
     {
         $dispatcher = $this->routes[$requestRoute];
 
+        $this->request->setParams($params);
+
+        $args = [
+            ...$params,
+            'request' => $this->request,
+            'body' => $this->request->body,
+            'params' => $this->request->params,
+            'query' => $this->request->query
+        ];
+
         if (is_callable($dispatcher)) {
-            call_user_func($dispatcher, ...$params);
+            $reflection = new ReflectionFunction($dispatcher);
+
+            $params = array_map(fn($param) => $param->name, $reflection->getParameters());
+
+            $args = array_filter(
+                $args,
+                fn($val, $key) => in_array($key, $params),
+                ARRAY_FILTER_USE_BOTH
+            );
+
+            $reflection->invokeArgs($args);
             exit;
         }
 

@@ -8,12 +8,12 @@ $router->get('/users/{id}', function () {
     echo 'list of all users';
 });
 
-$router->post('/users/{id}', function ($id) {
+$router->post('/users/{id}/images/{imageId}', function ($id, $body, $params) {
 
     status(200);
-
     return json([
-        'method' => 'POST',
-        'id' => $id
+        'id' => $id,
+        'body' => $body->description,
+        'imageId' => $params->imageId
     ]);
 });
