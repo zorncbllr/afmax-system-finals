@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Core;
 
-use ArrayAccess;
 use ReflectionFunction;
 use ReflectionMethod;
 
@@ -21,13 +20,15 @@ class Router implements HTTPMethodInterface
 {
     protected Request $request;
     protected array $routes;
+    protected string $base;
     protected $middlewares;
     protected $_404;
 
-    function __construct(array $middlewares = [])
+    function __construct(string $base = "", array $middlewares = [])
     {
         $this->request = new Request([]);
         $this->routes = [];
+        $this->base = $base;
         $this->middlewares = $middlewares;
     }
 
@@ -77,20 +78,14 @@ class Router implements HTTPMethodInterface
             }
         }
 
-        $this->use($this->_404);
+        if ($this->_404) {
+            $this->use($this->_404);
+        }
     }
 
     protected function dispatch(string $requestRoute, array $params = [], int $index = 0)
     {
         $this->request->setParams($params);
-
-        $args = [
-            ...$params,
-            'request' => $this->request,
-            'body' => $this->request->body,
-            'params' => $this->request->params,
-            'query' => $this->request->query
-        ];
 
         $dispatcher = $this->routes[$requestRoute];
 
@@ -109,17 +104,21 @@ class Router implements HTTPMethodInterface
         }
 
         $this->use($dispatcher);
+
         return exit;
     }
 
     protected function register(string $method, string $route, callable|array $dispatcher)
     {
-        $this->routes["$route:$method"] = $dispatcher;
+        $this->routes["{$this->base}$route:$method"] = $dispatcher;
     }
 
-    static function middleware(string ...$middleware)
+    function middleware(string ...$middleware)
     {
-        return new Router([...$middleware]);
+        return new Router(
+            base: $this->base,
+            middlewares: [...$this->middlewares, ...$middleware]
+        );
     }
 
     function resource(string $resource, string $controller)
@@ -138,6 +137,7 @@ class Router implements HTTPMethodInterface
             $reflection = new ReflectionMethod($dispatcher[0], $dispatcher[1]);
 
         $args = [
+            ...(array) $this->request->params,
             'request' => $this->request,
             'body' => $this->request->body,
             'params' => $this->request->params,

@@ -3,7 +3,8 @@
   "autoload": {
     "psr-4": {
       "Core\\": "core/",
-      "Controllers\\": "controllers/"
+      "Controllers\\": "controllers/",
+      "Middlewares\\": "middlewares/"
     },
     "files": [
       "core/utils/utils.php",
