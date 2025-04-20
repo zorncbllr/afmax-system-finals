@@ -13,6 +13,12 @@ function status(int $code)
     http_response_code($code);
 }
 
+function view(string $view, array $variables = [])
+{
+    extract($variables);
+    require parseDir(__DIR__) . "/../../views/$view.php";
+}
+
 function redirect(string $uri = "")
 {
     if (!empty($uri)) {

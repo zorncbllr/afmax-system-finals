@@ -2,6 +2,9 @@
 
 namespace Core;
 
+use AllowDynamicProperties;
+
+#[AllowDynamicProperties]
 class Request
 {
     public $body, $params;
@@ -14,6 +17,10 @@ class Request
         $this->query = $_GET;
         $this->method = $_SERVER['REQUEST_METHOD'];
         $this->baseUrl = 'http://' . $_SERVER['HTTP_HOST'];
+
+        foreach ($_REQUEST as $key => $value) {
+            $this->$key = htmlspecialchars($value);
+        }
     }
 
     function setParams(array $params)
