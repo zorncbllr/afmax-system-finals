@@ -2,18 +2,42 @@
 
 namespace Controllers;
 
+use Exception;
 use Models\User;
 use PDOException;
 use Services\UserService;
+use TypeError;
 
 class UserController
 {
-    function getAll()
+    function getUsers()
     {
         $users = UserService::getAllUsers();
 
         status(200);
         return json($users);
+    }
+
+    function getUserById($userId)
+    {
+        try {
+            $user = UserService::getUserById($userId);
+
+            if (!$user) {
+                throw new Exception("User does not exists.");
+            }
+
+            status(200);
+            return json($user);
+        } catch (Exception $e) {
+
+            status(404);
+            return json(['msg' => $e->getMessage()]);
+        } catch (TypeError $e) {
+
+            status(400);
+            return json(['msg' => 'Invalid userId.']);
+        }
     }
 
     /** @param User $body */
@@ -32,7 +56,7 @@ class UserController
             ]);
         } catch (PDOException $e) {
 
-            if ($e->getCode() === 23000) {
+            if ($e->getCode() == 23000) {
                 status(409);
                 return json(['msg' => 'Email already exists.']);
             }
