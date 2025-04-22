@@ -20,17 +20,25 @@ class UserController
     function createUser(object $body)
     {
         try {
-            UserService::createUser(
+            $user = UserService::createUser(
                 name: $body->name,
                 email: $body->email
             );
 
             status(200);
-            return json(['msg' => 'New user has been created.']);
+            return json([
+                'msg' => 'New user has been created.',
+                'user' => $user
+            ]);
         } catch (PDOException $e) {
-            status(400);
 
-            return json(['msg' => $e->getMessage()]);
+            if ($e->getCode() === 23000) {
+                status(409);
+                return json(['msg' => 'Email already exists.']);
+            }
+
+            status(500);
+            return json(['msg' => 'Unable to create user.']);
         }
     }
 }

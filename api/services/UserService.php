@@ -19,7 +19,7 @@ class UserService
         return $stmt->fetchAll(PDO::FETCH_CLASS, User::class);
     }
 
-    static function createUser(string $name, string $email): void
+    static function createUser(string $name, string $email): User
     {
         $db = App::getDatabase();
 
@@ -29,5 +29,14 @@ class UserService
             'name' => $name,
             'email' => $email
         ]);
+
+        $id = $db->lastInsertId();
+
+        $user = new User;
+        $user->id = $id;
+        $user->name = $name;
+        $user->email = $email;
+
+        return $user;
     }
 }
