@@ -4,7 +4,9 @@
     "psr-4": {
       "Core\\": "core/",
       "Controllers\\": "controllers/",
-      "Middlewares\\": "middlewares/"
+      "Middlewares\\": "middlewares/",
+      "Models\\": "models/",
+      "Services\\": "services/"
     },
     "files": [
       "core/utils/utils.php",

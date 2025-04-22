@@ -1,19 +1,14 @@
 <?php
 
-use Core\Request;
+use Controllers\UserController;
 use Core\Router;
 
 $router = new Router();
 
-$router->get('/', function () {
-    return view('home');
-});
+$router->route("/users")
+    ->get([UserController::class, 'getAll'])
+    ->post([UserController::class, 'createUser']);
 
-$router->post('/', function (Request $request) {
-    return json([
-        'request' => $request
-    ]);
-});
 
 $router->_404(function () {
     status(404);

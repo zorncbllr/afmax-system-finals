@@ -138,31 +138,31 @@ class Router implements HTTPMethodInterface
                 return $this;
             }
 
-            function get(callable|string $dispatcher)
+            function get(callable|array $dispatcher)
             {
                 $this->router->get($this->route, $dispatcher);
                 return $this;
             }
 
-            function post(callable|string $dispatcher)
+            function post(callable|array $dispatcher)
             {
                 $this->router->post($this->route, $dispatcher);
                 return $this;
             }
 
-            function patch(callable|string $dispatcher)
+            function patch(callable|array $dispatcher)
             {
                 $this->router->patch($this->route, $dispatcher);
                 return $this;
             }
 
-            function put(callable|string $dispatcher)
+            function put(callable|array $dispatcher)
             {
                 $this->router->put($this->route, $dispatcher);
                 return $this;
             }
 
-            function delete(callable|string $dispatcher)
+            function delete(callable|array $dispatcher)
             {
                 $this->router->delete($this->route, $dispatcher);
                 return $this;

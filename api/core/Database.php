@@ -7,9 +7,8 @@ namespace Core;
 use PDO;
 use PDOException;
 
-class Database
+class Database extends PDO
 {
-    protected PDO $pdo;
 
     function __construct()
     {
@@ -18,7 +17,7 @@ class Database
         $dsn = "mysql:" . http_build_query($config, "", ";");
 
         try {
-            $this->pdo = new PDO(
+            parent::__construct(
                 $dsn,
                 $config['user'],
                 $config['password'],
