@@ -26,7 +26,7 @@ class Product
 
         $product->brand = $row['brand'];
 
-        $product->images = explode(",", $row["images"]);
+        $product->images = $row['images'] !== null ? explode(",", $row["images"]) : [];
 
         return $product;
     }
