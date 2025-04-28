@@ -17,13 +17,13 @@ class ProductService
     }
 
     /** @return array<Product> */
-    public function getAllProducts()
+    public function getAllProducts(): array
     {
         return $this->productRepository->getAllProducts();
     }
 
     /** @return Product */
-    public function getProductById(int $productId)
+    public function getProductById(int $productId): Product
     {
         try {
             $product = $this->productRepository->getProductById($productId);

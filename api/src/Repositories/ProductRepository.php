@@ -9,7 +9,7 @@ use Src\Models\Product;
 class ProductRepository
 {
     /** @return array<Product> */
-    public function getAllProducts()
+    public function getAllProducts(): array
     {
         $db = App::getDatabase();
 
@@ -39,7 +39,7 @@ class ProductRepository
     }
 
     /** @return Product */
-    public function getProductById(int $productId)
+    public function getProductById(int $productId): Product
     {
         $db = App::getDatabase();
 

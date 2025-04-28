@@ -82,7 +82,7 @@ class Router implements HTTPMethodInterface
         }
     }
 
-    protected function dispatch(string $requestRoute, array $params = [], int $index = 0)
+    protected function dispatch(string $requestRoute, array $params = [], int $index = 0): void
     {
         $this->request->setParams($params);
 
@@ -99,20 +99,20 @@ class Router implements HTTPMethodInterface
                 }
             ]);
 
-            return exit;
+            exit;
         }
 
         $this->use($dispatcher);
 
-        return exit;
+        exit;
     }
 
-    protected function register(string $method, string $route, callable|array $dispatcher)
+    protected function register(string $method, string $route, callable|array $dispatcher): void
     {
         $this->routes["{$this->base}$route:$method"] = $dispatcher;
     }
 
-    function middleware(string ...$middleware)
+    function middleware(string ...$middleware): Router
     {
         return new Router(
             base: $this->base,
@@ -120,57 +120,12 @@ class Router implements HTTPMethodInterface
         );
     }
 
-    function route(string $route)
+    function route(string $route): Route
     {
-        return new class($route, $this) {
-            function __construct(
-                protected string $route,
-                protected Router $router
-            ) {}
-
-            function middleware(string ...$middleware)
-            {
-                $this->router = new Router(
-                    base: $this->router->base,
-                    middlewares: [...$this->router->middlewares, ...$middleware]
-                );
-
-                return $this;
-            }
-
-            function get(callable|array $dispatcher)
-            {
-                $this->router->get($this->route, $dispatcher);
-                return $this;
-            }
-
-            function post(callable|array $dispatcher)
-            {
-                $this->router->post($this->route, $dispatcher);
-                return $this;
-            }
-
-            function patch(callable|array $dispatcher)
-            {
-                $this->router->patch($this->route, $dispatcher);
-                return $this;
-            }
-
-            function put(callable|array $dispatcher)
-            {
-                $this->router->put($this->route, $dispatcher);
-                return $this;
-            }
-
-            function delete(callable|array $dispatcher)
-            {
-                $this->router->delete($this->route, $dispatcher);
-                return $this;
-            }
-        };
+        return new Route($route, $this);
     }
 
-    function resource(string $resource, string $controller)
+    function resource(string $resource, string $controller): void
     {
         $this->get("/$resource", [$controller, 'getAll']);
         $this->get("/$resource/{id}", [$controller, 'getById']);
@@ -179,7 +134,7 @@ class Router implements HTTPMethodInterface
         $this->delete("/$resource/{id}", [$controller, 'delete']);
     }
 
-    function use(callable|array $dispatcher)
+    function use(callable|array $dispatcher): void
     {
         is_callable($dispatcher) ?
             $reflection = new ReflectionFunction($dispatcher) :
@@ -206,32 +161,32 @@ class Router implements HTTPMethodInterface
             $reflection->invokeArgs(new $dispatcher[0], $args);
     }
 
-    function _404(callable|array $dispatcher)
+    function _404(callable|array $dispatcher): void
     {
         $this->_404 = $dispatcher;
     }
 
-    function get(string $route, callable|array $dispatcher)
+    function get(string $route, callable|array $dispatcher): void
     {
         $this->register('GET', $route, $dispatcher);
     }
 
-    function post(string $route, callable|array $dispatcher)
+    function post(string $route, callable|array $dispatcher): void
     {
         $this->register('POST', $route, $dispatcher);
     }
 
-    function patch(string $route, callable|array $dispatcher)
+    function patch(string $route, callable|array $dispatcher): void
     {
         $this->register('PATCH', $route, $dispatcher);
     }
 
-    function put(string $route, callable|array $dispatcher)
+    function put(string $route, callable|array $dispatcher): void
     {
         $this->register('PUT', $route, $dispatcher);
     }
 
-    function delete(string $route, callable|array $dispatcher)
+    function delete(string $route, callable|array $dispatcher): void
     {
         $this->register('DELETE', $route, $dispatcher);
     }

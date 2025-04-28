@@ -9,12 +9,12 @@ class Product
     public float $price;
     public string $createdAt, $updatedAt;
 
-    /** @var array<ProductImage> $images */
+    /** @var array<string> $images */
     public array $images;
 
 
     /** @return Product */
-    public static function fromRow(array $row)
+    public static function fromRow(array $row): Product
     {
         $product = new Product();
         $product->productId = $row['productId'];
