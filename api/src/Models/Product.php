@@ -2,8 +2,6 @@
 
 namespace Src\Models;
 
-use DateTime;
-
 class Product
 {
     public int $productId;
