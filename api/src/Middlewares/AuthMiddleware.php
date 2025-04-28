@@ -1,9 +1,9 @@
 <?php
 
-namespace Middlewares;
+namespace Src\Middlewares;
 
-use Core\Middleware;
-use Core\Request;
+use Src\Core\Middleware;
+use Src\Core\Request;
 
 class AuthMiddleware extends Middleware
 {

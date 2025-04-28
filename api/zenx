@@ -1,7 +1,7 @@
 <?php
 
-use Core\Kernel;
 use Dotenv\Dotenv;
+use Src\Core\Kernel;
 
 require_once  str_replace("\\", "/", __DIR__) . "/vendor/autoload.php";
 

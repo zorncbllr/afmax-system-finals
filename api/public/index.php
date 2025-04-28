@@ -1,8 +1,8 @@
 <?php
 
-use Core\App;
-use Core\Database;
 use Dotenv\Dotenv;
+use Src\Core\App;
+use Src\Core\Database;
 
 require_once  str_replace("\\", "/", __DIR__) . "/../vendor/autoload.php";
 

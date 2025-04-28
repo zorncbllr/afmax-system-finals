@@ -1,10 +1,10 @@
 <?php
 
-namespace Services;
+namespace Src\Services;
 
-use Core\App;
-use Models\Note;
 use PDO;
+use Src\Core\App;
+use Src\Models\Note;
 
 class NoteService
 {

@@ -1,24 +1,26 @@
 <?php
 
-namespace Controllers;
+namespace Src\Controllers;
 
 use Exception;
-use Models\User;
 use PDOException;
-use Services\UserService;
+use Src\Services\UserService;
 use TypeError;
 
 class UserController
 {
-    function getUsers()
+    public function getUsers()
     {
         $users = UserService::getAllUsers();
 
         status(200);
         return json($users);
     }
-
-    function getUserById($userId)
+    /**
+     * @param mixed $userId
+     * @return void
+     */
+    public function getUserById($userId)
     {
         try {
             $user = UserService::getUserById($userId);
@@ -41,7 +43,7 @@ class UserController
     }
 
     /** @param User $body */
-    function createUser(object $body)
+    public function createUser(object $body)
     {
         try {
             $user = UserService::createUser(

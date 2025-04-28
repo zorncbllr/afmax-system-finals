@@ -1,10 +1,10 @@
 <?php
 
-namespace Services;
+namespace Src\Services;
 
-use Core\App;
-use Models\User;
 use PDO;
+use Src\Core\App;
+use Src\Models\User;
 
 class UserService
 {

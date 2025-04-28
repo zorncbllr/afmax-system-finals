@@ -1,14 +1,10 @@
 <?php
 
-use Controllers\NoteController;
-use Controllers\UserController;
-use Core\Router;
+use Src\Controllers\NoteController;
+use Src\Controllers\UserController;
+use Src\Core\Router;
 
-$router = new Router(
-    base: "/api/v4"
-);
-
-
+$router = new Router();
 
 $router->route("/users")
     ->get([UserController::class, 'getUsers'])

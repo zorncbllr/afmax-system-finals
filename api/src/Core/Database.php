@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Core;
+namespace Src\Core;
 
 use PDO;
 use PDOException;
@@ -12,7 +12,7 @@ class Database extends PDO
 
     function __construct()
     {
-        $config = require parseDir(__DIR__) . '/../config/database.conf.php';
+        $config = require parseDir(__DIR__) . '/../Config/database.conf.php';
 
         $dsn = "mysql:" . http_build_query($config, "", ";");
 

@@ -2,15 +2,11 @@
   "name": "zorncbllr/api",
   "autoload": {
     "psr-4": {
-      "Core\\": "core/",
-      "Controllers\\": "controllers/",
-      "Middlewares\\": "middlewares/",
-      "Models\\": "models/",
-      "Services\\": "services/"
+      "Src\\": "src/"
     },
     "files": [
-      "core/utils/utils.php",
-      "core/utils/response-methods.php"
+      "src/Core/Utils/utils.php",
+      "src/Core/Utils/response-methods.php"
     ]
   },
   "authors": [

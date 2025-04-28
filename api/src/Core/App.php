@@ -1,6 +1,6 @@
 <?php
 
-namespace Core;
+namespace Src\Core;
 
 class App
 {
@@ -13,7 +13,7 @@ class App
 
     function run()
     {
-        require parseDir(__DIR__) . '/../routes/routes.php';
+        require parseDir(__DIR__) . '/../Routes/routes.php';
     }
 
     static function getDatabase(): Database
