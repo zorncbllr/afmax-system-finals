@@ -13,50 +13,28 @@ class ProductRepository
     {
         $db = App::getDatabase();
 
-        $stmt = $db->prepare("select * from products");
+        $stmt = $db->prepare(
+            "SELECT 
+            p.productId,
+            p.productName,
+            p.description,
+            p.price,
+            p.createdAt,
+            p.updatedAt,
+            b.`brandName` AS brand,
+            GROUP_CONCAT(pi.imagePath) AS images
+        FROM products p
+        JOIN brands b ON p.brandId = b.brandId
+        LEFT JOIN productImages pi ON p.productId = pi.productId
+        GROUP BY p.productId"
+        );
         $stmt->execute();
 
-        return $stmt->fetchAll(PDO::FETCH_CLASS, Product::class);
-    }
-
-
-    /** @return Product|null */
-    public function getProductById(int $productId)
-    {
-        $db = App::getDatabase();
-
-        $stmt = $db->prepare("select * from products where productId = :productId");
-
-        $stmt->execute(["productId" => $productId]);
-
-        return $stmt->fetchObject(Product::class);
-    }
-
-    /** @return void */
-    public function createProduct(Product $product)
-    {
-        $db = App::getDatabase();
-
-        $stmt = $db->prepare(
-            "insert into products (productName, description, brand, price)
-            values (:productName, :description, :brand, :price)"
+        $products = array_map(
+            fn($row) => Product::fromRow($row),
+            $stmt->fetchAll(PDO::FETCH_ASSOC)
         );
 
-        $stmt->execute([
-            "productName" => $product->productName,
-            "description" => $product->description,
-            "brand" => $product->brand,
-            "price" => $product->price
-        ]);
-    }
-
-    /** @return void */
-    public function deleteProduct(int $productId)
-    {
-        $db = App::getDatabase();
-
-        $stmt = $db->prepare("delete from products where productId = :productId");
-
-        $stmt->execute(["productId" => $productId]);
+        return $products;
     }
 }
