@@ -29,7 +29,7 @@ class ProductController implements IResource
     public function getById(Request $request, string $id)
     {
         try {
-            $product = $this->productService->getProductById($id);
+            $product = $this->productService->getProductById((int) $id);
 
             status(200);
             return json($product);
