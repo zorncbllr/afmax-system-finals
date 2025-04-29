@@ -7,12 +7,12 @@ class Category
     public int $categoryId;
     public string $categoryName;
 
-    /** @var array<Product> $products */
-    public array $products;
-
     public static function fromRow(array $row): Category
     {
         $category = new Category();
+
+        $category->categoryId = $row["categoryId"];
+        $category->categoryName = $row["categoryName"];
 
         return $category;
     }
