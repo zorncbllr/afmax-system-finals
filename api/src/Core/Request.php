@@ -7,14 +7,14 @@ use AllowDynamicProperties;
 #[AllowDynamicProperties]
 class Request
 {
-    public $body, $params;
     public string $method, $uri, $baseUrl;
-    public array $query;
+    public object $query, $body, $params, $files;
 
     function __construct()
     {
-        $this->body = json_decode(file_get_contents("php://input"), associative: false);
-        $this->query = $_GET;
+        $this->body = (object) json_decode(file_get_contents("php://input"), associative: false);
+        $this->query = (object) json_decode(json_encode($_GET), associative: false);
+        $this->files = (object) json_decode(json_encode($_FILES), associative: false);
         $this->method = $_SERVER['REQUEST_METHOD'];
         $this->baseUrl = 'http://' . $_SERVER['HTTP_HOST'];
 
@@ -25,6 +25,6 @@ class Request
 
     function setParams(array $params)
     {
-        $this->params = json_decode(json_encode($params), associative: false);
+        $this->params = (object) json_decode(json_encode($params), associative: false);
     }
 }

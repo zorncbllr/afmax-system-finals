@@ -21,12 +21,15 @@ class ProductRepository
             p.price,
             p.createdAt,
             p.updatedAt,
-            b.`brandName` AS brand,
-            GROUP_CONCAT(pi.imagePath) AS images
+            b.brandName AS brand,
+            GROUP_CONCAT(DISTINCT pi.imagePath) AS images,
+            GROUP_CONCAT(DISTINCT c.categoryName) AS categories
         FROM products p
         JOIN brands b ON p.brandId = b.brandId
         LEFT JOIN productImages pi ON p.productId = pi.productId
-        GROUP BY p.productId"
+        LEFT JOIN productCategories pc ON p.productId = pc.productId
+        LEFT JOIN categories c ON pc.categoryId = c.categoryId
+        GROUP BY p.productId;"
         );
         $stmt->execute();
 
@@ -51,17 +54,25 @@ class ProductRepository
             p.price,
             p.createdAt,
             p.updatedAt,
-            b.`brandName` AS brand,
-            GROUP_CONCAT(pi.imagePath) AS images
+            b.brandName AS brand,
+            GROUP_CONCAT(DISTINCT pi.imagePath) AS images,
+            GROUP_CONCAT(DISTINCT c.categoryName) AS categories
         FROM products p
         JOIN brands b ON p.brandId = b.brandId
         LEFT JOIN productImages pi ON p.productId = pi.productId
+        LEFT JOIN productCategories pc ON p.productId = pc.productId
+        LEFT JOIN categories c ON pc.categoryId = c.categoryId
         WHERE p.productId = :productId
-        GROUP BY p.productId"
+        GROUP BY p.productId;"
         );
 
         $stmt->execute(["productId" => $productId]);
 
         return Product::fromRow($stmt->fetch(PDO::FETCH_ASSOC));
+    }
+
+    public function createProduct(Product $product)
+    {
+        $db = App::getDatabase();
     }
 }

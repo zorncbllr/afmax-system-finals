@@ -1,27 +1,50 @@
 USE afmax_database;
 
--- Insert mock brands
-INSERT INTO brands (brandName) VALUES 
-('MediTech Solutions'),
-('HealthFirst Supplies'),
-('CarePlus Medical'),
-('VitaMed Essentials');
+INSERT INTO brands (brandName) VALUES
+('MedEquip'),
+('HealthPlus'),
+('SafeTech'),
+('SterilPro'),
+('OrthoGen');
 
--- Insert mock products
+-- Insert categories
+INSERT INTO categories (categoryName) VALUES
+('Diagnostics'),
+('Surgical Instruments'),
+('Protective Equipment'),
+('Sterilization'),
+('Orthopedic Supplies');
+
+-- Insert products
 INSERT INTO products (productName, description, price, brandId) VALUES
-('Digital Blood Pressure Monitor', 'Accurate and easy-to-use digital blood pressure monitor.', 59.99, 1),
-('Sterile Surgical Gloves', 'High-quality sterile gloves for surgical procedures.', 19.99, 2),
-('3-Ply Disposable Face Masks', 'Comfortable and breathable disposable masks.', 14.99, 2),
-('Infrared Thermometer', 'Non-contact infrared thermometer for quick readings.', 39.99, 1),
-('Wheelchair Standard Model', 'Durable and lightweight wheelchair.', 249.99, 3),
-('First Aid Kit - 100 Pieces', 'Comprehensive first aid kit for emergencies.', 34.99, 4);
+('X-Ray Machine', 'High-definition digital x-ray machine.', 12000.00, 1),
+('MRI Scanner', 'Advanced MRI machine with 3T magnet.', 95000.00, 1),
+('Scalpel Set', 'Stainless steel scalpel set.', 450.00, 2),
+('Surgical Gloves', 'Latex-free disposable gloves.', 25.00, 3),
+('Autoclave Unit', 'Sterilization device for medical tools.', 3800.00, 4),
+('Knee Brace', 'Adjustable orthopedic knee brace.', 120.00, 5),
+('Face Shield', 'Anti-fog full-face shield.', 15.99, 3),
+('Bone Saw', 'Electric bone saw for orthopedic surgeries.', 750.00, 5);
 
--- Insert mock product images
+-- Insert productImages
 INSERT INTO productImages (productId, imagePath) VALUES
-(1, '/images/products/bp_monitor_1.jpg'),
-(1, '/images/products/bp_monitor_2.jpg'),
-(2, '/images/products/surgical_gloves.jpg'),
-(3, '/images/products/face_masks.jpg'),
-(4, '/images/products/infrared_thermometer.jpg'),
-(5, '/images/products/wheelchair.jpg'),
-(6, '/images/products/first_aid_kit.jpg');
+(1, 'images/products/xray-machine.jpg'),
+(2, 'images/products/mri-scanner.jpg'),
+(3, 'images/products/scalpel-set.jpg'),
+(4, 'images/products/surgical-gloves.jpg'),
+(5, 'images/products/autoclave-unit.jpg'),
+(6, 'images/products/knee-brace.jpg'),
+(7, 'images/products/face-shield.jpg'),
+(8, 'images/products/bone-saw.jpg');
+
+-- Insert productCategories (many-to-many)
+INSERT INTO productCategories (categoryId, productId) VALUES
+(1, 1), -- X-Ray Machine → Diagnostics
+(1, 2), -- MRI Scanner → Diagnostics
+(2, 3), -- Scalpel Set → Surgical Instruments
+(2, 8), -- Bone Saw → Surgical Instruments
+(3, 4), -- Surgical Gloves → Protective Equipment
+(3, 7), -- Face Shield → Protective Equipment
+(4, 5), -- Autoclave Unit → Sterilization
+(5, 6), -- Knee Brace → Orthopedic Supplies
+(5, 8); -- Bone Saw → Orthopedic Supplies

@@ -1,13 +1,16 @@
 USE afmax_database;
 
-DROP TABLE IF EXISTS products;
 DROP TABLE IF EXISTS productImages;
+DROP TABLE IF EXISTS productCategories;
+DROP TABLE IF EXISTS products;
 DROP TABLE IF EXISTS brands;
+DROP TABLE IF EXISTS categories;
+
 
 CREATE TABLE brands (
     brandId INT PRIMARY KEY AUTO_INCREMENT,
     brandName VARCHAR(100) NOT NULL
-)
+);
 
 CREATE TABLE products (
     productId INT PRIMARY KEY AUTO_INCREMENT,
@@ -24,5 +27,18 @@ CREATE TABLE productImages (
     productImageId INT PRIMARY KEY AUTO_INCREMENT,
     productId INT NOT NULL,
     imagePath VARCHAR(255) NOT NULL,
+    FOREIGN KEY (productId) REFERENCES products(productId) ON DELETE CASCADE
+);
+
+CREATE TABLE categories (
+    categoryId INT PRIMARY KEY AUTO_INCREMENT,
+    categoryName VARCHAR(100) NOT NULL
+);
+
+CREATE TABLE productCategories (
+    categoryId INT NOT NULL,
+    productId INT NOT NULL,
+    PRIMARY KEY (categoryId, productId),
+    FOREIGN KEY (categoryId) REFERENCES categories(categoryId),
     FOREIGN KEY (productId) REFERENCES products(productId)
-)
+);

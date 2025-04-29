@@ -12,6 +12,9 @@ class Product
     /** @var array<string> $images */
     public array $images;
 
+    /** @var array<string> $categories */
+    public array $categories;
+
 
     /** @return Product */
     public static function fromRow(array $row): Product
@@ -21,12 +24,13 @@ class Product
         $product->productName = $row['productName'];
         $product->description = $row['description'];
         $product->price = $row['price'];
+        $product->brand = $row['brand'];
+
         $product->createdAt = $row['createdAt'];
         $product->updatedAt = $row['updatedAt'];
 
-        $product->brand = $row['brand'];
-
         $product->images = $row['images'] !== null ? explode(",", $row["images"]) : [];
+        $product->categories = $row['categories'] !== null ? explode(",", $row["categories"]) : [];
 
         return $product;
     }
