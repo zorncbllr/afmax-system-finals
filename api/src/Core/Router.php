@@ -25,7 +25,8 @@ class Router implements HTTPMethodInterface
 
     function __construct(string $base = "", array $middlewares = [])
     {
-        $this->request = new Request([]);
+        $this->request = new Request();
+        $this->request->setParams([]);
         $this->routes = [];
         $this->base = $base;
         $this->middlewares = $middlewares;

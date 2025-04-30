@@ -14,10 +14,16 @@ class Category
     {
         $category = new Category();
 
-        $category->categoryId = $row["categoryId"];
-        $category->categoryName = $row["categoryName"];
+        $category->categoryId = $row[0]["categoryId"];
+        $category->categoryName = $row[0]["categoryName"];
 
-        $category->products = $row['products'] !== null ? explode(",", $row["products"]) : [];
+        $category->products = [];
+
+        foreach ($row as $productRow) {
+            $productDTO = ProductDTO::fromRow($productRow);
+
+            array_push($category->products, $productDTO);
+        }
 
         return $category;
     }
