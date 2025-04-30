@@ -6,7 +6,6 @@ import {
   MotionValue,
 } from "motion/react";
 import React from "react";
-import { Link } from "react-router";
 import { Button } from "./button";
 
 export const HeroParallax = ({
@@ -102,38 +101,27 @@ export const HeroParallax = ({
 
 export const Header = () => {
   return (
-    <section className="mx-auto max-w-2xl pt-54 relative z-20">
-      <div className="flex justify-center">
-        <div className="relative rounded-full mb-8 px-3 py-1 text-sm/6 w-fit text-gray-600 ring-1 ring-gray-900/10 hover:ring-gray-900/20">
-          Latest medical supplies available.
-          <Link to="#" className="font-semibold text-sky-600">
-            <span className="absolute inset-0" aria-hidden="true"></span>See
-            what's new
-            <span aria-hidden="true">&rarr;</span>
-          </Link>
-        </div>
+    <div className="z-99 max-w-7xl relative mx-auto py-20 md:py-40 px-4 w-full  left-0 top-0">
+      <h1 className="text-2xl md:text-7xl font-bold dark:text-white">
+        Trusted Medical Supplies, <br />
+        <span className="text-transparent bg-clip-text bg-gradient-to-r to-emerald-600 from-sky-400">
+          Delivered!
+        </span>
+      </h1>
+      <p className="max-w-2xl text-base md:text-xl mt-8 dark:text-neutral-200">
+        Order high-quality medical supplies with ease and get them delivered to
+        your hospital or clinic on time.
+      </p>
+
+      <div className="mt-10 flex items-center justify-start gap-x-6">
+        <Button className="rounded-md px-3.5 py-2.5 text-sm font-semibold text-white shadow-xs bg-gradient-to-r to-emerald-600 from-sky-400">
+          See Products
+        </Button>
+        <Button variant="secondary">
+          Custom Order <span aria-hidden="true">→</span>
+        </Button>
       </div>
-      <div className="text-center">
-        <h1 className="text-5xl font-semibold tracking-tight text-balance text-gray-900 sm:text-7xl">
-          Trusted Medical Supplies,
-          <span className="text-transparent bg-clip-text bg-gradient-to-r to-emerald-600 from-sky-400">
-            Delivered!
-          </span>
-        </h1>
-        <p className="mt-8 text-lg font-medium text-pretty text-gray-700 sm:text-xl/8">
-          Order high-quality medical supplies with ease and get them delivered
-          to your hospital or clinic on time.
-        </p>
-        <div className="mt-10 flex items-center justify-center gap-x-6">
-          <Button className="rounded-md px-3.5 py-2.5 text-sm font-semibold text-white shadow-xs bg-gradient-to-r to-emerald-600 from-sky-400">
-            See Products
-          </Button>
-          <Button variant="secondary">
-            Custom Order <span aria-hidden="true">→</span>
-          </Button>
-        </div>
-      </div>
-    </section>
+    </div>
   );
 };
 
@@ -164,7 +152,7 @@ export const ProductCard = ({
           src={product.thumbnail}
           height="600"
           width="600"
-          className="object-cover object-left-top absolute h-full w-full inset-0"
+          className="object-cover object-left-top absolute h-full w-full inset-0 rounded-xl"
           alt={product.title}
         />
       </a>
