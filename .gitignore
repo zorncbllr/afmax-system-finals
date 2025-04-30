@@ -1,3 +1,5 @@
-api/vendor/
+server/vendor/
 
-api/.env
+server/.env
+
+client/node_modules/
