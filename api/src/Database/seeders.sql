@@ -1,5 +1,6 @@
 USE afmax_database;
 
+-- Insert brands
 INSERT INTO brands (brandName) VALUES
 ('MedEquip'),
 ('HealthPlus'),
@@ -26,25 +27,47 @@ INSERT INTO products (productName, description, price, brandId) VALUES
 ('Face Shield', 'Anti-fog full-face shield.', 15.99, 3),
 ('Bone Saw', 'Electric bone saw for orthopedic surgeries.', 750.00, 5);
 
--- Insert productImages
+-- Insert productImages (2–3 images per product)
 INSERT INTO productImages (productId, imagePath) VALUES
-(1, 'images/products/xray-machine.jpg'),
-(2, 'images/products/mri-scanner.jpg'),
+(1, 'images/products/xray-machine-front.jpg'),
+(1, 'images/products/xray-machine-side.jpg'),
+(2, 'images/products/mri-scanner-front.jpg'),
+(2, 'images/products/mri-room-view.jpg'),
+(2, 'images/products/mri-controls.jpg'),
 (3, 'images/products/scalpel-set.jpg'),
-(4, 'images/products/surgical-gloves.jpg'),
-(5, 'images/products/autoclave-unit.jpg'),
+(3, 'images/products/scalpel-detail.jpg'),
+(4, 'images/products/gloves-box.jpg'),
+(5, 'images/products/autoclave.jpg'),
+(5, 'images/products/autoclave-back.jpg'),
 (6, 'images/products/knee-brace.jpg'),
+(6, 'images/products/knee-brace-demo.jpg'),
 (7, 'images/products/face-shield.jpg'),
-(8, 'images/products/bone-saw.jpg');
+(8, 'images/products/bone-saw.jpg'),
+(8, 'images/products/bone-saw-blades.jpg'),
+(8, 'images/products/bone-saw-kit.jpg');
 
--- Insert productCategories (many-to-many)
+-- Insert productCategories (1–3 categories per product)
 INSERT INTO productCategories (categoryId, productId) VALUES
-(1, 1), -- X-Ray Machine → Diagnostics
-(1, 2), -- MRI Scanner → Diagnostics
-(2, 3), -- Scalpel Set → Surgical Instruments
-(2, 8), -- Bone Saw → Surgical Instruments
-(3, 4), -- Surgical Gloves → Protective Equipment
-(3, 7), -- Face Shield → Protective Equipment
-(4, 5), -- Autoclave Unit → Sterilization
-(5, 6), -- Knee Brace → Orthopedic Supplies
-(5, 8); -- Bone Saw → Orthopedic Supplies
+-- X-Ray Machine
+(1, 1),
+(2, 1),
+-- MRI Scanner
+(1, 2),
+(4, 2),
+-- Scalpel Set
+(2, 3),
+-- Surgical Gloves
+(3, 4),
+(4, 4),
+-- Autoclave Unit
+(4, 5),
+(2, 5),
+-- Knee Brace
+(5, 6),
+(2, 6),
+-- Face Shield
+(3, 7),
+-- Bone Saw
+(2, 8),
+(5, 8),
+(4, 8);
