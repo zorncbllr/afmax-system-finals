@@ -15,7 +15,7 @@ class CategoryRepository
         $db = App::getDatabase();
 
         $stmt = $db->prepare(
-            "SELECT * FROM categories"
+            "SELECT * FROM categories;"
         );
 
         $stmt->execute();
@@ -41,7 +41,7 @@ class CategoryRepository
             p.productName,
             b.brandName AS brand,
             p.price,
-            pi.imagePath AS displayImagePath
+            pi.imagePath 
         FROM categories c
         JOIN productCategories pc ON pc.categoryId = c.categoryId
         JOIN products p ON p.productId = pc.productId
@@ -52,11 +52,11 @@ class CategoryRepository
             GROUP BY productId
         ) firstImages ON firstImages.productId = p.productId
         JOIN productImages pi ON pi.productImageId = firstImages.firstImageId
-        WHERE c.categoryId = :categoryId"
+        WHERE c.categoryId = :categoryId;"
         );
 
         $stmt->execute(["categoryId" => $categoryId]);
 
-        return Category::fromRow($stmt->fetch(PDO::FETCH_ASSOC));
+        return Category::fromRow($stmt->fetchAll(PDO::FETCH_ASSOC));
     }
 }

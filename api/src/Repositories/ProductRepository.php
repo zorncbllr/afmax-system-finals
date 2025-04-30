@@ -28,7 +28,7 @@ class ProductRepository
             FROM productImages
             GROUP BY productId
         ) firstImages ON firstImages.productId = p.productId
-        JOIN productImages pi ON pi.productImageId = firstImages.firstImageId"
+        JOIN productImages pi ON pi.productImageId = firstImages.firstImageId;"
         );
         $stmt->execute();
 
