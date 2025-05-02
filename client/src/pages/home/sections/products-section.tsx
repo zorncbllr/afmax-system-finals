@@ -3,6 +3,7 @@ import SectionHeader from "../components/section-header";
 import { useProductStore } from "../../../stores/product";
 import GridPattern from "../../../components/grid-pattern";
 import ProductCard from "../../../components/product-card";
+import ProductTab from "../components/product-tab";
 
 const ProductsSection: React.FC = () => {
   const { products, loadProducts } = useProductStore();
@@ -34,6 +35,8 @@ const ProductsSection: React.FC = () => {
         </div>
 
         <div className="flex flex-col justify-start gap-2 w-fit">
+          <ProductTab />
+
           <div className="grid grid-cols-2 md:grid-cols-3 gap-2 pl-2 w-fit place-self-center">
             {products.map((product) => (
               <ProductCard
