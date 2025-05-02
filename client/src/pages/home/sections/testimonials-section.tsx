@@ -55,7 +55,7 @@ const testimonials: Testimonial[] = [
 
 const TestimonialsSection: React.FC = () => {
   return (
-    <section className="flex items-center flex-col gap-8 mb-32">
+    <section className="p-4 flex items-center flex-col gap-8 mb-32">
       <SectionHeader
         section="Testimonials"
         heading="We have worked with many respectable hospitals."
