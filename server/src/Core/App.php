@@ -2,8 +2,6 @@
 
 namespace Src\Core;
 
-use PDOException;
-
 class App
 {
     protected static Database $database;
@@ -11,6 +9,17 @@ class App
     function __construct(Database $database)
     {
         static::$database = $database;
+
+        $config = require_once parseDir(__DIR__) . '/../Config/cors.conf.php';
+
+        header("Access-Control-Allow-Origin: " . $config['origin']);
+        header("Access-Control-Allow-Methods: " . implode(', ', $config['allowed_methods']));
+        header("Access-Control-Allow-Headers: " . implode(', ', $config['allowed_headers']));
+
+        if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+            http_response_code(204);
+            exit();
+        }
     }
 
     function run()
