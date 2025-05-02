@@ -102,26 +102,30 @@ export const HeroParallax = ({
 
 export const Header = () => {
   return (
-    <div className="z-99 max-w-7xl relative mx-auto py-20 md:py-40 px-4 w-full  left-0 top-0">
-      <h1 className="text-2xl md:text-7xl font-bold dark:text-white">
-        Trusted Medical Supplies, <br />
-        <span className="text-transparent bg-clip-text bg-gradient-to-r to-emerald-600 from-sky-400">
-          Delivered!
-        </span>
-      </h1>
-      <p className="max-w-2xl text-base md:text-xl mt-8 dark:text-neutral-200">
-        Order high-quality medical supplies with ease and get them delivered to
-        your hospital or clinic on time.
-      </p>
+    <div className="z-99 flex flex-col justify-center relative mx-auto py-16 md:py-40 w-full left-0 top-0">
+      <section className="flex justify-center py-8 bg-blue-50/30 backdrop-blur-md rounded-xl border border-white/20 p-6 shadow-sm">
+        <div>
+          <h1 className="text-2xl md:text-7xl font-bold dark:text-white">
+            Trusted Medical Supplies, <br />
+            <span className="text-transparent bg-clip-text bg-gradient-to-r to-emerald-600 from-sky-400">
+              Delivered!
+            </span>
+          </h1>
+          <p className="max-w-2xl text-base md:text-xl mt-8 dark:text-neutral-200">
+            Order high-quality medical supplies with ease and get them delivered
+            to your hospital or clinic on time.
+          </p>
 
-      <div className="mt-10 flex items-center justify-start gap-x-6">
-        <Button className="rounded-md px-3.5 py-2.5 text-sm font-semibold text-white shadow-xs bg-gradient-to-r to-emerald-600 from-sky-400">
-          See Products
-        </Button>
-        <Button variant="secondary">
-          Custom Order <span aria-hidden="true">→</span>
-        </Button>
-      </div>
+          <div className="mt-10 flex items-center justify-start gap-x-6">
+            <Button className="rounded-md px-3.5 py-2.5 text-sm font-semibold text-white shadow-xs bg-gradient-to-r to-emerald-600 from-sky-400">
+              See Products
+            </Button>
+            <Button variant="secondary">
+              Custom Order <span aria-hidden="true">→</span>
+            </Button>
+          </div>
+        </div>
+      </section>
 
       <div className="grid w-full max-w-6xl grid-cols-1 gap-8 mx-auto mt-24 sm:grid-cols-2 lg:grid-cols-3">
         <div className="p-6 rounded-lg bg-white shadow-sm">
