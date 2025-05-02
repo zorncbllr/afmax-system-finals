@@ -13,7 +13,7 @@ export default function HeroSection() {
         </div>
       </div>
       <div className="text-center">
-        <h1 className="text-6xl p-8 md:text-7xl lg:text-[5rem] font-semibold tracking-tight text-balance text-gray-900">
+        <h1 className="text-6xl p-8 md:text-7xl lg:text-[4.8rem] font-semibold tracking-tight text-balance text-gray-900">
           Trusted Medical Supplies,{" "}
           <span className="text-transparent bg-clip-text bg-gradient-to-r to-emerald-600 from-sky-400">
             Delivered!
