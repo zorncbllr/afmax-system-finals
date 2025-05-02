@@ -14,7 +14,7 @@ const ProductsSection: React.FC = () => {
   console.log(products);
 
   return (
-    <section className="flex justify-center flex-col gap-8 mb-24">
+    <section className="flex px-4 lg:px-2 justify-center flex-col gap-8 mb-24">
       <SectionHeader
         section="Products"
         heading="Medical Supplies On Hand"
@@ -22,7 +22,7 @@ const ProductsSection: React.FC = () => {
       />
 
       <div className="flex justify-center w-full">
-        <div className="hidden lg:flex xl:flex w-[20rem] relative shadow-sm border-[.01px] rounded-l-2xl border-gray-300 overflow-hidden">
+        <div className="hidden xl:flex w-[20rem] relative shadow-sm border-[.01px] rounded-l-2xl border-gray-300 overflow-hidden">
           <GridPattern />
 
           <a
