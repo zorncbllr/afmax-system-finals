@@ -9,7 +9,7 @@ export default function AboutSection() {
         description="Ordering medical supplies has never been easier! Follow these simple steps to get the products you need."
       />
 
-      <div className="my-16 gap-2 justify-center flex flex-wrap lg:gap-0">
+      <div className="my-16 w-fit gap-2 justify-center place-self-center grid md:grid-cols-2 lg:grid-cols-2 xl:flex xl:gap-0">
         {[
           {
             title: "Selection of Products",

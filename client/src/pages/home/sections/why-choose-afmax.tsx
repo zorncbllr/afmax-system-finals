@@ -40,19 +40,19 @@ const WhyChooseAfmax: React.FC = () => {
 
                 <img
                   width="150"
-                  className="absolute left-2 z-40 translate-y-56"
+                  className="w-2/6 relative lg:absolute lg:left-2 xl:absolute xl:left-2 z-40 lg:translate-y-56 xl:translate-y-56"
                   src={FastDelivery}
                   alt=""
                 />
                 <img
                   width="2000"
-                  className="absolute -left-4 z-40 translate-y-80"
+                  className="w-4/5 relative lg:w-full lg:absolute lg:-left-4 xl:absolute xl:-left-4 z-40 lg:translate-y-80 xl:translate-y-80"
                   src={DeliveryTruck}
                   alt=""
                 />
                 <div>
                   <div className="absolute top-40 w-[25rem] -left-20 grid place-content-center h-[40rem] bg-gray-700 rounded-4xl">
-                    <div className="absolute w-[2rem] bg-gray-700 h-[10rem] -right-1 top-[10rem] z-0 rounded-r-md" />
+                    <div className="absolute w-[2rem] bg-gray-00 h-[10rem] -right-1 top-[10rem] z-0 rounded-r-md" />
                     <div className="absolute w-[2rem] bg-gray-700 h-[4rem] -right-1 top-[21rem] z-0 rounded-r-md" />
                     <div className="w-[23rem] overflow-hidden h-[38rem] rounded-2xl bg-gray-900 z-10" />
                   </div>
@@ -74,7 +74,11 @@ const WhyChooseAfmax: React.FC = () => {
                   </p>
                 </div>
                 <div className="flex flex-1 items-center justify-center px-8 max-lg:pt-10 max-lg:pb-12 sm:px-10 lg:pb-2">
-                  <img className="w-full" src={WideRange} alt="" />
+                  <img
+                    className="w-4/6 lg:w-full xl:w-full"
+                    src={WideRange}
+                    alt=""
+                  />
                 </div>
               </div>
               <div className="pointer-events-none absolute inset-px rounded-lg ring-1 shadow-sm ring-black/5 max-lg:rounded-t-[2rem]" />

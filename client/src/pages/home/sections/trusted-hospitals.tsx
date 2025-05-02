@@ -25,13 +25,13 @@ const logos = [
 
 const TrustedHospitals: React.FC = () => {
   return (
-    <div className="py-28 overflow-hidden">
-      <div className="mx-auto max-w-7xl px-6">
+    <div className="py-28 mt-16 overflow-hidden">
+      <div className="mx-auto max-w-7xl flex flex-col justify-center items-center">
         <h2 className="text-center text-lg leading-8 font-semibold text-gray-900">
           Trusted by the most reliable hospitals in Bicol
         </h2>
 
-        <div className="mt-10 whitespace-nowrap animate-scroll flex gap-x-8 items-center">
+        <div className="mt-18 whitespace-nowrap animate-scroll flex gap-x-8 items-center">
           {logos.map((logo, index) => (
             <img
               key={index}

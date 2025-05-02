@@ -22,7 +22,7 @@ const ProductsSection: React.FC = () => {
       />
 
       <div className="flex justify-center w-full">
-        <div className="w-[20rem] relative shadow-sm border-[.01px] rounded-l-2xl border-gray-300 overflow-hidden">
+        <div className="hidden lg:flex xl:flex w-[20rem] relative shadow-sm border-[.01px] rounded-l-2xl border-gray-300 overflow-hidden">
           <GridPattern />
 
           <a
@@ -34,7 +34,7 @@ const ProductsSection: React.FC = () => {
         </div>
 
         <div className="flex flex-col justify-start gap-2 w-fit">
-          <div className="grid grid-cols-3 gap-2 pl-2 w-fit place-self-center">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-2 pl-2 w-fit place-self-center">
             {products.map((product) => (
               <ProductCard
                 key={product.productId}
