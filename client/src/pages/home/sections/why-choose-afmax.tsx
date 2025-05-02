@@ -7,7 +7,7 @@ import Secure from "@/assets/secure.svg";
 const WhyChooseAfmax: React.FC = () => {
   return (
     <section className="my-24">
-      <div className="flex flex-col gap-4 items-center">
+      <div className="flex flex-col gap-4 mb-8 items-center">
         <h1 className="text-2xl font-semibold tracking-tight text-balance text-gray-900 text-center">
           Why Choose{" "}
           <span className="text-transparent bg-clip-text bg-gradient-to-r to-emerald-600 from-sky-400">

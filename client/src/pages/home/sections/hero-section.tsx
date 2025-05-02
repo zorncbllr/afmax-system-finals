@@ -13,13 +13,13 @@ export default function HeroSection() {
         </div>
       </div>
       <div className="text-center">
-        <h1 className="text-5xl font-semibold tracking-tight text-balance text-gray-900 sm:text-7xl">
+        <h1 className="text-6xl p-8 md:text-7xl lg:text-[5rem] font-semibold tracking-tight text-balance text-gray-900">
           Trusted Medical Supplies,{" "}
           <span className="text-transparent bg-clip-text bg-gradient-to-r to-emerald-600 from-sky-400">
             Delivered!
           </span>
         </h1>
-        <p className="mt-8 text-lg font-medium text-pretty text-gray-500 sm:text-xl/8">
+        <p className="mt-8 px-8 text-lg font-medium text-pretty text-gray-500 sm:text-xl/8">
           Order high-quality medical supplies with ease and get them delivered
           to your hospital or clinic on time.
         </p>
