@@ -27,11 +27,8 @@ class Database extends PDO
             );
         } catch (PDOException $e) {
 
-            http_response_code(500);
-            return json_encode([
-                'error' => $e->getMessage()
-            ]);
-            exit;
+            status(500);
+            die("Database Exception: Database server might be down or might be due to incorrect configurations.");
         }
     }
 }

@@ -2,6 +2,8 @@
 
 namespace Src\Core;
 
+use PDOException;
+
 class App
 {
     protected static Database $database;
