@@ -41,6 +41,7 @@ class CategoryRepository
             p.productName,
             b.brandName AS brand,
             p.price,
+            p.isFeatured,
             pi.imagePath 
         FROM categories c
         JOIN productCategories pc ON pc.categoryId = c.categoryId

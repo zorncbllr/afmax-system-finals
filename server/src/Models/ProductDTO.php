@@ -8,6 +8,7 @@ class ProductDTO
     public string $productName, $brand;
     public float $price;
     public string $imagePath;
+    public bool $isFeatured;
 
     public static function fromRow(array $row): ProductDTO
     {
@@ -17,6 +18,7 @@ class ProductDTO
         $productDTO->productName = $row["productName"];
         $productDTO->brand = $row["brand"];
         $productDTO->price = $row["price"];
+        $productDTO->isFeatured = $row["isFeatured"];
         $productDTO->imagePath = $row["imagePath"];
 
         return $productDTO;

@@ -7,6 +7,7 @@ class Product
     public int $productId;
     public string $productName, $description, $brand;
     public float $price;
+    public bool $isFeatured;
     public string $createdAt, $updatedAt;
 
     /** @var array<string> $images */
@@ -25,6 +26,7 @@ class Product
         $product->description = $row['description'];
         $product->price = $row['price'];
         $product->brand = $row['brand'];
+        $product->isFeatured = $row["isFeatured"];
 
         $product->createdAt = $row['createdAt'];
         $product->updatedAt = $row['updatedAt'];

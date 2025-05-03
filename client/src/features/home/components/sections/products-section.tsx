@@ -1,12 +1,26 @@
-import React from "react";
+import React, { useEffect } from "react";
 import SectionHeader from "../section-header";
 import GridPattern from "../../../../components/grid-pattern";
 import ProductCard from "../../../../components/product-card";
 import ProductTab from "../product-tab";
-import { useProducts } from "../../../../hooks/useProducts";
+import { useFeaturedStore } from "../../store";
+import { useFetchFeaturedCategories } from "../../hooks";
 
 const ProductsSection: React.FC = () => {
-  const { data: products } = useProducts();
+  const { data: categories, isFetched } = useFetchFeaturedCategories();
+  const { initCategories, activeCategory, setActiveCategory } =
+    useFeaturedStore();
+
+  useEffect(() => {
+    if (isFetched && categories!.length > 0) {
+      initCategories(categories);
+      setActiveCategory(0);
+    }
+  }, [isFetched, categories]);
+
+  if (!activeCategory) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <section className="flex px-4 lg:px-2 justify-center flex-col gap-8 mb-24">
@@ -32,7 +46,7 @@ const ProductsSection: React.FC = () => {
           <ProductTab />
 
           <div className="grid grid-cols-2 md:grid-cols-3 gap-2 pl-2 w-fit place-self-center">
-            {products?.map((product) => (
+            {activeCategory.products.map((product) => (
               <ProductCard
                 key={product.productId}
                 productId={product.productId}

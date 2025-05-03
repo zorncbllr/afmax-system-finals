@@ -20,6 +20,7 @@ class ProductRepository
             p.productName,
             b.brandName AS brand,
             p.price,
+            p.isFeatured,
             pi.imagePath
         FROM products p
         JOIN brands b ON b.brandId = p.brandId
@@ -51,6 +52,7 @@ class ProductRepository
             p.productName,
             p.description,
             p.price,
+            p.isFeatured,
             p.createdAt,
             p.updatedAt,
             b.brandName AS brand,
