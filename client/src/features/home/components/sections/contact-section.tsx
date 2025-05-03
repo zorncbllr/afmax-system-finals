@@ -1,5 +1,5 @@
 import React from "react";
-import SectionHeader from "../components/section-header";
+import SectionHeader from "../section-header";
 
 const ContactSection: React.FC = () => {
   return (

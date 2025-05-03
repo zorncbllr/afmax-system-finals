@@ -1,18 +1,12 @@
-import React, { useEffect } from "react";
-import SectionHeader from "../components/section-header";
-import { useProductStore } from "../../../stores/product";
-import GridPattern from "../../../components/grid-pattern";
-import ProductCard from "../../../components/product-card";
-import ProductTab from "../components/product-tab";
+import React from "react";
+import SectionHeader from "../section-header";
+import GridPattern from "../../../../components/grid-pattern";
+import ProductCard from "../../../../components/product-card";
+import ProductTab from "../product-tab";
+import { useProducts } from "../../../../hooks/useProducts";
 
 const ProductsSection: React.FC = () => {
-  const { products, loadProducts } = useProductStore();
-
-  useEffect(() => {
-    loadProducts();
-  }, [loadProducts]);
-
-  console.log(products);
+  const { data: products } = useProducts();
 
   return (
     <section className="flex px-4 lg:px-2 justify-center flex-col gap-8 mb-24">
@@ -38,7 +32,7 @@ const ProductsSection: React.FC = () => {
           <ProductTab />
 
           <div className="grid grid-cols-2 md:grid-cols-3 gap-2 pl-2 w-fit place-self-center">
-            {products.map((product) => (
+            {products?.map((product) => (
               <ProductCard
                 key={product.productId}
                 productId={product.productId}

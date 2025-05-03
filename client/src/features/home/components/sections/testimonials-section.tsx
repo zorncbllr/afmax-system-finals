@@ -1,6 +1,6 @@
 import React from "react";
-import SectionHeader from "../components/section-header";
-import TestimonialCard from "../components/testimonial-card";
+import SectionHeader from "../section-header";
+import TestimonialCard from "../testimonial-card";
 
 // Define TypeScript types for the testimonials
 interface Testimonial {
