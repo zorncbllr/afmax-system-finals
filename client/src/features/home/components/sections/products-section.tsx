@@ -1,10 +1,10 @@
 import React, { useEffect } from "react";
 import SectionHeader from "../section-header";
 import GridPattern from "../../../../components/grid-pattern";
-import ProductCard from "../../../../components/product-card";
 import ProductTab from "../product-tab";
 import { useFeaturedStore } from "../../store";
 import { useFetchFeaturedCategories } from "../../hooks";
+import ProductCard from "@/features/products/components/product-card";
 
 const ProductsSection: React.FC = () => {
   const { data: categories, isFetched } = useFetchFeaturedCategories();
