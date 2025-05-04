@@ -14,7 +14,7 @@ import { useSidebar } from "@/features/sidebar/store";
 import Header from "@/components/header";
 
 const sidebarProps: SideBarProps = {
-  heading: "AFMAX",
+  heading: "ADMIN",
   headingHref: "/",
   sections: [
     {
