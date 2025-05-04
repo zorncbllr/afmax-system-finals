@@ -1,12 +1,18 @@
+import { useSidebar } from "@/features/sidebar/store";
 import { Columns2Icon, SearchIcon } from "lucide-react";
 
 const Header = () => {
+  const { toggleSidebar } = useSidebar();
+
   return (
     <header className="p-4 border-y-1 border-gray-200 w-full">
       <nav className="flex gap-4">
-        <section className="border border-gray-200 w-fit p-2 rounded-lg">
+        <button
+          onClick={toggleSidebar}
+          className="border cursor-pointer border-gray-200 w-fit p-2 rounded-lg"
+        >
           <Columns2Icon className="text-gray-500" />
-        </section>
+        </button>
 
         <section>
           <div className="block">
