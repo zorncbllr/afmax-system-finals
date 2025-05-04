@@ -1,11 +1,10 @@
 import SideBar from "@/features/sidebar/sidebar";
-import React, { useEffect, useLayoutEffect } from "react";
+import React, { useLayoutEffect } from "react";
 import { LayoutRouteProps } from "react-router";
 
 import { ShoppingBagIcon, Package2Icon } from "lucide-react";
 import { SideBarProps } from "@/features/sidebar/types";
 import { useSidebar } from "@/features/sidebar/store";
-import { Card, CardContent } from "@/components/ui/card";
 import Header from "@/components/header";
 
 const sidebarProps: SideBarProps = {
@@ -46,8 +45,10 @@ const UserLayout: React.FC<LayoutRouteProps> = ({ children }) => {
       <div className="flex flex-col w-full">
         <Header />
 
-        <main className="p-4 w-full h-full grid">
-          <div className="p-4 border rounded-lg text-gray-700">{children}</div>
+        <main className="p-4 w-full h-full grid bg-gray-50">
+          <div className="p-4 border rounded-lg text-gray-700 bg-white">
+            {children}
+          </div>
         </main>
       </div>
     </div>
