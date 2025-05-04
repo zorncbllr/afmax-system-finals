@@ -1,9 +1,10 @@
 import SideBar from "@/features/sidebar/sidebar";
-import React from "react";
+import React, { useEffect, useLayoutEffect } from "react";
 import { LayoutRouteProps } from "react-router";
 
 import { ShoppingBagIcon, Package2Icon } from "lucide-react";
 import { SideBarProps } from "@/features/sidebar/types";
+import { useSidebar } from "@/features/sidebar/store";
 
 const sidebarProps: SideBarProps = {
   heading: "AFMAX",
@@ -30,9 +31,15 @@ const sidebarProps: SideBarProps = {
 };
 
 const UserLayout: React.FC<LayoutRouteProps> = ({ children }) => {
+  const { setSidebarProps } = useSidebar();
+
+  useLayoutEffect(() => {
+    setSidebarProps(sidebarProps);
+  }, []);
+
   return (
     <div className="w-full h-screen flex">
-      <SideBar {...sidebarProps} />
+      <SideBar />
 
       <main className="w-full h-full">
         <header></header>

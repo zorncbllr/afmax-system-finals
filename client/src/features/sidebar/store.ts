@@ -6,7 +6,7 @@ interface SidebarStore {
   sidebarProps?: SideBarProps;
 
   setSidebarProps: (sidebarProps: SideBarProps) => void;
-  setActiveItem: (item: SideBarItem) => void;
+  setActiveItem: (item: SideBarItem | undefined) => void;
 }
 
 export const useSidebar = create<SidebarStore>((set) => ({
