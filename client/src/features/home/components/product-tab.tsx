@@ -4,14 +4,13 @@ function ProductTab() {
   const { categories, activeCategory, setActiveCategory } = useFeaturedStore();
 
   const changeActiveTab = (index: number) => {
-    console.log(index);
     setActiveCategory(index);
   };
 
   return (
     <div className="flex overflow-x-auto whitespace-nowrap">
       {categories.map((category, index) => (
-        <>
+        <div key={category.categoryName}>
           {category == activeCategory ? (
             <button
               onClick={() => changeActiveTab(index)}
@@ -27,7 +26,7 @@ function ProductTab() {
               <span className="mx-1 text-base">{category.categoryName}</span>
             </button>
           )}
-        </>
+        </div>
       ))}
     </div>
   );

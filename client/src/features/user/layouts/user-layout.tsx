@@ -5,6 +5,8 @@ import { LayoutRouteProps } from "react-router";
 import { ShoppingBagIcon, Package2Icon } from "lucide-react";
 import { SideBarProps } from "@/features/sidebar/types";
 import { useSidebar } from "@/features/sidebar/store";
+import { Card, CardContent } from "@/components/ui/card";
+import Header from "@/components/header";
 
 const sidebarProps: SideBarProps = {
   heading: "AFMAX",
@@ -41,10 +43,13 @@ const UserLayout: React.FC<LayoutRouteProps> = ({ children }) => {
     <div className="w-full h-screen flex">
       <SideBar />
 
-      <main className="w-full h-full">
-        <header></header>
-        {children}
-      </main>
+      <div className="flex flex-col w-full">
+        <Header />
+
+        <main className="p-4 w-full h-full grid">
+          <div className="p-4 border rounded-lg text-gray-700">{children}</div>
+        </main>
+      </div>
     </div>
   );
 };
