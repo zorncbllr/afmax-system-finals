@@ -16,6 +16,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { cn } from "@/lib/utils";
 
 export const columns: ColumnDef<ProductDTO>[] = [
   // Checkbox column
@@ -79,8 +80,43 @@ export const columns: ColumnDef<ProductDTO>[] = [
     header: "Categories",
     cell: ({ row }) => {
       const categories: string[] = row.getValue("categories");
-      return categories.join(", ");
+      const badgeColors = [
+        "badge-primary",
+        "badge-secondary",
+        "badge-accent",
+        "badge-info",
+        "badge-success",
+        "badge-warning",
+        "badge-error",
+        "badge-neutral",
+      ];
+
+      // Simple hash function for consistent color per category
+      const getColorIndex = (str: string) => {
+        let hash = 0;
+        for (let i = 0; i < str.length; i++) {
+          hash = str.charCodeAt(i) + ((hash << 5) - hash);
+        }
+        return Math.abs(hash) % badgeColors.length;
+      };
+
+      return (
+        <div className="flex flex-wrap gap-2" data-theme="light">
+          {categories.map((category) => (
+            <div
+              key={category}
+              className={cn(
+                "badge badge-soft px-2 badge-sm",
+                badgeColors[getColorIndex(category)]
+              )}
+            >
+              {category}
+            </div>
+          ))}
+        </div>
+      );
     },
+    filterFn: "arrIncludesSome",
   },
   {
     accessorKey: "imagePath",
