@@ -98,11 +98,11 @@ export const columns: ColumnDef<ProductDTO>[] = [
     filterFn: "arrIncludesSome",
   },
   {
-    accessorKey: "imagePath",
+    accessorKey: "image",
     header: "Image",
     cell: ({ row }) => (
       <img
-        src={row.getValue("imagePath")}
+        src={row.getValue("image")}
         alt="Product"
         className="h-10 w-10 object-cover rounded-md"
       />

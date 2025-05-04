@@ -21,7 +21,7 @@ class ProductRepository
             b.brandName AS brand,
             p.price,
             p.isFeatured,
-            pi.imagePath,
+            pi.imagePath AS image,
             GROUP_CONCAT(DISTINCT c.categoryName) AS categories
         FROM products p
         JOIN brands b ON b.brandId = p.brandId

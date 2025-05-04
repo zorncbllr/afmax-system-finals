@@ -7,7 +7,7 @@ class ProductDTO
     public int $productId;
     public string $productName, $brand;
     public float $price;
-    public string $imagePath;
+    public string $image;
     public bool $isFeatured;
 
     /** @var array<string> $categories */
@@ -22,7 +22,7 @@ class ProductDTO
         $productDTO->brand = $row["brand"];
         $productDTO->price = $row["price"];
         $productDTO->isFeatured = $row["isFeatured"];
-        $productDTO->imagePath = $row["imagePath"];
+        $productDTO->image = $row["image"];
 
         $productDTO->categories = $row['categories'] !== null ? explode(",", $row["categories"]) : [];
 
