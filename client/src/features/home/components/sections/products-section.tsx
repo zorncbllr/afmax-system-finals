@@ -53,7 +53,7 @@ const ProductsSection: React.FC = () => {
                 productName={product.productName}
                 brand={product.brand}
                 price={product.price}
-                imagePath={product.imagePath}
+                image={product.image}
               />
             ))}
           </div>

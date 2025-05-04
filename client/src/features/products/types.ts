@@ -3,7 +3,7 @@ export interface ProductDTO {
   productName: string;
   brand: string;
   price: number;
-  imagePath: string;
+  image: string;
   isFeatured: boolean;
   categories: string[];
 }

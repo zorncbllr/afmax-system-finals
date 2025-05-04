@@ -5,7 +5,7 @@ interface ProductCardProps {
   productName: string;
   brand: string;
   price: number;
-  imagePath: string;
+  image: string;
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({
@@ -13,7 +13,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
   productName,
   brand,
   price,
-  imagePath,
+  image,
 }) => {
   return (
     <div
@@ -21,7 +21,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
       className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden w-[12rem] lg:w-[14rem] transition hover:shadow-lg"
     >
       <img
-        src={imagePath}
+        src={image}
         alt={productName}
         className="h-44 lg:h-48 w-full object-cover"
       />

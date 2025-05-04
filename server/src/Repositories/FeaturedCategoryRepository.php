@@ -22,7 +22,7 @@ class FeaturedCategoryRepository
                         'brand', b.brandName,
                         'price', p.price,
                         'isFeatured', p.isFeatured,
-                        'imagePath', (
+                        'image', ( 
                             SELECT pi.imagePath
                             FROM productImages pi
                             WHERE pi.productId = p.productId
