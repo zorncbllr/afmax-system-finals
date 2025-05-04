@@ -5,6 +5,7 @@ export interface ProductDTO {
   price: number;
   imagePath: string;
   isFeatured: boolean;
+  categories: string[];
 }
 
 export interface Product {
