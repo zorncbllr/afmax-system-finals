@@ -17,6 +17,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
+import { CategoryBadge } from "@/components/category-badge";
 
 export const columns: ColumnDef<ProductDTO>[] = [
   // Checkbox column
@@ -59,9 +60,11 @@ export const columns: ColumnDef<ProductDTO>[] = [
     header: "Price",
     cell: ({ row }) => {
       const amount = parseFloat(row.getValue("price"));
-      return new Intl.NumberFormat("en-US", {
+      return new Intl.NumberFormat("fil-PH", {
         style: "currency",
-        currency: "USD",
+        currency: "PHP",
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 2,
       }).format(amount);
     },
   },
@@ -80,38 +83,14 @@ export const columns: ColumnDef<ProductDTO>[] = [
     header: "Categories",
     cell: ({ row }) => {
       const categories: string[] = row.getValue("categories");
-      const badgeColors = [
-        "badge-primary",
-        "badge-secondary",
-        "badge-accent",
-        "badge-info",
-        "badge-success",
-        "badge-warning",
-        "badge-error",
-        "badge-neutral",
-      ];
-
-      // Simple hash function for consistent color per category
-      const getColorIndex = (str: string) => {
-        let hash = 0;
-        for (let i = 0; i < str.length; i++) {
-          hash = str.charCodeAt(i) + ((hash << 5) - hash);
-        }
-        return Math.abs(hash) % badgeColors.length;
-      };
-
       return (
-        <div className="flex flex-wrap gap-2 bg-transparent" data-theme="light">
+        <div className="flex flex-wrap gap-2">
           {categories.map((category) => (
-            <div
+            <CategoryBadge
               key={category}
-              className={cn(
-                "badge badge-soft px-2 badge-sm",
-                badgeColors[getColorIndex(category)]
-              )}
-            >
-              {category}
-            </div>
+              category={category}
+              className="text-xs"
+            />
           ))}
         </div>
       );
