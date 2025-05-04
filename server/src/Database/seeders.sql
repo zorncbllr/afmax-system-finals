@@ -1,65 +1,56 @@
 USE afmax_database;
 
--- Insert brands
-INSERT INTO brands (brandName) VALUES 
-('MedEquip'),
-('HealthTech'),
-('BioScan'),
-('SterilSafe'),
-('ThermoMed');
+-- Brands
+INSERT INTO brands (brandName) VALUES
+('3M'), ('BD'), ('Philips'), ('Omron'), ('GE Healthcare'),
+('Medtronic'), ('Medline'), ('Fresenius'), ('Dräger'), ('Halyard');
 
--- Insert categories
+-- Categories
 INSERT INTO categories (categoryName) VALUES
-('Diagnostics'),
-('Imaging'),
-('Surgical'),
-('Sterilization'),
-('Monitoring'),
-('Therapy');
+('Infection Control'),
+('Diabetes Management'),
+('Maternal Health'),
+('Emergency Care'),
+('Diagnostic Imaging'),
+('Respiratory Therapy'),
+('Wound Care'),
+('Surgical Supplies'),
+('Home Healthcare'),
+('Orthopedic Support');
 
--- Insert products
+-- Products
 INSERT INTO products (productName, description, price, brandId, isFeatured) VALUES
-('X-Ray Machine', 'High-performance X-ray imaging device.', 12000.00, 1, true),
-('MRI Scanner', 'Advanced MRI machine with 3T magnet.', 95000.00, 1, true),
-('Ultrasound Device', 'Portable and high-resolution ultrasound machine.', 15000.00, 2, false),
-('Sterilizer Unit', 'Fast-cycle steam sterilizer for instruments.', 7000.00, 4, false),
-('Heart Monitor', 'Continuous patient monitoring system.', 4000.00, 5, true),
-('Therapy Chair', 'Reclining chair for physical therapy sessions.', 3000.00, 5, false),
-('Surgical Lamp', 'Shadowless surgical light with adjustable intensity.', 2000.00, 3, true),
-('CT Scanner', '128-slice CT scanner for full-body diagnostics.', 85000.00, 2, false),
-('Defibrillator', 'Compact defibrillator with AED function.', 5000.00, 3, false),
-('IV Pump', 'Automated infusion system with precision controls.', 2500.00, 4, false);
+('N95 Respirator Mask', 'NIOSH-certified particulate filter', 120.00, 1, 1),
+('Insulin Pump Supplies', 'Disposable infusion sets', 2990.00, 2, 1),
+('Portable Fetal Doppler', 'Handheld baby heartbeat monitor', 8999.00, 4, 0),
+('Nebulizer Machine', 'Compressor nebulizer for asthma', 4599.00, 4, 1),
+('Hemostatic Dressing', 'Emergency trauma wound dressing', 2450.00, 7, 1),
+('Cervical Collar', 'Adjustable neck brace', 1899.00, 9, 1),
+('Electric Breast Pump', 'Hospital-grade double pump', 21999.00, 8, 1);
 
--- Insert product images
+-- Product Images (2-3 per product)
 INSERT INTO productImages (productId, imagePath) VALUES
-(1, 'images/products/xray-machine-front.jpg'),
-(1, 'images/products/xray-machine-side.jpg'),
-(2, 'images/products/mri-scanner-front.jpg'),
-(2, 'images/products/mri-controls.jpg'),
-(2, 'images/products/mri-room-view.jpg'),
-(3, 'images/products/ultrasound-device.jpg'),
-(4, 'images/products/sterilizer-unit.jpg'),
-(5, 'images/products/heart-monitor.jpg'),
-(6, 'images/products/therapy-chair.jpg'),
-(7, 'images/products/surgical-lamp.jpg'),
-(8, 'images/products/ct-scanner.jpg'),
-(9, 'images/products/defibrillator.jpg'),
-(10, 'images/products/iv-pump.jpg');
+(1, 'https://m.media-amazon.com/images/I/71gHY9gAqkL._AC_SL1500_.jpg'),
+(1, 'https://www.3m.com/3M/en_US/p/d/v000147847/'),
+(2, 'https://www.medtronic.com/content/dam/medtronic-com/global/images/products/diabetes/MMT-399a.png'),
+(2, 'https://www.diabetesnet.com/wp-content/uploads/2021/08/medtronic-infusion-set.jpg'),
+(3, 'https://www.contecmed.com/UploadFiles/P_20200821143505715.jpg'),
+(3, 'https://www.medicalexpo.com/prod/edan-instruments/image-214848-10256561.jpg'),
+(4, 'https://www.omronhealthcare-ap.com/wp-content/uploads/2020/09/NE-C801-compressor-nebulizer-1.png'),
+(4, 'https://www.medescan.com.au/cdn/shop/products/nebuliser_compressor_nebulizer_machine_medescan_1.jpg'),
+(5, 'https://www.teleflex.com/usa/en/product-areas/narescue/images/narescue-hemostatic-dressing.jpg'),
+(5, 'https://m.media-amazon.com/images/I/81xZ7HmyZ-L._AC_SL1500_.jpg'),
+(6, 'https://www.emed.com/cdn/shop/products/AmbuPerfitACE_1024x1024.jpg'),
+(6, 'https://www.orthomed.co.uk/wp-content/uploads/2020/10/Ambu-Perfit-Ace-Cervical-Collar.jpg'),
+(7, 'https://www.spectrababy.com/cdn/shop/products/spectra-s1-plus-hospital-grade-breast-pump-268415.jpg'),
+(7, 'https://images.ctfassets.net/6m9bd13t776q/6Uy1H2jXqYkH3C8sDdC4hT/5b64f2a0b0c4d3a0a8a0d4a4d4b4a4d4/spectra-s1-plus-hospital-grade-breast-pump.png');
 
--- Assign product categories
+-- Category Assignments (1-3 per product)
 INSERT INTO productCategories (categoryId, productId) VALUES
-(1, 1), -- X-Ray → Diagnostics
-(2, 1), -- X-Ray → Imaging
-(1, 2), -- MRI → Diagnostics
-(2, 2), -- MRI → Imaging
-(2, 3), -- Ultrasound → Imaging
-(1, 3), -- Ultrasound → Diagnostics
-(4, 4), -- Sterilizer → Sterilization
-(5, 5), -- Monitor → Monitoring
-(6, 6), -- Chair → Therapy
-(3, 7), -- Lamp → Surgical
-(2, 8), -- CT → Imaging
-(1, 8), -- CT → Diagnostics
-(1, 9), -- Defib → Diagnostics
-(5, 9), -- Defib → Monitoring
-(5, 10); -- IV Pump → Monitoring
+/* N95 Mask */         (1,1), (4,1),
+/* Insulin Supplies */ (2,2), (9,2),
+/* Fetal Doppler */    (3,3), (5,3), (4,3),
+/* Nebulizer */        (6,4), (9,4),
+/* Hemostatic Dressing */ (7,5), (4,5),
+/* Cervical Collar */  (10,6), (4,6),
+/* Breast Pump */      (3,7), (9,7);

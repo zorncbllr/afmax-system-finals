@@ -160,7 +160,7 @@ const AdminProducts = () => {
 
   return (
     <AdminLayout>
-      <h1>products</h1>
+      <h1>Products</h1>
       {isFetched && (
         <DataTable columnFilter="productName" columns={columns} data={data!} />
       )}
