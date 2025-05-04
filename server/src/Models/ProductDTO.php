@@ -10,6 +10,9 @@ class ProductDTO
     public string $imagePath;
     public bool $isFeatured;
 
+    /** @var array<string> $categories */
+    public array $categories;
+
     public static function fromRow(array $row): ProductDTO
     {
         $productDTO = new ProductDTO();
@@ -20,6 +23,8 @@ class ProductDTO
         $productDTO->price = $row["price"];
         $productDTO->isFeatured = $row["isFeatured"];
         $productDTO->imagePath = $row["imagePath"];
+
+        $productDTO->categories = $row['categories'] !== null ? explode(",", $row["categories"]) : [];
 
         return $productDTO;
     }

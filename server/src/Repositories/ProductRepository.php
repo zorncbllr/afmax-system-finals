@@ -21,7 +21,8 @@ class ProductRepository
             b.brandName AS brand,
             p.price,
             p.isFeatured,
-            pi.imagePath
+            pi.imagePath,
+            GROUP_CONCAT(DISTINCT c.categoryName) AS categories
         FROM products p
         JOIN brands b ON b.brandId = p.brandId
         JOIN (
@@ -29,7 +30,10 @@ class ProductRepository
             FROM productImages
             GROUP BY productId
         ) firstImages ON firstImages.productId = p.productId
-        JOIN productImages pi ON pi.productImageId = firstImages.firstImageId;"
+        JOIN productImages pi ON pi.productImageId = firstImages.firstImageId
+        LEFT JOIN productCategories pc ON p.productId = pc.productId
+        LEFT JOIN categories c ON pc.categoryId = c.categoryId
+        GROUP BY p.`productId`"
         );
         $stmt->execute();
 

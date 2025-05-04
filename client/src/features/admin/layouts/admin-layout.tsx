@@ -4,7 +4,6 @@ import { LayoutRouteProps } from "react-router";
 
 import {
   ShoppingBagIcon,
-  Package2Icon,
   LayoutDashboardIcon,
   UsersIcon,
   BadgeDollarSignIcon,
