@@ -101,7 +101,7 @@ export const columns: ColumnDef<ProductDTO>[] = [
       };
 
       return (
-        <div className="flex flex-wrap gap-2" data-theme="light">
+        <div className="flex flex-wrap gap-2 bg-transparent" data-theme="light">
           {categories.map((category) => (
             <div
               key={category}
