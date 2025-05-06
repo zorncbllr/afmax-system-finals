@@ -8,6 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { CardDescription } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { CategoryBadge } from "@/components/category-badge";
+import { cn } from "@/lib/utils";
 
 export default function ProductForm() {
   const {
@@ -19,6 +20,8 @@ export default function ProductForm() {
     removeCategory,
     addCategory,
     handleCategoryChange,
+    imagePreviews,
+    handleImageChange,
   } = useAdminProductsStore();
 
   return (
@@ -70,16 +73,37 @@ export default function ProductForm() {
                         <div className="flex flex-col gap-4 w-[30rem]">
                           <div className="grid gap-2">
                             <Label>Product Images</Label>
-                            <div className="relative grid place-content-center h-[12rem] bg-blue-50 rounded-md border-dashed border border-blue-500 text-blue-500">
-                              <div className="absolute grid gap-2 place-items-center place-self-center">
-                                <ImagesIcon size={40} />
-                                <Label>Drag & Drop or Choose files</Label>
-                                <CardDescription>
-                                  Supports jpeg, jpg, png
-                                </CardDescription>
-                              </div>
+                            <div className="relative overflow-hidden grid place-content-center h-[12rem] bg-blue-50 rounded-md border-dashed border border-blue-500 text-blue-500">
+                              {imagePreviews.length <= 0 ? (
+                                <div className="absolute grid gap-2 place-items-center place-self-center">
+                                  <ImagesIcon size={40} />
+                                  <Label>Drag & Drop or Choose files</Label>
+                                  <CardDescription>
+                                    Supports jpeg, jpg, png
+                                  </CardDescription>
+                                </div>
+                              ) : (
+                                <div
+                                  className={cn(
+                                    "p-4 gap-2 grid",
+                                    imagePreviews.length == 1
+                                      ? "place-items-center"
+                                      : imagePreviews.length == 2
+                                      ? "grid-cols-2"
+                                      : "grid-cols-3"
+                                  )}
+                                >
+                                  {imagePreviews.map((image) => (
+                                    <img
+                                      src={image}
+                                      className="w-full rounded-md"
+                                    />
+                                  ))}
+                                </div>
+                              )}
 
                               <input
+                                onChange={handleImageChange}
                                 multiple
                                 name="images[]"
                                 accept="image/*"

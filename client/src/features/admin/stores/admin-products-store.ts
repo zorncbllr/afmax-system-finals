@@ -5,11 +5,13 @@ interface AdminProductsStore {
   isOpen: boolean;
   category: string;
   categories: string[];
+  imagePreviews: string[];
 
   setIsOpen: (value: boolean) => void;
   handleCategoryChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   handleSumbit: (event: React.FormEvent<HTMLFormElement>) => void;
   addCategory: () => void;
+  handleImageChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   removeCategory: (index: number) => void;
 }
 
@@ -18,6 +20,7 @@ export const useAdminProductsStore = create<AdminProductsStore>((set, get) => ({
 
   category: "",
   categories: [],
+  imagePreviews: [],
 
   setIsOpen: (value) =>
     set(() => ({
@@ -39,6 +42,18 @@ export const useAdminProductsStore = create<AdminProductsStore>((set, get) => ({
       categories.splice(index, 1);
 
       return { categories };
+    }),
+
+  handleImageChange: (event) =>
+    set(() => {
+      const files = event.target.files as FileList;
+      const images = [];
+
+      for (const file of files) {
+        images.push(URL.createObjectURL(file));
+      }
+
+      return { imagePreviews: images };
     }),
 
   handleSumbit: async (event) => {
