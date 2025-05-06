@@ -85,7 +85,7 @@ export default function ProductForm() {
                               ) : (
                                 <div
                                   className={cn(
-                                    "p-4 gap-2 grid",
+                                    "p-4 gap-2 grid place-items-center",
                                     imagePreviews.length == 1
                                       ? "place-items-center"
                                       : imagePreviews.length == 2
