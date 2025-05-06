@@ -96,7 +96,7 @@ export default function ProductForm() {
         categories: [],
         images: new DataTransfer().files,
       });
-    }, 1000);
+    }, 300);
   }, [isOpen]);
 
   const submitHandler = (values: z.infer<typeof ProductFormSchema>) => {
