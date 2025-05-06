@@ -18,6 +18,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
 import { CategoryBadge } from "@/components/category-badge";
+import { useAdminProductsStore } from "../stores/admin-products-store";
+import ProductForm from "../components/product-form";
 
 export const columns: ColumnDef<ProductDTO>[] = [
   // Checkbox column
@@ -150,6 +152,13 @@ export const columns: ColumnDef<ProductDTO>[] = [
     },
   },
 ];
+
+const AddButton = () => {
+  const { setIsOpen } = useAdminProductsStore();
+
+  return <Button onClick={() => setIsOpen(true)}>Add Product</Button>;
+};
+
 const AdminProducts = () => {
   const { setActiveItem, sidebarProps } = useSidebar();
   const { data, isFetched } = useFetchProducts();
@@ -162,8 +171,15 @@ const AdminProducts = () => {
     <AdminLayout>
       <h1>Products</h1>
       {isFetched && (
-        <DataTable columnFilter="productName" columns={columns} data={data!} />
+        <DataTable
+          actions={[<AddButton />]}
+          columnFilter="productName"
+          columns={columns}
+          data={data!}
+        />
       )}
+
+      <ProductForm />
     </AdminLayout>
   );
 };
