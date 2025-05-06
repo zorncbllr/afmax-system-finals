@@ -22,9 +22,11 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { useEffect, useState } from "react";
+import { useCreateProduct } from "@/features/products/product-hooks";
 
 export default function ProductForm() {
   const { isOpen, setIsOpen } = useAdminProductsStore();
+  const { mutate } = useCreateProduct();
 
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
   const [category, SetCategory] = useState<string>("");
@@ -100,7 +102,24 @@ export default function ProductForm() {
   }, [isOpen]);
 
   const submitHandler = (values: z.infer<typeof ProductFormSchema>) => {
-    console.log(values);
+    const formData = new FormData();
+
+    formData.set("productName", values.productName);
+    formData.set("brand", values.brand);
+    formData.set("description", values.description);
+    formData.set("price", values.price.toString());
+
+    for (const image of values.images) {
+      formData.append("images[]", image, image.name);
+    }
+
+    console.log(formData.getAll("images[]"));
+
+    for (const category of values.categories) {
+      formData.append("categories[]", category);
+    }
+
+    mutate(formData);
   };
 
   return (
@@ -122,7 +141,6 @@ export default function ProductForm() {
           >
             <Form {...form}>
               <form
-                method="post"
                 onSubmit={form.handleSubmit(submitHandler)}
                 encType="multipart/form-data"
               >

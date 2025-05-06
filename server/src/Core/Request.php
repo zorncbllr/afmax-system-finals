@@ -19,7 +19,7 @@ class Request
         $this->baseUrl = 'http://' . $_SERVER['HTTP_HOST'];
 
         foreach ($_REQUEST as $key => $value) {
-            $this->$key = htmlspecialchars($value);
+            $this->$key =  is_array($value) ? $value : htmlspecialchars($value);
         }
     }
 

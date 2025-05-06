@@ -10,5 +10,11 @@ export const getProductById = async (productId: number): Promise<Product> => {
 };
 
 export const createProduct = async (data: FormData) => {
-  return (await axiosInstance.post("/products", data)).data;
+  return (
+    await axiosInstance.post("/products", data, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    })
+  ).data;
 };

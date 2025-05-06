@@ -44,7 +44,7 @@ class ProductController implements IResource
     {
         status(200);
 
-        return json($_FILES["images"]);
+        return json($request);
     }
 
     public function update(Request $request, string $id) {}
