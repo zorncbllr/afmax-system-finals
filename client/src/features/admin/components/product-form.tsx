@@ -78,23 +78,25 @@ export default function ProductForm() {
   }, [form.watch("categories")]);
 
   useEffect(() => {
-    imagePreviews.forEach((image) => {
-      URL.revokeObjectURL(image);
-    });
+    setTimeout(() => {
+      imagePreviews.forEach((image) => {
+        URL.revokeObjectURL(image);
+      });
 
-    form.clearErrors();
+      form.clearErrors();
 
-    setImagePreviews([]);
-    SetCategory("");
+      setImagePreviews([]);
+      SetCategory("");
 
-    form.reset({
-      productName: "",
-      brand: "",
-      description: "",
-      price: 0,
-      categories: [],
-      images: new DataTransfer().files,
-    });
+      form.reset({
+        productName: "",
+        brand: "",
+        description: "",
+        price: 0,
+        categories: [],
+        images: new DataTransfer().files,
+      });
+    }, 1000);
   }, [isOpen]);
 
   const submitHandler = (values: z.infer<typeof ProductFormSchema>) => {
