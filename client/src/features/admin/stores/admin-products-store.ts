@@ -23,9 +23,18 @@ export const useAdminProductsStore = create<AdminProductsStore>((set, get) => ({
   imagePreviews: [],
 
   setIsOpen: (value) =>
-    set(() => ({
-      isOpen: value,
-    })),
+    set(() => {
+      get().imagePreviews.forEach((image) => {
+        URL.revokeObjectURL(image);
+      });
+
+      return {
+        isOpen: value,
+        imagePreviews: [],
+        categories: [],
+        category: "",
+      };
+    }),
 
   handleCategoryChange: (event) =>
     set(() => ({ category: event.target.value })),
@@ -46,6 +55,10 @@ export const useAdminProductsStore = create<AdminProductsStore>((set, get) => ({
 
   handleImageChange: (event) =>
     set(() => {
+      get().imagePreviews.forEach((image) => {
+        URL.revokeObjectURL(image);
+      });
+
       const files = event.target.files as FileList;
       const images = [];
 
@@ -65,6 +78,10 @@ export const useAdminProductsStore = create<AdminProductsStore>((set, get) => ({
     });
 
     console.log(formData.getAll("images[]"));
+
+    get().imagePreviews.forEach((image) => {
+      URL.revokeObjectURL(image);
+    });
 
     const data = await createProduct(formData);
     console.log(data);

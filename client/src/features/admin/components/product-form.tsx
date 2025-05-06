@@ -178,7 +178,11 @@ export default function ProductForm() {
               </div>
               <div className="bg-gray-50 gap-4 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
                 <Button type="submit">Create</Button>
-                <Button onClick={() => setIsOpen(false)} variant={"secondary"}>
+                <Button
+                  type="button"
+                  onClick={() => setIsOpen(false)}
+                  variant={"secondary"}
+                >
                   Cancel
                 </Button>
               </div>
