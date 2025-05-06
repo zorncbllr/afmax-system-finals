@@ -19,12 +19,7 @@ class ProductService
         protected ProductRepository $productRepository,
         protected CategoryRepository $categoryRepository,
         protected Database $database,
-
-    ) {
-        $this->productRepository = $productRepository;
-        $this->database = $database;
-        $this->categoryRepository = $categoryRepository;
-    }
+    ) {}
 
     /** @return array<Product> */
     public function getAllProducts(): array

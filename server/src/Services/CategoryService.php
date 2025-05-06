@@ -15,10 +15,7 @@ class CategoryService
     public function __construct(
         protected CategoryRepository $categoryRepository,
         protected Database $database
-    ) {
-        $this->categoryRepository = $categoryRepository;
-        $this->database = $database;
-    }
+    ) {}
 
     /** @return array<CategoryDTO> */
     public function getAllCategories(): array

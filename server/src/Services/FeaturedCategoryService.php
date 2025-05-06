@@ -13,10 +13,7 @@ class FeaturedCategoryService
     public function __construct(
         protected FeaturedCategoryRepository $featuredCategoryRepository,
         protected Database $database
-    ) {
-        $this->featuredCategoryRepository = $featuredCategoryRepository;
-        $this->database = $database;
-    }
+    ) {}
 
     /** @return array<Category> */
     public function getFeaturedCategoryProducts(int $categoryLimit, int $productsLimit): array
