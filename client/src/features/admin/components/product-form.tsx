@@ -77,6 +77,26 @@ export default function ProductForm() {
     }
   }, [form.watch("categories")]);
 
+  useEffect(() => {
+    imagePreviews.forEach((image) => {
+      URL.revokeObjectURL(image);
+    });
+
+    form.clearErrors();
+
+    setImagePreviews([]);
+    SetCategory("");
+
+    form.reset({
+      productName: "",
+      brand: "",
+      description: "",
+      price: 0,
+      categories: [],
+      images: new DataTransfer().files,
+    });
+  }, [isOpen]);
+
   const submitHandler = (values: z.infer<typeof ProductFormSchema>) => {
     console.log(values);
   };
