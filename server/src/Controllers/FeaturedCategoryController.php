@@ -2,6 +2,7 @@
 
 namespace Src\Controllers;
 
+use Src\Core\App;
 use Src\Repositories\FeaturedCategoryRepository;
 use Src\Services\FeaturedCategoryService;
 
@@ -11,10 +12,9 @@ class FeaturedCategoryController
 
     public function __construct()
     {
-        $featuredCategoryRepository = new FeaturedCategoryRepository();
-
         $this->featuredCategoryService = new FeaturedCategoryService(
-            featuredCategoryRepository: $featuredCategoryRepository
+            featuredCategoryRepository: new FeaturedCategoryRepository(),
+            database: App::getDatabase()
         );
     }
 

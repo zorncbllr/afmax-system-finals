@@ -2,24 +2,27 @@
 
 namespace Src\Services;
 
+use Src\Core\Database;
 use Src\Models\Category;
 use Src\Models\ProductDTO;
 use Src\Repositories\FeaturedCategoryRepository;
 
 class FeaturedCategoryService
 {
-    protected FeaturedCategoryRepository $featuredCategoryRepository;
 
-    public function __construct(FeaturedCategoryRepository $featuredCategoryRepository)
-    {
+    public function __construct(
+        protected FeaturedCategoryRepository $featuredCategoryRepository,
+        protected Database $database
+    ) {
         $this->featuredCategoryRepository = $featuredCategoryRepository;
+        $this->database = $database;
     }
 
     /** @return array<Category> */
     public function getFeaturedCategoryProducts(int $categoryLimit, int $productsLimit): array
     {
         $rawCategoryProducts = $this->featuredCategoryRepository
-            ->getFeaturedCategoryProducts($categoryLimit, $productsLimit);
+            ->getFeaturedCategoryProducts($categoryLimit, $productsLimit, $this->database);
 
         $processedCategoryProducts = [];
 

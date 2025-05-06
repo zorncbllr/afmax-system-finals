@@ -3,17 +3,16 @@
 namespace Src\Repositories;
 
 use PDO;
-use Src\Core\App;
+use Src\Core\Database;
 use Src\Models\Category;
 use Src\Models\CategoryDTO;
+use Src\Models\Product;
 
 class CategoryRepository
 {
     /** @return array<CategoryDTO> */
-    public function getAllCategories(): array
+    public function getAllCategories(Database $db): array
     {
-        $db = App::getDatabase();
-
         $stmt = $db->prepare(
             "SELECT * FROM categories;"
         );
@@ -29,10 +28,8 @@ class CategoryRepository
     }
 
     /** @return Category */
-    public function getCategoryById(int $categoryId): Category
+    public function getCategoryById(int $categoryId, Database $db): Category
     {
-        $db = App::getDatabase();
-
         $stmt = $db->prepare(
             "SELECT 
             c.categoryId,
@@ -59,5 +56,28 @@ class CategoryRepository
         $stmt->execute(["categoryId" => $categoryId]);
 
         return Category::fromRow($stmt->fetchAll(PDO::FETCH_ASSOC));
+    }
+
+    public function createCategory(CategoryDTO $category, Product $product, Database $db): CategoryDTO
+    {
+        $stmt = $db->prepare("INSERT INTO categories (categoryName) VALUES (:categoryName)");
+        $stmt->execute(['categoryName' => $category->categoryName]);
+
+        $category->categoryId = $db->lastInsertId();
+
+        return $category;
+    }
+
+    public function connectCategoryToProduct(CategoryDTO $category, Product $product, Database $db)
+    {
+        $stmt = $db->prepare(
+            "INSERT INTO productCategories (categoryId, productId) 
+            VALUES (:categoryId, :productId)"
+        );
+
+        $stmt->execute([
+            "categoryId" => $category->categoryId,
+            "productId" => $product->productId
+        ]);
     }
 }

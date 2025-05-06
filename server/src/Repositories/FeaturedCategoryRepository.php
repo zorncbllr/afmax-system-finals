@@ -3,14 +3,12 @@
 namespace Src\Repositories;
 
 use PDO;
-use Src\Core\App;
+use Src\Core\Database;
 
 class FeaturedCategoryRepository
 {
-    public function getFeaturedCategoryProducts(int $categoryLimit, int $productsLimit): array
+    public function getFeaturedCategoryProducts(int $categoryLimit, int $productsLimit, Database $db): array
     {
-        $db = App::getDatabase();
-
         $stmt = $db->prepare(
             "SELECT
                 c.categoryId,

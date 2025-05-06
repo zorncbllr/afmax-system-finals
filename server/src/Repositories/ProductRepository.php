@@ -3,17 +3,15 @@
 namespace Src\Repositories;
 
 use PDO;
-use Src\Core\App;
+use Src\Core\Database;
 use Src\Models\Product;
 use Src\Models\ProductDTO;
 
 class ProductRepository
 {
     /** @return array<ProductDTO> */
-    public function getAllProducts(): array
+    public function getAllProducts(Database $db): array
     {
-        $db = App::getDatabase();
-
         $stmt = $db->prepare(
             "SELECT 
             p.productId,
@@ -46,10 +44,8 @@ class ProductRepository
     }
 
     /** @return Product */
-    public function getProductById(int $productId): Product
+    public function getProductById(int $productId, Database $db): Product
     {
-        $db = App::getDatabase();
-
         $stmt = $db->prepare(
             "SELECT 
             p.productId,
@@ -76,8 +72,44 @@ class ProductRepository
         return Product::fromRow($stmt->fetch(PDO::FETCH_ASSOC));
     }
 
-    public function createProduct(Product $product)
+    public function createProduct(Product $product, Database $db): Product
     {
-        $db = App::getDatabase();
+        $stmt = $db->prepare("INSERT INTO brands (brandName) VALUES (:brandName)");
+        $stmt->execute(["brandName" => $product->brand]);
+
+        $stmt = $db->prepare(
+            "INSERT INTO products (productName, description, brandId, price)
+            VALUES (:productName, :description, :brandId, :price)"
+        );
+
+        $stmt->execute([
+            "productName" => $product->productName,
+            "description" => $product->description,
+            "brandId" => $db->lastInsertId(),
+            "price" => $product->price
+        ]);
+
+        $product->productId = $db->lastInsertId();
+
+        $query = "INSERT INTO productImages (productId, imagePath) VALUES ";
+
+        $images = [];
+        $parameters = [];
+
+        foreach ($product->images as $index => $image) {
+            array_push($images, "(:productId, :imagePath$index)");
+            $parameters["imagePath$index"] = $image;
+        }
+
+        $query .= implode(",", $images);
+
+        $stmt = $db->prepare($query);
+
+        $stmt->execute([
+            "productId" => $product->productId,
+            ...$parameters
+        ]);
+
+        return $product;
     }
 }

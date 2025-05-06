@@ -2,9 +2,11 @@
 
 namespace Src\Controllers;
 
+use Src\Core\App;
 use Src\Core\Exceptions\ServiceException;
 use Src\Core\Interfaces\IResource;
 use Src\Core\Request;
+use Src\Repositories\CategoryRepository;
 use Src\Repositories\ProductRepository;
 use Src\Services\ProductService;
 
@@ -14,8 +16,11 @@ class ProductController implements IResource
 
     public function __construct()
     {
-        $productRepository = new ProductRepository();
-        $this->productService = new ProductService($productRepository);
+        $this->productService = new ProductService(
+            productRepository: new ProductRepository(),
+            categoryRepository: new CategoryRepository(),
+            database: App::getDatabase()
+        );
     }
 
     public function getAll(Request $request)
@@ -42,9 +47,24 @@ class ProductController implements IResource
 
     public function create(Request $request)
     {
-        status(200);
+        try {
+            $errors = $this->productService->createProduct($request);
 
-        return json($request);
+            if ($errors) {
+
+                status(400);
+                return json($errors);
+            }
+
+            status(200);
+            return json(["message" => "New product has been created."]);
+        } catch (ServiceException $e) {
+
+            status(409);
+            return json([
+                "message" => $e->getMessage()
+            ]);
+        }
     }
 
     public function update(Request $request, string $id) {}
