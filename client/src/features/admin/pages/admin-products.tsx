@@ -104,7 +104,7 @@ export const columns: ColumnDef<ProductDTO>[] = [
     header: "Image",
     cell: ({ row }) => (
       <img
-        src={row.getValue("image")}
+        src={"http://localhost:8000" + row.getValue("image")}
         alt="Product"
         className="h-10 w-10 object-cover rounded-md"
       />
