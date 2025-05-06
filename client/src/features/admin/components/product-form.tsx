@@ -24,18 +24,10 @@ import {
 import { useEffect, useState } from "react";
 
 export default function ProductForm() {
-  const {
-    isOpen,
-    setIsOpen,
-    category,
-    categories,
-    removeCategory,
-    addCategory,
-    handleCategoryChange,
-  } = useAdminProductsStore();
+  const { isOpen, setIsOpen } = useAdminProductsStore();
 
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
-  const [categoryInput, setCategoryInput] = useState<string>("");
+  const [category, SetCategory] = useState<string>("");
 
   const form = useForm<z.infer<typeof ProductFormSchema>>({
     resolver: zodResolver(ProductFormSchema),
@@ -48,6 +40,19 @@ export default function ProductForm() {
       images: new DataTransfer().files,
     },
   });
+
+  const appendCategory = () => {
+    if (category != "") {
+      form.setValue("categories", [...form.getValues("categories"), category]);
+      SetCategory("");
+    }
+  };
+
+  const removeCategory = (index: number) => {
+    const categories = form.getValues("categories");
+    categories.splice(index, 1);
+    form.setValue("categories", categories);
+  };
 
   useEffect(() => {
     const generatePreviews = async () => {
@@ -65,6 +70,12 @@ export default function ProductForm() {
 
     generatePreviews();
   }, [form.watch("images")]);
+
+  useEffect(() => {
+    if (form.getValues("categories").length > 0) {
+      form.clearErrors("categories");
+    }
+  }, [form.watch("categories")]);
 
   const submitHandler = (values: z.infer<typeof ProductFormSchema>) => {
     console.log(values);
@@ -249,7 +260,9 @@ export default function ProductForm() {
                                       >
                                         <Input
                                           value={category}
-                                          onChange={handleCategoryChange}
+                                          onChange={(e) =>
+                                            SetCategory(e.target.value)
+                                          }
                                           className={cn(
                                             "w-full border-0 focus-visible:ring-0",
                                             fieldState.error &&
@@ -265,39 +278,41 @@ export default function ProductForm() {
                                               ? "destructive"
                                               : "default"
                                           }
-                                          onClick={addCategory}
+                                          onClick={appendCategory}
                                         >
                                           <PlusIcon className="h-4 w-4" />
                                         </Button>
                                       </div>
 
                                       <div className="flex flex-wrap gap-2">
-                                        {categories.map((cat, index) => (
-                                          <CategoryBadge
-                                            key={cat}
-                                            category={cat}
-                                            className={cn(
-                                              "text-xs",
-                                              fieldState.error &&
-                                                "border-destructive text-destructive"
-                                            )}
-                                            action={
-                                              <button
-                                                type="button"
-                                                onClick={() =>
-                                                  removeCategory(index)
-                                                }
-                                                className={
-                                                  fieldState.error
-                                                    ? "text-destructive"
-                                                    : ""
-                                                }
-                                              >
-                                                <XIcon className="h-3 w-3" />
-                                              </button>
-                                            }
-                                          />
-                                        ))}
+                                        {form
+                                          .getValues("categories")
+                                          .map((cat, index) => (
+                                            <CategoryBadge
+                                              key={cat}
+                                              category={cat}
+                                              className={cn(
+                                                "text-xs",
+                                                fieldState.error &&
+                                                  "border-destructive text-destructive"
+                                              )}
+                                              action={
+                                                <button
+                                                  type="button"
+                                                  onClick={() =>
+                                                    removeCategory(index)
+                                                  }
+                                                  className={
+                                                    fieldState.error
+                                                      ? "text-destructive"
+                                                      : ""
+                                                  }
+                                                >
+                                                  <XIcon className="h-3 w-3" />
+                                                </button>
+                                              }
+                                            />
+                                          ))}
                                       </div>
                                     </div>
                                   </FormControl>

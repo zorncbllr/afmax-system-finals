@@ -33,5 +33,5 @@ export const ProductFormSchema = z.object({
     .refine((files) => files.length > 0, "At least one image is required"),
   categories: z
     .array(z.string().min(1))
-    .nonempty("At least one category is required"),
+    .min(1, "At least one category is required"),
 });
