@@ -1,3 +1,5 @@
+import { z } from "zod";
+
 export interface ProductDTO {
   productId: number;
   productName: string;
@@ -20,3 +22,16 @@ export interface Product {
   categories: string[];
   isFeatured: boolean;
 }
+
+export const ProductFormSchema = z.object({
+  productName: z.string().min(1, "Product name is required"),
+  brand: z.string().min(1, "Brand is required"),
+  description: z.string().min(1, "Description is required"),
+  price: z.number().min(1, "Price must be greater than 0"),
+  images: z
+    .instanceof(FileList)
+    .refine((files) => files.length > 0, "At least one image is required"),
+  categories: z
+    .array(z.string().min(1))
+    .nonempty("At least one category is required"),
+});
