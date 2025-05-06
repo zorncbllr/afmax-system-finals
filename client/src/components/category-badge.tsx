@@ -2,6 +2,7 @@ import { cn } from "@/lib/utils";
 
 interface CategoryBadgeProps {
   category: string;
+  action?: React.ReactNode;
   className?: string;
   size?: "sm" | "md" | "lg";
 }
@@ -28,6 +29,7 @@ const getColorIndex = (str: string) => {
 export function CategoryBadge({
   category,
   className,
+  action,
   size = "md",
 }: CategoryBadgeProps) {
   const variant = colorVariants[getColorIndex(category)];
@@ -40,13 +42,14 @@ export function CategoryBadge({
   return (
     <span
       className={cn(
-        "inline-flex items-center rounded-md font-medium transition-colors duration-200",
+        "inline-flex items-center gap-2 rounded-md font-medium transition-colors duration-200",
         variant,
         sizeClasses[size],
         className
       )}
     >
       {category}
+      {action}
     </span>
   );
 }

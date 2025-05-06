@@ -8,3 +8,7 @@ export const getProducts = async (): Promise<ProductDTO[]> => {
 export const getProductById = async (productId: number): Promise<Product> => {
   return (await axiosInstance.get<Product>(`/products/${productId}`)).data;
 };
+
+export const createProduct = async (data: FormData) => {
+  return (await axiosInstance.post("/products", data)).data;
+};

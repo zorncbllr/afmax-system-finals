@@ -40,7 +40,12 @@ class ProductController implements IResource
         }
     }
 
-    public function create(Request $request) {}
+    public function create(Request $request)
+    {
+        status(200);
+
+        return json($_FILES["images"]);
+    }
 
     public function update(Request $request, string $id) {}
 
