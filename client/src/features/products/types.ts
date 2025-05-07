@@ -26,7 +26,10 @@ export interface Product {
 export const ProductFormSchema = z.object({
   productName: z.string().min(1, "Product name is required"),
   brand: z.string().min(1, "Brand is required"),
-  description: z.string().min(1, "Description is required"),
+  description: z
+    .string()
+    .min(1, "Description is required")
+    .max(10000, "Maximum description length is 10,0000 characters"),
   price: z.number().min(1, "Price must be greater than 0"),
   images: z
     .instanceof(FileList)
