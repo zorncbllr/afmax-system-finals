@@ -14,12 +14,27 @@ export const queryClient = new QueryClient({
   },
 });
 
-createRoot(document.getElementById("root")!).render(
-  <StrictMode>
-    <QueryClientProvider client={queryClient}>
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
-    </QueryClientProvider>
-  </StrictMode>
-);
+const container = document.getElementById("root");
+if (!container) {
+  throw new Error("Root container element not found");
+}
+
+const root = createRoot(container);
+
+function renderApp() {
+  root.render(
+    <StrictMode>
+      <QueryClientProvider client={queryClient}>
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
+      </QueryClientProvider>
+    </StrictMode>
+  );
+}
+
+renderApp();
+
+if (import.meta.hot) {
+  import.meta.hot.accept(renderApp);
+}
