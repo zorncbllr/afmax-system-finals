@@ -114,6 +114,14 @@ class ProductService
             throw new ServiceException("Product not found.");
         }
 
+        $product = $this->productRepository->getProductById($productId);
+
+        $publicDir = parseDir(__DIR__) . "/../../public/";
+
+        foreach ($product->images as $image) {
+            unlink($publicDir . $image);
+        }
+
         $this->productRepository->deleteProduct($productId);
 
         foreach ($relations as $relation) {
