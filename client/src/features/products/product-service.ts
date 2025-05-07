@@ -1,6 +1,10 @@
-import { string } from "zod";
 import { axiosInstance } from "../../lib/api";
 import { Product, ProductDTO } from "./types";
+
+interface SuccessResponse {
+  message: string;
+  description: string;
+}
 
 export const getProducts = async (): Promise<ProductDTO[]> => {
   return (await axiosInstance.get<ProductDTO[]>("/products")).data;
@@ -10,7 +14,9 @@ export const getProductById = async (productId: number): Promise<Product> => {
   return (await axiosInstance.get<Product>(`/products/${productId}`)).data;
 };
 
-export const createProduct = async (data: FormData) => {
+export const createProduct = async (
+  data: FormData
+): Promise<SuccessResponse> => {
   return (
     await axiosInstance.post("/products", data, {
       headers: {
@@ -22,6 +28,6 @@ export const createProduct = async (data: FormData) => {
 
 export const deleteProduct = async (
   productId: number
-): Promise<{ message: string }> => {
+): Promise<SuccessResponse> => {
   return (await axiosInstance.delete(`/products/${productId}`)).data;
 };

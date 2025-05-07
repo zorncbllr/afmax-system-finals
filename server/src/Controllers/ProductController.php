@@ -75,7 +75,10 @@ class ProductController implements IResource
             $this->productService->createProduct($request);
 
             status(200);
-            return json(["message" => "New product has been created."]);
+            return json([
+                "message" => "New product has been created.",
+                "description" => "You can now manage it from the product list."
+            ]);
         } catch (ServiceException $e) {
 
             status(409);
@@ -93,7 +96,10 @@ class ProductController implements IResource
             $this->productService->deleteProduct((int) $id);
 
             status(200);
-            return json(["message" => "Product has been deleted."]);
+            return json([
+                "message" => "Product has been removed.",
+                "description" => "This action cannot be undone."
+            ]);
         } catch (ServiceException $e) {
 
             status(400);

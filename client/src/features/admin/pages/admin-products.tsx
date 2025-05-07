@@ -19,7 +19,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { cn } from "@/lib/utils";
 import { CategoryBadge } from "@/components/category-badge";
 import { useAdminProductsStore } from "../stores/admin-products-store";
 import ProductForm from "../components/product-form";

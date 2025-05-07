@@ -8,6 +8,7 @@ import {
 import { Product, ProductDTO } from "./types";
 import { queryClient } from "@/main";
 import { useAdminProductsStore } from "../admin/stores/admin-products-store";
+import toast from "react-hot-toast";
 
 export const useFetchProducts = () =>
   useQuery<ProductDTO[]>({
@@ -29,14 +30,15 @@ export const useCreateProduct = () => {
     mutationKey: ["products"],
     mutationFn: async (data: FormData) => createProduct(data),
 
-    onSettled: (data, err) => {
-      console.log(err);
-      console.log(data);
+    onSuccess: (data) => {
+      client.invalidateQueries({
+        queryKey: ["products"],
+      });
 
       setIsOpen(false);
 
-      client.invalidateQueries({
-        queryKey: ["products"],
+      toast.success(data.message, {
+        position: "top-right",
       });
     },
   });
@@ -49,12 +51,13 @@ export const useDeleteProduct = () => {
     mutationKey: ["products"],
     mutationFn: async (productId: number) => deleteProduct(productId),
 
-    onSettled: (data, err) => {
-      console.log(data);
-      console.log(err);
-
+    onSuccess: (data) => {
       client.invalidateQueries({
         queryKey: ["products"],
+      });
+
+      toast.success(data.message, {
+        position: "top-right",
       });
     },
   });
