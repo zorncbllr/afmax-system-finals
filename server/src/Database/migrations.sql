@@ -33,7 +33,7 @@ CREATE TABLE productImages (
 
 CREATE TABLE categories (
     categoryId INT PRIMARY KEY AUTO_INCREMENT,
-    categoryName VARCHAR(100) NOT NULL
+    categoryName VARCHAR(100) UNIQUE NOT NULL
 );
 
 CREATE TABLE productCategories (

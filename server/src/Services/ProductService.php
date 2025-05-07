@@ -82,10 +82,11 @@ class ProductService
             $product = $this->productRepository->createProduct($product);
 
             foreach ($product->categories as $categoryName) {
-                $category = new CategoryDTO();
-                $category->categoryName = $categoryName;
-
-                $category = $this->categoryRepository->createCategory($category);
+                try {
+                    $category = $this->categoryRepository->createCategory($categoryName);
+                } catch (PDOException $_) {
+                    $category = $this->categoryRepository->findCategoryByName($categoryName);
+                }
 
                 $this->categoryRepository->connectCategoryToProduct($category, $product);
             }

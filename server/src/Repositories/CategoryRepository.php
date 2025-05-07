@@ -12,6 +12,18 @@ class CategoryRepository
 {
     public function __construct(protected Database $database) {}
 
+
+    public function findCategoryByName(string $categoryName): CategoryDTO
+    {
+        $stmt = $this->database->prepare(
+            "SELECT * FROM categories WHERE categoryName = :categoryName"
+        );
+
+        $stmt->execute(["categoryName" => $categoryName]);
+
+        return $stmt->fetchObject(CategoryDTO::class);
+    }
+
     /** @return array<CategoryDTO> */
     public function getAllCategories(): array
     {
@@ -60,12 +72,14 @@ class CategoryRepository
         return Category::fromRow($stmt->fetchAll(PDO::FETCH_ASSOC));
     }
 
-    public function createCategory(CategoryDTO $category): CategoryDTO
+    public function createCategory(string $categoryName): CategoryDTO
     {
         $stmt = $this->database->prepare("INSERT INTO categories (categoryName) VALUES (:categoryName)");
-        $stmt->execute(['categoryName' => $category->categoryName]);
+        $stmt->execute(['categoryName' => $categoryName]);
 
+        $category = new CategoryDTO();
         $category->categoryId = $this->database->lastInsertId();
+        $category->categoryName = $categoryName;
 
         return $category;
     }
