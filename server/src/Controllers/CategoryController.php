@@ -6,7 +6,6 @@ use Src\Core\App;
 use Src\Core\Exceptions\ServiceException;
 use Src\Core\Interfaces\IResource;
 use Src\Core\Request;
-use Src\Repositories\CategoryRepository;
 use Src\Services\CategoryService;
 
 class CategoryController implements IResource
@@ -15,10 +14,7 @@ class CategoryController implements IResource
 
     public function __construct()
     {
-        $this->categoryService = new CategoryService(
-            categoryRepository: new CategoryRepository(),
-            database: App::getDatabase()
-        );
+        $this->categoryService = new CategoryService(database: App::getDatabase());
     }
 
     public function getAll(Request $request)

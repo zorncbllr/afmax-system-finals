@@ -1,5 +1,10 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { createProduct, getProductById, getProducts } from "./product-service";
+import {
+  createProduct,
+  deleteProduct,
+  getProductById,
+  getProducts,
+} from "./product-service";
 import { Product, ProductDTO } from "./types";
 import { queryClient } from "@/main";
 import { useAdminProductsStore } from "../admin/stores/admin-products-store";
@@ -29,6 +34,24 @@ export const useCreateProduct = () => {
       console.log(data);
 
       setIsOpen(false);
+
+      client.invalidateQueries({
+        queryKey: ["products"],
+      });
+    },
+  });
+};
+
+export const useDeleteProduct = () => {
+  const client = queryClient;
+
+  return useMutation({
+    mutationKey: ["products"],
+    mutationFn: async (productId: number) => deleteProduct(productId),
+
+    onSettled: (data, err) => {
+      console.log(data);
+      console.log(err);
 
       client.invalidateQueries({
         queryKey: ["products"],

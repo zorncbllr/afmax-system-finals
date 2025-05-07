@@ -7,9 +7,11 @@ use Src\Core\Database;
 
 class FeaturedCategoryRepository
 {
-    public function getFeaturedCategoryProducts(int $categoryLimit, int $productsLimit, Database $db): array
+    public function __construct(protected Database $database) {}
+
+    public function getFeaturedCategoryProducts(int $categoryLimit, int $productsLimit): array
     {
-        $stmt = $db->prepare(
+        $stmt = $this->database->prepare(
             "SELECT
                 c.categoryId,
                 c.categoryName,

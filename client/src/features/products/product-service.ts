@@ -1,3 +1,4 @@
+import { string } from "zod";
 import { axiosInstance } from "../../lib/api";
 import { Product, ProductDTO } from "./types";
 
@@ -17,4 +18,10 @@ export const createProduct = async (data: FormData) => {
       },
     })
   ).data;
+};
+
+export const deleteProduct = async (
+  productId: number
+): Promise<{ message: string }> => {
+  return (await axiosInstance.delete(`/products/${productId}`)).data;
 };

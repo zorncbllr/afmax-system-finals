@@ -7,8 +7,6 @@ use Src\Core\App;
 use Src\Core\Exceptions\ServiceException;
 use Src\Core\Interfaces\IResource;
 use Src\Core\Request;
-use Src\Repositories\CategoryRepository;
-use Src\Repositories\ProductRepository;
 use Src\Services\ProductService;
 
 class ProductController implements IResource
@@ -17,11 +15,7 @@ class ProductController implements IResource
 
     public function __construct()
     {
-        $this->productService = new ProductService(
-            productRepository: new ProductRepository(),
-            categoryRepository: new CategoryRepository(),
-            database: App::getDatabase()
-        );
+        $this->productService = new ProductService(database: App::getDatabase());
     }
 
     public function getAll(Request $request)
@@ -93,5 +87,17 @@ class ProductController implements IResource
 
     public function update(Request $request, string $id) {}
 
-    public function delete(Request $request, string $id) {}
+    public function delete(Request $request, string $id)
+    {
+        try {
+            $this->productService->deleteProduct((int) $id);
+
+            status(200);
+            return json(["message" => "Product has been deleted."]);
+        } catch (ServiceException $e) {
+
+            status(400);
+            return json($e->getMessage());
+        }
+    }
 }

@@ -40,6 +40,6 @@ CREATE TABLE productCategories (
     categoryId INT NOT NULL,
     productId INT NOT NULL,
     PRIMARY KEY (categoryId, productId),
-    FOREIGN KEY (categoryId) REFERENCES categories(categoryId),
-    FOREIGN KEY (productId) REFERENCES products(productId)
+    FOREIGN KEY (categoryId) REFERENCES categories(categoryId) ON DELETE RESTRICT,
+    FOREIGN KEY (productId) REFERENCES products(productId) ON DELETE CASCADE
 );

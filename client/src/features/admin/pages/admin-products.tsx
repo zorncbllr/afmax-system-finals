@@ -4,7 +4,10 @@ import { useEffect } from "react";
 import { DataTable } from "@/components/data-table";
 
 import { ProductDTO } from "@/features/products/types";
-import { useFetchProducts } from "@/features/products/product-hooks";
+import {
+  useDeleteProduct,
+  useFetchProducts,
+} from "@/features/products/product-hooks";
 
 import { ColumnDef } from "@tanstack/react-table";
 import { Check, X, MoreHorizontal, Eye, Trash2, Pencil } from "lucide-react";
@@ -115,6 +118,7 @@ export const columns: ColumnDef<ProductDTO>[] = [
     id: "actions",
     cell: ({ row }) => {
       const product = row.original;
+      const { mutate } = useDeleteProduct();
 
       return (
         <DropdownMenu>
@@ -140,7 +144,7 @@ export const columns: ColumnDef<ProductDTO>[] = [
               Edit
             </DropdownMenuItem>
             <DropdownMenuItem
-              onClick={() => console.log("Delete", product.productId)}
+              onClick={() => mutate(product.productId)}
               className="text-red-500"
             >
               <Trash2 className="mr-2 h-4 w-4" />

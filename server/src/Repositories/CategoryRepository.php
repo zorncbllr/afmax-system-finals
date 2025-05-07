@@ -10,10 +10,12 @@ use Src\Models\Product;
 
 class CategoryRepository
 {
+    public function __construct(protected Database $database) {}
+
     /** @return array<CategoryDTO> */
-    public function getAllCategories(Database $db): array
+    public function getAllCategories(): array
     {
-        $stmt = $db->prepare(
+        $stmt = $this->database->prepare(
             "SELECT * FROM categories;"
         );
 
@@ -28,9 +30,9 @@ class CategoryRepository
     }
 
     /** @return Category */
-    public function getCategoryById(int $categoryId, Database $db): Category
+    public function getCategoryById(int $categoryId): Category
     {
-        $stmt = $db->prepare(
+        $stmt = $this->database->prepare(
             "SELECT 
             c.categoryId,
             c.categoryName,
@@ -58,19 +60,19 @@ class CategoryRepository
         return Category::fromRow($stmt->fetchAll(PDO::FETCH_ASSOC));
     }
 
-    public function createCategory(CategoryDTO $category, Product $product, Database $db): CategoryDTO
+    public function createCategory(CategoryDTO $category): CategoryDTO
     {
-        $stmt = $db->prepare("INSERT INTO categories (categoryName) VALUES (:categoryName)");
+        $stmt = $this->database->prepare("INSERT INTO categories (categoryName) VALUES (:categoryName)");
         $stmt->execute(['categoryName' => $category->categoryName]);
 
-        $category->categoryId = $db->lastInsertId();
+        $category->categoryId = $this->database->lastInsertId();
 
         return $category;
     }
 
-    public function connectCategoryToProduct(CategoryDTO $category, Product $product, Database $db)
+    public function connectCategoryToProduct(CategoryDTO $category, Product $product)
     {
-        $stmt = $db->prepare(
+        $stmt = $this->database->prepare(
             "INSERT INTO productCategories (categoryId, productId) 
             VALUES (:categoryId, :productId)"
         );
@@ -79,5 +81,11 @@ class CategoryRepository
             "categoryId" => $category->categoryId,
             "productId" => $product->productId
         ]);
+    }
+
+    public function deleteCategory(int $categoryId)
+    {
+        $stmt = $this->database->prepare("DELETE FROM categories WHERE categoryId = :categoryId");
+        $stmt->execute(["categoryId" => $categoryId]);
     }
 }

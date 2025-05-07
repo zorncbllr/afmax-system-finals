@@ -9,17 +9,19 @@ use Src\Repositories\FeaturedCategoryRepository;
 
 class FeaturedCategoryService
 {
+    protected FeaturedCategoryRepository $featuredCategoryRepository;
 
     public function __construct(
-        protected FeaturedCategoryRepository $featuredCategoryRepository,
         protected Database $database
-    ) {}
+    ) {
+        $this->featuredCategoryRepository = new FeaturedCategoryRepository($this->database);
+    }
 
     /** @return array<Category> */
     public function getFeaturedCategoryProducts(int $categoryLimit, int $productsLimit): array
     {
         $rawCategoryProducts = $this->featuredCategoryRepository
-            ->getFeaturedCategoryProducts($categoryLimit, $productsLimit, $this->database);
+            ->getFeaturedCategoryProducts($categoryLimit, $productsLimit);
 
         $processedCategoryProducts = [];
 

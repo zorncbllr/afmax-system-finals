@@ -9,10 +9,12 @@ use Src\Models\ProductDTO;
 
 class ProductRepository
 {
+    public function __construct(protected Database $database) {}
+
     /** @return array<ProductDTO> */
-    public function getAllProducts(Database $db): array
+    public function getAllProducts(): array
     {
-        $stmt = $db->prepare(
+        $stmt = $this->database->prepare(
             "SELECT 
             p.productId,
             p.productName,
@@ -44,9 +46,9 @@ class ProductRepository
     }
 
     /** @return Product */
-    public function getProductById(int $productId, Database $db): Product
+    public function getProductById(int $productId): Product
     {
-        $stmt = $db->prepare(
+        $stmt = $this->database->prepare(
             "SELECT 
             p.productId,
             p.productName,
@@ -72,12 +74,12 @@ class ProductRepository
         return Product::fromRow($stmt->fetch(PDO::FETCH_ASSOC));
     }
 
-    public function createProduct(Product $product, Database $db): Product
+    public function createProduct(Product $product): Product
     {
-        $stmt = $db->prepare("INSERT INTO brands (brandName) VALUES (:brandName)");
+        $stmt = $this->database->prepare("INSERT INTO brands (brandName) VALUES (:brandName)");
         $stmt->execute(["brandName" => $product->brand]);
 
-        $stmt = $db->prepare(
+        $stmt = $this->database->prepare(
             "INSERT INTO products (productName, description, brandId, price)
             VALUES (:productName, :description, :brandId, :price)"
         );
@@ -85,11 +87,11 @@ class ProductRepository
         $stmt->execute([
             "productName" => $product->productName,
             "description" => $product->description,
-            "brandId" => $db->lastInsertId(),
+            "brandId" => $this->database->lastInsertId(),
             "price" => $product->price
         ]);
 
-        $product->productId = $db->lastInsertId();
+        $product->productId = $this->database->lastInsertId();
 
         $query = "INSERT INTO productImages (productId, imagePath) VALUES ";
 
@@ -103,7 +105,7 @@ class ProductRepository
 
         $query .= implode(",", $images);
 
-        $stmt = $db->prepare($query);
+        $stmt = $this->database->prepare($query);
 
         $stmt->execute([
             "productId" => $product->productId,
@@ -111,5 +113,11 @@ class ProductRepository
         ]);
 
         return $product;
+    }
+
+    public function deleteProduct(int $productId)
+    {
+        $stmt = $this->database->prepare("DELETE FROM products WHERE productId = :productId");
+        $stmt->execute(["productId" => $productId]);
     }
 }

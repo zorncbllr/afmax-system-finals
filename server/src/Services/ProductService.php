@@ -9,29 +9,35 @@ use Src\Core\Request;
 use Src\Models\CategoryDTO;
 use Src\Models\Product;
 use Src\Repositories\CategoryRepository;
+use Src\Repositories\ProductCategoryRepository;
 use Src\Repositories\ProductRepository;
 use TypeError;
 
 class ProductService
 {
+    protected ProductRepository $productRepository;
+    protected CategoryRepository $categoryRepository;
+    protected ProductCategoryRepository $pivotRepository;
 
     public function __construct(
-        protected ProductRepository $productRepository,
-        protected CategoryRepository $categoryRepository,
         protected Database $database,
-    ) {}
+    ) {
+        $this->productRepository = new ProductRepository($this->database);
+        $this->categoryRepository = new CategoryRepository($this->database);
+        $this->pivotRepository = new ProductCategoryRepository($this->database);
+    }
 
     /** @return array<Product> */
     public function getAllProducts(): array
     {
-        return $this->productRepository->getAllProducts($this->database);
+        return $this->productRepository->getAllProducts();
     }
 
     /** @return Product */
     public function getProductById(int $productId): Product
     {
         try {
-            $product = $this->productRepository->getProductById($productId, $this->database);
+            $product = $this->productRepository->getProductById($productId);
 
             if (!$product) {
                 throw new ServiceException("Product not found.");
@@ -73,15 +79,15 @@ class ProductService
 
             $this->database->beginTransaction();
 
-            $product = $this->productRepository->createProduct($product, $this->database);
+            $product = $this->productRepository->createProduct($product);
 
             foreach ($product->categories as $categoryName) {
                 $category = new CategoryDTO();
                 $category->categoryName = $categoryName;
 
-                $category = $this->categoryRepository->createCategory($category, $product, $this->database);
+                $category = $this->categoryRepository->createCategory($category);
 
-                $this->categoryRepository->connectCategoryToProduct($category, $product, $this->database);
+                $this->categoryRepository->connectCategoryToProduct($category, $product);
             }
 
             $this->database->commit();
@@ -95,7 +101,26 @@ class ProductService
                 unlink($uploadPath);
             }
 
-            throw new ServiceException($e->getMessage());
+            throw new ServiceException("Failed to create new product.");
+        }
+    }
+
+
+    public function deleteProduct(int $productId)
+    {
+        $relations = $this->pivotRepository->getRelationshipsWith($productId);
+
+        if (empty($relations)) {
+            throw new ServiceException("Product not found.");
+        }
+
+        $this->productRepository->deleteProduct($productId);
+
+        foreach ($relations as $relation) {
+            try {
+                $this->categoryRepository->deleteCategory($relation->categoryId);
+            } catch (PDOException $_) {
+            }
         }
     }
 }
