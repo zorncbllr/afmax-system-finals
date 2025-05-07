@@ -7,6 +7,9 @@ import AdminProducts from "./features/admin/pages/admin-products";
 import AdminUsers from "./features/admin/pages/admin-users";
 import AdminTransactions from "./features/admin/pages/admin-transactions";
 import { Toaster } from "react-hot-toast";
+import UserProductView from "./features/user/pages/user-product-view";
+import AdminProductView from "./features/admin/pages/admin-product-view";
+import PageNotFound from "./components/page-not-found";
 
 function App() {
   return (
@@ -17,10 +20,18 @@ function App() {
         <Route path="/products" element={<UserProducts />} />
         <Route path="/supplies" element={<UserSupplies />} />
 
+        <Route path="/products/:productId" element={<UserProductView />} />
+
         <Route path="/admin/dashboard" element={<Dashboard />} />
         <Route path="/admin/products" element={<AdminProducts />} />
+        <Route
+          path="/admin/products/:productId"
+          element={<AdminProductView />}
+        />
         <Route path="/admin/users" element={<AdminUsers />} />
         <Route path="/admin/transactions" element={<AdminTransactions />} />
+
+        <Route path="*" element={<PageNotFound />} />
       </Routes>
     </>
   );
