@@ -22,6 +22,7 @@ import {
 import { CategoryBadge } from "@/components/category-badge";
 import { useAdminProductsStore } from "../stores/admin-products-store";
 import ProductForm from "../components/product-form";
+import { useNavigate } from "react-router";
 
 export const columns: ColumnDef<ProductDTO>[] = [
   // Checkbox column
@@ -118,6 +119,7 @@ export const columns: ColumnDef<ProductDTO>[] = [
     cell: ({ row }) => {
       const product = row.original;
       const { mutate } = useDeleteProduct();
+      const navigator = useNavigate();
 
       return (
         <DropdownMenu>
@@ -129,9 +131,7 @@ export const columns: ColumnDef<ProductDTO>[] = [
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuItem
-              onClick={() =>
-                navigator.clipboard.writeText(product.productId.toString())
-              }
+              onClick={() => navigator(`/admin/products/${product.productId}`)}
             >
               <Eye className="mr-2 h-4 w-4" />
               View

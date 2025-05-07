@@ -1,4 +1,5 @@
 import React from "react";
+import { useNavigate } from "react-router";
 
 interface ProductCardProps {
   productId: number;
@@ -15,8 +16,11 @@ const ProductCard: React.FC<ProductCardProps> = ({
   price,
   image,
 }) => {
+  const navigator = useNavigate();
+
   return (
     <div
+      onClick={() => navigator(`/products/${productId}`)}
       key={productId}
       className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden w-[12rem] lg:w-[14rem] transition hover:shadow-lg"
     >
