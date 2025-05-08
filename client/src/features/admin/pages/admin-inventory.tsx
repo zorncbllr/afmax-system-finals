@@ -9,26 +9,26 @@ export const breadcrumbList: BreadcrumbItem[] = [
     itemName: "Admin",
   },
   {
-    href: "/admin/transactions",
-    itemName: "Transaction List",
+    href: "/admin/inventoy",
+    itemName: "Inventory",
   },
 ];
 
-const AdminTransactions = () => {
+const AdminInventory = () => {
   const { setActiveItem, sidebarProps } = useSidebar();
   const { setBreadcrumbList, setActivePage } = useBreadcrumb();
 
   useEffect(() => {
-    setActiveItem(sidebarProps?.sections[0].items[4]);
+    setActiveItem(sidebarProps?.sections[0].items[2]);
     setBreadcrumbList(breadcrumbList);
     setActivePage(breadcrumbList[1]);
   }, [sidebarProps]);
 
   return (
     <AdminLayout>
-      <h1>AdminTransactions</h1>
+      <h1>Admin Inventory</h1>
     </AdminLayout>
   );
 };
 
-export default AdminTransactions;
+export default AdminInventory;

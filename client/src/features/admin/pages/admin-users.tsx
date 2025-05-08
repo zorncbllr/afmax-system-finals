@@ -19,7 +19,7 @@ const AdminUsers = () => {
   const { setBreadcrumbList, setActivePage } = useBreadcrumb();
 
   useEffect(() => {
-    setActiveItem(sidebarProps?.sections[0].items[2]);
+    setActiveItem(sidebarProps?.sections[0].items[3]);
     setBreadcrumbList(breadcrumbList);
     setActivePage(breadcrumbList[1]);
   }, [sidebarProps]);

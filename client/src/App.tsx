@@ -10,6 +10,7 @@ import { Toaster } from "react-hot-toast";
 import UserProductView from "./features/user/pages/user-product-view";
 import AdminProductView from "./features/admin/pages/admin-product-view";
 import PageNotFound from "./components/page-not-found";
+import AdminInventory from "./features/admin/pages/admin-inventory";
 
 function App() {
   return (
@@ -29,6 +30,7 @@ function App() {
           element={<AdminProductView />}
         />
         <Route path="/admin/users" element={<AdminUsers />} />
+        <Route path="/admin/inventory" element={<AdminInventory />} />
         <Route path="/admin/transactions" element={<AdminTransactions />} />
 
         <Route path="*" element={<PageNotFound />} />
