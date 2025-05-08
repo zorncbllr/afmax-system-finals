@@ -2,7 +2,7 @@ import SideBar from "@/features/sidebar/sidebar";
 import React, { useLayoutEffect } from "react";
 import { LayoutRouteProps } from "react-router";
 
-import { ShoppingBagIcon, Package2Icon } from "lucide-react";
+import { ShoppingBagIcon } from "lucide-react";
 import { SideBarProps } from "@/features/sidebar/types";
 import { useSidebar } from "@/features/sidebar/store";
 import Header from "@/components/header";
@@ -19,12 +19,6 @@ const sidebarProps: SideBarProps = {
           title: "Products",
           icon: ShoppingBagIcon,
           href: "/products",
-          children: [],
-        },
-        {
-          title: "Supplies",
-          icon: Package2Icon,
-          href: "/supplies",
           children: [],
         },
       ],

@@ -1,5 +1,5 @@
 import { useSidebar } from "@/features/sidebar/store";
-import AdminLayout from "../layouts/admin-layout";
+import AdminLayout from "../../layouts/admin-layout";
 import { useEffect } from "react";
 import { BreadcrumbItem, useBreadcrumb } from "@/features/breadcrumbs/store";
 

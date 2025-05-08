@@ -15,7 +15,7 @@ const ProductView = ({ product }: { product: Product }) => {
   }).format(parseFloat(product.price.toString()));
 
   return (
-    <div className="w-full flex gap-40">
+    <div className="w-full flex gap-40 justify-center mt-12">
       <div className="flex w-fit gap-4">
         <div className="flex flex-col gap-4">
           {product.images.map((image) => (
@@ -40,7 +40,7 @@ const ProductView = ({ product }: { product: Product }) => {
         />
       </div>
 
-      <section className="flex-col flex gap-2">
+      <section className="flex-col flex gap-2 p-4">
         <h1 className="text-3xl font-semibold font-mono">
           {product.productName}
         </h1>
@@ -61,12 +61,12 @@ const ProductView = ({ product }: { product: Product }) => {
           <Button variant={"secondary"}>Buy Now</Button>
         </div>
 
-        <div className="flex flex-col w-[45rem] gap-4 mt-4">
+        <div className="flex flex-col w-[40rem] gap-4 mt-4">
           <h1 className="text-lg font-semibold text-gray-500">
             Product Description:
           </h1>
 
-          <div className="tracking-wide text-gray-500">
+          <div className="tracking-wide text-justify text-gray-500">
             {product.description}
           </div>
         </div>

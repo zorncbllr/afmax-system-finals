@@ -1,16 +1,16 @@
 import { Route, Routes } from "react-router";
 import Home from "./features/home/pages/home";
-import UserProducts from "./features/user/pages/user-products";
-import UserSupplies from "./features/user/pages/user-supplies";
-import Dashboard from "./features/admin/pages/dashboard";
-import AdminProducts from "./features/admin/pages/admin-products";
-import AdminUsers from "./features/admin/pages/admin-users";
-import AdminTransactions from "./features/admin/pages/admin-transactions";
+import UserProducts from "./features/products/pages/user/user-products";
+import Dashboard from "./features/dashboard/dashboard";
+import AdminProducts from "./features/products/pages/admin/admin-products";
+import AdminUsers from "./features/users/admin-users";
+import AdminTransactions from "./features/transactions/admin-transactions";
 import { Toaster } from "react-hot-toast";
-import UserProductView from "./features/user/pages/user-product-view";
-import AdminProductView from "./features/admin/pages/admin-product-view";
+import UserProductView from "./features/products/pages/user/user-product-view";
+import AdminProductView from "./features/products/pages/admin/admin-product-view";
 import PageNotFound from "./components/page-not-found";
-import AdminInventory from "./features/admin/pages/admin-inventory";
+import AdminInventory from "./features/inventory/pages/admin-inventory";
+import ProductEditView from "./features/products/pages/admin/product-edit-view";
 
 function App() {
   return (
@@ -19,9 +19,12 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/products" element={<UserProducts />} />
-        <Route path="/supplies" element={<UserSupplies />} />
 
         <Route path="/products/:productId" element={<UserProductView />} />
+        <Route
+          path="/admin/products/edit/:productId"
+          element={<ProductEditView />}
+        />
 
         <Route path="/admin/dashboard" element={<Dashboard />} />
         <Route path="/admin/products" element={<AdminProducts />} />

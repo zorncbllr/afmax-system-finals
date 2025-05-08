@@ -1,7 +1,7 @@
 import { useParams } from "react-router";
-import UserLayout from "../layouts/user-layout";
+import UserLayout from "../../../../layouts/user-layout";
 import ProductView from "@/features/products/components/product-view";
-import { useFetchProductById } from "@/features/products/hooks";
+import { useFetchProductById } from "@/features/products/api/query";
 import PageNotFound from "@/components/page-not-found";
 import { BreadcrumbItem, useBreadcrumb } from "@/features/breadcrumbs/store";
 import { useEffect } from "react";
@@ -43,9 +43,7 @@ const UserProductView = () => {
   }, [product]);
 
   return (
-    <UserLayout>
-      <ProductView product={product} />
-    </UserLayout>
+    <UserLayout>{isFetched && <ProductView product={product!} />}</UserLayout>
   );
 };
 

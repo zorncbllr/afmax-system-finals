@@ -5,10 +5,10 @@ import {
   getProductById,
   getProducts,
 } from "./service";
-import { Product, ProductDTO } from "./types";
+import { Product, ProductDTO } from "../types";
 import { queryClient } from "@/main";
-import { useAdminProductsStore } from "../admin/stores/admin-products-store";
 import toast from "react-hot-toast";
+import { useProductForm } from "../hooks/useProductForm";
 
 export const useFetchProducts = () =>
   useQuery<ProductDTO[]>({
@@ -24,7 +24,7 @@ export const useFetchProductById = (productId: number) =>
 
 export const useCreateProduct = () => {
   const client = queryClient;
-  const { setIsOpen } = useAdminProductsStore();
+  const { setIsOpen } = useProductForm();
 
   return useMutation({
     mutationKey: ["products"],

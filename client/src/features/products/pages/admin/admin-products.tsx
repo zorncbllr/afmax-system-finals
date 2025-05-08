@@ -1,10 +1,13 @@
 import { useSidebar } from "@/features/sidebar/store";
-import AdminLayout from "../layouts/admin-layout";
+import AdminLayout from "../../../../layouts/admin-layout";
 import { useEffect } from "react";
 import { DataTable } from "@/components/data-table";
 
 import { ProductDTO } from "@/features/products/types";
-import { useDeleteProduct, useFetchProducts } from "@/features/products/hooks";
+import {
+  useDeleteProduct,
+  useFetchProducts,
+} from "@/features/products/api/query";
 
 import { ColumnDef } from "@tanstack/react-table";
 import { Check, X, MoreHorizontal, Eye, Trash2, Pencil } from "lucide-react";
@@ -17,10 +20,10 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { CategoryBadge } from "@/features/categories/components/category-badge";
-import { useAdminProductsStore } from "../stores/admin-products-store";
-import ProductForm from "../components/product-form";
+import ProductForm from "../../components/product-form";
 import { useNavigate } from "react-router";
 import { BreadcrumbItem, useBreadcrumb } from "@/features/breadcrumbs/store";
+import { useProductForm } from "../../hooks/useProductForm";
 
 export const columns: ColumnDef<ProductDTO>[] = [
   // Checkbox column
@@ -135,7 +138,9 @@ export const columns: ColumnDef<ProductDTO>[] = [
               View
             </DropdownMenuItem>
             <DropdownMenuItem
-              onClick={() => console.log("Edit", product.productId)}
+              onClick={() =>
+                navigator(`/admin/products/edit/${product.productId}`)
+              }
             >
               <Pencil className="mr-2 h-4 w-4" />
               Edit
@@ -155,7 +160,7 @@ export const columns: ColumnDef<ProductDTO>[] = [
 ];
 
 const AddButton = () => {
-  const { setIsOpen } = useAdminProductsStore();
+  const { setIsOpen } = useProductForm();
 
   return <Button onClick={() => setIsOpen(true)}>Add Product</Button>;
 };

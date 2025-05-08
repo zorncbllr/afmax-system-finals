@@ -1,5 +1,5 @@
-import { axiosInstance } from "../../lib/api";
-import { Product, ProductDTO } from "./types";
+import { axiosInstance } from "../../../lib/api";
+import { Product, ProductDTO } from "../types";
 
 interface SuccessResponse {
   message: string;
