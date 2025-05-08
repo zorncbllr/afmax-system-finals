@@ -1,11 +1,11 @@
-import { useState } from "react";
+import { useLayoutEffect, useState } from "react";
 import { Product } from "../types";
 import { cn } from "@/lib/utils";
 import { CategoryBadge } from "@/features/categories/components/category-badge";
 import { Button } from "@/components/ui/button";
 
 const ProductView = ({ product }: { product: Product }) => {
-  const [mainImage, setMainImage] = useState<string>(product.images[0]);
+  const [mainImage, setMainImage] = useState<string>("");
 
   const formattedPrice = new Intl.NumberFormat("fil-PH", {
     style: "currency",
@@ -13,6 +13,10 @@ const ProductView = ({ product }: { product: Product }) => {
     minimumFractionDigits: 0,
     maximumFractionDigits: 2,
   }).format(parseFloat(product.price.toString()));
+
+  useLayoutEffect(() => {
+    setMainImage(product.images[0]);
+  }, [product]);
 
   return (
     <div className="w-full flex gap-40 justify-center mt-12">
