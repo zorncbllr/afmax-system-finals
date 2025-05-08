@@ -2,4 +2,6 @@ server/vendor/
 
 server/.env
 
+server/public/images
+
 client/node_modules/

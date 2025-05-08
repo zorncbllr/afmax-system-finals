@@ -54,32 +54,35 @@ class ProductService
 
     public function createProduct(Request $request)
     {
-        try {
-            $product = new Product();
+        $uploadDir = parseDir(__DIR__) . "/../../public/images";
+        $hashedImages = [];
 
-            $product->productName = $request->productName;
-            $product->brand = $request->brand;
-            $product->price = $request->price;
-            $product->description = $request->description;
-            $product->categories = $request->categories;
-            $product->images = [];
+        $product = new Product();
 
-            $images = $request->files->images;
+        $product->productName = $request->productName;
+        $product->brand = $request->brand;
+        $product->price = $request->price;
+        $product->description = $request->description;
+        $product->categories = $request->categories;
+        $product->images = [];
 
-            $uploadDir = parseDir(__DIR__) . "/../../public/images";
+        $images = $request->files->images;
 
-            if (!is_dir($uploadDir)) mkdir($uploadDir);
+        if (!is_dir($uploadDir)) mkdir($uploadDir);
 
-            for ($i = 0; $i < sizeof($images->name); $i++) {
-                $uploadPath = $uploadDir . "/" . $images->name[$i];
+        for ($i = 0; $i < sizeof($images->name); $i++) {
+            $hashedImageName = uniqid(more_entropy: true) . "." . end(explode(".", $images->name[$i]));
+            $uploadPath = $uploadDir . "/" . $hashedImageName;
 
-                if (move_uploaded_file($images->tmp_name[$i], $uploadPath)) {
-                    $imagePath = "/images/" . $images->name[$i];
+            if (move_uploaded_file($images->tmp_name[$i], $uploadPath)) {
+                $imagePath = "/images/" . $hashedImageName;
 
-                    array_push($product->images, $imagePath);
-                }
+                array_push($product->images, $imagePath);
+                array_push($hashedImages, $uploadPath);
             }
+        }
 
+        try {
             $this->database->beginTransaction();
 
             $product = $this->productRepository->createProduct($product);
@@ -101,10 +104,8 @@ class ProductService
 
             $this->database->rollBack();
 
-            for ($i = 0; $i < sizeof($images->name); $i++) {
-                $uploadPath = $uploadDir . "/" . $images->name[$i];
-
-                unlink($uploadPath);
+            foreach ($hashedImages as $uploadedImage) {
+                unlink($uploadedImage);
             }
 
             throw new ServiceException("Failed to create new product.");
