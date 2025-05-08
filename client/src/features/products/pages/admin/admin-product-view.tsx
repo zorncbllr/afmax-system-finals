@@ -1,6 +1,8 @@
 import { useParams } from "react-router";
 import AdminLayout from "../../../../layouts/admin-layout";
-import ProductView from "@/features/products/components/product-view";
+import ProductView, {
+  ProductViewSkeleton,
+} from "@/features/products/components/product-view";
 import { useFetchProductById } from "@/features/products/api/query";
 import PageNotFound from "@/components/page-not-found";
 
@@ -13,7 +15,8 @@ const AdminProductView = () => {
   const {
     data: product,
     isError,
-    isFetched,
+    isLoading,
+    isFetching,
   } = useFetchProductById(parseInt(productId ?? "-1"));
   const { setBreadcrumbList, setActivePage } = useBreadcrumb();
 
@@ -22,7 +25,7 @@ const AdminProductView = () => {
   }
 
   useEffect(() => {
-    if (isFetched) {
+    if (product) {
       const activePage: BreadcrumbItem = {
         href: `/admin/products/${productId?.toString()}`,
         itemName: product!.productName,
@@ -34,7 +37,13 @@ const AdminProductView = () => {
   }, [product]);
 
   return (
-    <AdminLayout>{isFetched && <ProductView product={product!} />}</AdminLayout>
+    <AdminLayout>
+      {isLoading || isFetching ? (
+        <ProductViewSkeleton />
+      ) : (
+        product && <ProductView key={productId} product={product} />
+      )}
+    </AdminLayout>
   );
 };
 

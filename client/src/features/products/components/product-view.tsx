@@ -3,6 +3,69 @@ import { Product } from "../types";
 import { cn } from "@/lib/utils";
 import { CategoryBadge } from "@/features/categories/components/category-badge";
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
+
+export const ProductViewSkeleton = () => {
+  return (
+    <div className="w-full flex gap-40 justify-center mt-12">
+      <div className="flex w-fit gap-4">
+        <div className="flex flex-col gap-4">
+          <Skeleton className="w-[9rem] h-[9rem] object-cover shadow-sm" />
+          <Skeleton className="w-[9rem] h-[9rem] object-cover shadow-sm" />
+          <Skeleton className="w-[9rem] h-[9rem] object-cover shadow-sm" />
+        </div>
+
+        <Skeleton className="w-[30rem] h-[30rem] object-cover shadow-sm" />
+      </div>
+
+      <div className="max-w-4xl mx-auto p-6 space-y-8">
+        {/* Product Title */}
+        <div className="space-y-4">
+          <Skeleton className="h-9 w-3/4 rounded-lg" />
+          <div className="flex space-x-2">
+            <Skeleton className="h-6 w-24 rounded-full" />
+            <Skeleton className="h-6 w-24 rounded-full" />
+            <Skeleton className="h-6 w-24 rounded-full" />
+          </div>
+        </div>
+
+        {/* Product Header Section */}
+        <div className="space-y-4">
+          <Skeleton className="h-7 w-1/3 rounded-lg" />
+          <div className="flex items-center space-x-4">
+            <Skeleton className="h-8 w-20 rounded-lg" />
+            <Skeleton className="h-6 w-16 rounded-lg" />
+          </div>
+        </div>
+
+        {/* Action Buttons Grid */}
+        <div className="grid grid-cols-2 gap-4">
+          <div className="space-y-2">
+            <Skeleton className="h-5 w-1/4 rounded-md" />
+            <Skeleton className="h-12 w-full rounded-lg" />
+          </div>
+          <div className="space-y-2">
+            <Skeleton className="h-5 w-1/4 rounded-md" />
+            <Skeleton className="h-12 w-full rounded-lg" />
+          </div>
+        </div>
+
+        {/* Product Description */}
+        <div className="space-y-4">
+          <Skeleton className="h-6 w-40 rounded-lg" />
+          <div className="space-y-2">
+            <Skeleton className="h-4 w-full rounded-md" />
+            <Skeleton className="h-4 w-5/6 rounded-md" />
+            <Skeleton className="h-4 w-4/5 rounded-md" />
+            <Skeleton className="h-4 w-3/4 rounded-md" />
+            <Skeleton className="h-4 w-5/6 rounded-md" />
+            <Skeleton className="h-4 w-2/3 rounded-md" />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 const ProductView = ({ product }: { product: Product }) => {
   const [mainImage, setMainImage] = useState<string>("");
@@ -19,16 +82,16 @@ const ProductView = ({ product }: { product: Product }) => {
   }, [product]);
 
   return (
-    <div className="w-full flex gap-40 justify-center mt-12">
-      <div className="flex w-fit gap-4">
-        <div className="flex flex-col gap-4">
+    <div className="w-full flex flex-col xl:flex-row gap-32 xl:justify-around py-10 px-18">
+      <div className="flex flex-col-reverse items-center lg:flex-row xl:items-start w-fit gap-4">
+        <div className="flex lg:flex-col gap-4">
           {product.images.map((image) => (
             <img
               src={"http://localhost:8000" + image}
               alt="Product Image"
               onClick={() => setMainImage(image)}
               className={cn(
-                "w-[9rem] h-[9rem] object-cover shadow-sm",
+                "w-[7rem] h-[7rem] lg:w-[9rem] lg:h-[9rem] lg:min-w-[9rem] object-cover shadow-sm",
                 image == mainImage
                   ? " rounded-r-lg border-l-4 border-blue-500"
                   : "rounded-lg"
@@ -40,7 +103,7 @@ const ProductView = ({ product }: { product: Product }) => {
         <img
           src={"http://localhost:8000" + mainImage}
           alt="Product Image"
-          className="w-[30rem] h-[30rem] object-cover rounded-r-lg shadow-sm"
+          className="w-[25rem] h-[25rem] lg:w-[30rem] lg:h-[30rem] lg:min-w-[30rem] object-cover rounded-r-lg shadow-sm"
         />
       </div>
 
@@ -65,7 +128,7 @@ const ProductView = ({ product }: { product: Product }) => {
           <Button variant={"secondary"}>Buy Now</Button>
         </div>
 
-        <div className="flex flex-col w-[40rem] gap-4 mt-4">
+        <div className="flex flex-col w-full gap-4 mt-4">
           <h1 className="text-lg font-semibold text-gray-500">
             Product Description:
           </h1>
