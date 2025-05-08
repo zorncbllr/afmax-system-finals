@@ -34,9 +34,7 @@ const AdminProductView = () => {
   }, [product]);
 
   return (
-    <AdminLayout>
-      <ProductView product={product} />
-    </AdminLayout>
+    <AdminLayout>{isFetched && <ProductView product={product!} />}</AdminLayout>
   );
 };
 

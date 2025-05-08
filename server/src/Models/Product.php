@@ -23,7 +23,7 @@ class Product
         $product = new Product();
         $product->productId = $row['productId'];
         $product->productName = $row['productName'];
-        $product->description = $row['description'];
+        $product->description = htmlspecialchars_decode($row['description']);
         $product->price = $row['price'];
         $product->brand = $row['brand'];
         $product->isFeatured = $row["isFeatured"];
