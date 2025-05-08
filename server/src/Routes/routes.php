@@ -2,6 +2,7 @@
 
 use Src\Controllers\CategoryController;
 use Src\Controllers\FeaturedCategoryController;
+use Src\Controllers\InventoryController;
 use Src\Controllers\ProductController;
 use Src\Core\Router;
 
@@ -15,6 +16,8 @@ $router->get(
 );
 
 $router->resource("categories", CategoryController::class);
+
+$router->resource("inventory", InventoryController::class);
 
 $router->_404(function () {
     status(404);

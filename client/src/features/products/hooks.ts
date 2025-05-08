@@ -4,7 +4,7 @@ import {
   deleteProduct,
   getProductById,
   getProducts,
-} from "./product-service";
+} from "./service";
 import { Product, ProductDTO } from "./types";
 import { queryClient } from "@/main";
 import { useAdminProductsStore } from "../admin/stores/admin-products-store";

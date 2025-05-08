@@ -52,7 +52,7 @@ INSERT INTO units (unitName, abbreviation) VALUES
 ('Units', 'unt');
 
 -- Insert Inventory Data
-INSERT INTO inventories (inventoryId, unitId, productId, stockQuantity, expirationDate) VALUES
+INSERT INTO inventories (inventoryId, unitId, productId, quantity, expiration) VALUES
 (1, 1, 1, 1000, '2025-12-31'),  -- Ibuprofen tablets
 (2, 5, 2, 150, NULL),           -- Thermometers
 (3, 3, 3, 500, '2026-06-30'),    -- Gloves boxes

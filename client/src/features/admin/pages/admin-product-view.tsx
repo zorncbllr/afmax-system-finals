@@ -1,7 +1,7 @@
 import { useParams } from "react-router";
 import AdminLayout from "../layouts/admin-layout";
 import ProductView from "@/features/products/components/product-view";
-import { useFetchProductById } from "@/features/products/product-hooks";
+import { useFetchProductById } from "@/features/products/hooks";
 import PageNotFound from "@/components/page-not-found";
 
 import { breadcrumbList } from "./admin-products";

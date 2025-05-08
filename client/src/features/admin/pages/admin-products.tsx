@@ -4,10 +4,7 @@ import { useEffect } from "react";
 import { DataTable } from "@/components/data-table";
 
 import { ProductDTO } from "@/features/products/types";
-import {
-  useDeleteProduct,
-  useFetchProducts,
-} from "@/features/products/product-hooks";
+import { useDeleteProduct, useFetchProducts } from "@/features/products/hooks";
 
 import { ColumnDef } from "@tanstack/react-table";
 import { Check, X, MoreHorizontal, Eye, Trash2, Pencil } from "lucide-react";

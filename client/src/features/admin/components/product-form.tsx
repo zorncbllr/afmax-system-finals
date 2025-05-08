@@ -22,7 +22,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { useEffect, useState } from "react";
-import { useCreateProduct } from "@/features/products/product-hooks";
+import { useCreateProduct } from "@/features/products/hooks";
 
 export default function ProductForm() {
   const { isOpen, setIsOpen } = useAdminProductsStore();
