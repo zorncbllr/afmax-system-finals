@@ -35,6 +35,10 @@ export const useCreateProduct = () => {
         queryKey: ["products"],
       });
 
+      client.invalidateQueries({
+        queryKey: ["inventory"],
+      });
+
       setIsOpen(false);
 
       toast.success(data.message, {

@@ -9,6 +9,7 @@ use Src\Core\Request;
 use Src\Models\CategoryDTO;
 use Src\Models\Product;
 use Src\Repositories\CategoryRepository;
+use Src\Repositories\InventoryRepository;
 use Src\Repositories\ProductCategoryRepository;
 use Src\Repositories\ProductRepository;
 use TypeError;
@@ -18,6 +19,7 @@ class ProductService
     protected ProductRepository $productRepository;
     protected CategoryRepository $categoryRepository;
     protected ProductCategoryRepository $pivotRepository;
+    protected InventoryRepository $inventoryRepository;
 
     public function __construct(
         protected Database $database,
@@ -25,6 +27,7 @@ class ProductService
         $this->productRepository = new ProductRepository($this->database);
         $this->categoryRepository = new CategoryRepository($this->database);
         $this->pivotRepository = new ProductCategoryRepository($this->database);
+        $this->inventoryRepository = new InventoryRepository($this->database);
     }
 
     /** @return array<Product> */
@@ -90,6 +93,8 @@ class ProductService
 
                 $this->categoryRepository->connectCategoryToProduct($category, $product);
             }
+
+            $this->inventoryRepository->createInventoryFor($product);
 
             $this->database->commit();
         } catch (PDOException $e) {

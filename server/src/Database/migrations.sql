@@ -53,11 +53,11 @@ CREATE TABLE units (
 );
 
 CREATE TABLE inventories (
-    inventoryId INT PRIMARY KEY,
-    unitId INT NOT NULL,
+    inventoryId INT PRIMARY KEY AUTO_INCREMENT,
+    unitId INT,
     productId INT NOT NULL,
-    quantity INT NOT NULL,
-    expiration DATE,
+    quantity INT,
+    expiration DATETIME DEFAULT NULL,
     createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (unitId) REFERENCES units(unitId),

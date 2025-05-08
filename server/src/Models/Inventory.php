@@ -6,24 +6,24 @@ use DateTime;
 
 class Inventory
 {
-    public int $inventoryId, $quantity;
+    public int $inventoryId;
     public string $unit, $product, $abbreviation;
-    public string $expiration, $dateStocked;
-    public bool $isExpired = false;
+    public string $expiration, $dateStocked, $quantity;
+    public bool $isExpired;
 
     public static function fromRow(array $row): Inventory
     {
         $inventory = new Inventory();
 
         $inventory->inventoryId = $row["inventoryId"];
-        $inventory->unit = $row["unit"];
+        $inventory->unit = $row["unit"] ?? "----";
         $inventory->product = $row["product"];
-        $inventory->abbreviation = $row["abbreviation"];
+        $inventory->abbreviation = $row["abbreviation"] ?? "----";
         $inventory->dateStocked = (new DateTime($row["dateStocked"]))->format('F j, Y');
-        $inventory->quantity = $row["quantity"];
+        $inventory->quantity = $row["quantity"] ?? "----";
 
-        $inventory->expiration = (new DateTime($row["expiration"]))->format('F j, Y');
-        $inventory->isExpired = (new DateTime($row["expiration"])) < (new DateTime());
+        $inventory->expiration = $row["expiration"] == null ? "----" : (new DateTime($row["expiration"]))->format('F j, Y');
+        $inventory->isExpired = $row["expiration"] == null ? false : (new DateTime($row["expiration"])) < (new DateTime());
 
         return $inventory;
     }

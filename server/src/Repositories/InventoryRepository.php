@@ -5,6 +5,7 @@ namespace Src\Repositories;
 use PDO;
 use Src\Core\Database;
 use Src\Models\Inventory;
+use Src\Models\Product;
 
 class InventoryRepository
 {
@@ -24,7 +25,7 @@ class InventoryRepository
             i.`updatedAt` as dateStocked,
             i.expiration
             FROM inventories i
-            JOIN units u
+            LEFT JOIN units u
             ON i.`unitId` = u.`unitId`
             JOIN products p
             ON p.`productId` = i.`productId`"
@@ -36,5 +37,14 @@ class InventoryRepository
             fn($row) => Inventory::fromRow($row),
             $stmt->fetchAll(PDO::FETCH_ASSOC)
         );
+    }
+
+    public function createInventoryFor(Product $product)
+    {
+        $stmt = $this->database->prepare(
+            "INSERT INTO inventories (productId) VALUES (:productId);"
+        );
+
+        $stmt->execute(["productId" => $product->productId]);
     }
 }

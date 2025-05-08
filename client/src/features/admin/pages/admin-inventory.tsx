@@ -41,10 +41,6 @@ const columns: ColumnDef<Inventory>[] = [
   {
     accessorKey: "quantity",
     header: "Quantity",
-    cell: ({ row }) => {
-      const quantity = parseFloat(row.getValue("quantity"));
-      return `${quantity.toLocaleString()} ${row.original.abbreviation}`;
-    },
   },
   {
     accessorKey: "unit",
