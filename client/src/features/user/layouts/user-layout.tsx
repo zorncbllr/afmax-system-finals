@@ -6,6 +6,7 @@ import { ShoppingBagIcon, Package2Icon } from "lucide-react";
 import { SideBarProps } from "@/features/sidebar/types";
 import { useSidebar } from "@/features/sidebar/store";
 import Header from "@/components/header";
+import AppBreadcrumb from "@/features/breadcrumbs/app-breadcrumb";
 
 const sidebarProps: SideBarProps = {
   heading: "AFMAX",
@@ -46,8 +47,10 @@ const UserLayout: React.FC<LayoutRouteProps> = ({ children }) => {
         <Header />
 
         <main className="p-4 w-full h-full grid bg-gray-50">
-          <div className="p-4 border rounded-lg text-gray-700 bg-white">
-            {children}
+          <div className="p-4 border rounded-lg text-gray-700 bg-white flex flex-col gap-4">
+            <AppBreadcrumb />
+
+            <div>{children}</div>
           </div>
         </main>
       </div>

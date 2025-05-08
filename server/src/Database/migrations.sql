@@ -2,6 +2,8 @@ USE afmax_database;
 
 DROP TABLE IF EXISTS productImages;
 DROP TABLE IF EXISTS productCategories;
+DROP TABLE IF EXISTS inventories;
+DROP TABLE IF EXISTS units;
 DROP TABLE IF EXISTS products;
 DROP TABLE IF EXISTS brands;
 DROP TABLE IF EXISTS categories;
@@ -41,5 +43,23 @@ CREATE TABLE productCategories (
     productId INT NOT NULL,
     PRIMARY KEY (categoryId, productId),
     FOREIGN KEY (categoryId) REFERENCES categories(categoryId) ON DELETE RESTRICT,
+    FOREIGN KEY (productId) REFERENCES products(productId) ON DELETE CASCADE
+);
+
+CREATE TABLE units (
+    unitId INT PRIMARY KEY AUTO_INCREMENT,
+    unitName VARCHAR(100) NOT NULL,
+    abbreviation VARCHAR(50)
+);
+
+CREATE TABLE inventories (
+    inventoryId INT PRIMARY KEY,
+    unitId INT NOT NULL,
+    productId INT NOT NULL,
+    stockQuantity INT NOT NULL,
+    expirationDate DATE,
+    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (unitId) REFERENCES units(unitId),
     FOREIGN KEY (productId) REFERENCES products(productId) ON DELETE CASCADE
 );

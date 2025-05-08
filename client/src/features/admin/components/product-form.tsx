@@ -6,7 +6,7 @@ import { Label } from "@/components/ui/label";
 import { FilePlusIcon, ImagesIcon, PlusIcon, XIcon } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
 import { Separator } from "@/components/ui/separator";
-import { CategoryBadge } from "@/components/category-badge";
+import { CategoryBadge } from "@/features/categories/components/category-badge";
 import { cn } from "@/lib/utils";
 import { useForm } from "react-hook-form";
 import { z } from "zod";

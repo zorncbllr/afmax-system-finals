@@ -19,10 +19,11 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { CategoryBadge } from "@/components/category-badge";
+import { CategoryBadge } from "@/features/categories/components/category-badge";
 import { useAdminProductsStore } from "../stores/admin-products-store";
 import ProductForm from "../components/product-form";
 import { useNavigate } from "react-router";
+import { BreadcrumbItem, useBreadcrumb } from "@/features/breadcrumbs/store";
 
 export const columns: ColumnDef<ProductDTO>[] = [
   // Checkbox column
@@ -162,12 +163,26 @@ const AddButton = () => {
   return <Button onClick={() => setIsOpen(true)}>Add Product</Button>;
 };
 
+export const breadcrumbList: BreadcrumbItem[] = [
+  {
+    href: "/admin/dashboard",
+    itemName: "Admin",
+  },
+  {
+    href: "/admin/products",
+    itemName: "Product List",
+  },
+];
+
 const AdminProducts = () => {
   const { setActiveItem, sidebarProps } = useSidebar();
   const { data, isFetched } = useFetchProducts();
+  const { setActivePage, setBreadcrumbList } = useBreadcrumb();
 
   useEffect(() => {
     setActiveItem(sidebarProps?.sections[0].items[1]);
+    setBreadcrumbList(breadcrumbList);
+    setActivePage(breadcrumbList[1]);
   }, [sidebarProps]);
 
   return (
