@@ -97,7 +97,7 @@ const AdminInventory = () => {
       <h1>Admin Inventory</h1>
       {isFetched && (
         <DataTable
-          columnFilter="productName"
+          columnFilter="product"
           columns={columns}
           data={inventoryData!}
           actions={[<AddItemButton />]}
