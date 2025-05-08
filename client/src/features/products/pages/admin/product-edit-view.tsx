@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { useParams } from "react-router";
 import { useFetchProductById } from "../../api/query";
 import AdminLayout from "@/layouts/admin-layout";
-import { PencilIcon, XIcon } from "lucide-react";
+import { ImagePlusIcon, PencilIcon, XIcon } from "lucide-react";
 import { breadcrumbList } from "./admin-products";
 import { BreadcrumbItem, useBreadcrumb } from "@/features/breadcrumbs/store";
 
@@ -52,6 +52,16 @@ const ProductEditView = () => {
         <div className="flex  gap-40">
           <div className="flex w-fit gap-4">
             <div className="flex flex-col gap-4">
+              <div className="relative flex justify-center items-center w-[9rem] h-[9rem] border border-dashed border-blue-500 bg-blue-50 shadow-sm rounded-lg">
+                <input
+                  type="file"
+                  multiple
+                  accept="image/*"
+                  className="placeholder-transparent text-transparent w-full h-full z-50"
+                />
+                <ImagePlusIcon className="absolute text-blue-500" size={40} />
+              </div>
+
               {product?.images.map((image) => (
                 <div className="relative">
                   <img
