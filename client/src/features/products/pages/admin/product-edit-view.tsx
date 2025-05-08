@@ -44,88 +44,94 @@ const ProductEditView = () => {
 
   return (
     <AdminLayout>
-      <div className="w-full flex gap-40 justify-center mt-12">
-        <div className="flex w-fit gap-4">
-          <div className="flex flex-col gap-4">
-            {product?.images.map((image) => (
-              <div className="relative">
-                <img
-                  src={"http://localhost:8000" + image}
-                  alt="Product Image"
-                  className={cn(
-                    "w-[9rem] h-[9rem] object-cover shadow-sm",
-                    image == mainImage
-                      ? " rounded-r-lg border-l-4 border-blue-500"
-                      : "rounded-lg"
-                  )}
-                />
-                <Button
-                  variant={"secondary"}
-                  className="rounded-full absolute -top-2 -right-2"
-                >
-                  <XIcon />
-                </Button>
-              </div>
-            ))}
-          </div>
-
-          <div className="relative">
-            <img
-              src={"http://localhost:8000" + mainImage}
-              alt="Product Image"
-              className="w-[30rem] h-[30rem] object-cover rounded-r-lg shadow-sm"
-            />
-            <Button
-              variant={"secondary"}
-              className="rounded-full absolute -top-2 -right-2"
-            >
-              <XIcon />
-            </Button>
-          </div>
+      <div className="flex flex-col items-center gap-8 p-12">
+        <div className="flex w-full justify-end">
+          <Button>Update Details</Button>
         </div>
 
-        <section className="flex-col flex gap-2 p-4">
-          <div className="flex gap-4 items-center">
-            <h1 className="text-3xl font-semibold font-mono">
-              {product?.productName}
-            </h1>
-            <PencilIcon size={20} />
-          </div>
-
-          <div className="flex gap-4 items-center">
-            <p className="text-xl">{product?.brand}</p>
-            <PencilIcon size={16} />
-          </div>
-
-          <div className="flex gap-4 items-center">
-            <p className="text-blue-700 text-2xl font-semibold my-4">
-              {formattedPrice}
-            </p>
-            <PencilIcon size={16} />
-          </div>
-
-          <div className="flex gap-4 items-center">
-            <div>
-              {product?.categories.map((category) => (
-                <CategoryBadge category={category} />
+        <div className="flex  gap-40">
+          <div className="flex w-fit gap-4">
+            <div className="flex flex-col gap-4">
+              {product?.images.map((image) => (
+                <div className="relative">
+                  <img
+                    src={"http://localhost:8000" + image}
+                    alt="Product Image"
+                    className={cn(
+                      "w-[9rem] h-[9rem] object-cover shadow-sm",
+                      image == mainImage
+                        ? " rounded-r-lg border-l-4 border-blue-500"
+                        : "rounded-lg"
+                    )}
+                  />
+                  <Button
+                    variant={"secondary"}
+                    className="rounded-full absolute -top-2 -right-2"
+                  >
+                    <XIcon />
+                  </Button>
+                </div>
               ))}
             </div>
-            <PencilIcon size={16} />
+
+            <div className="relative">
+              <img
+                src={"http://localhost:8000" + mainImage}
+                alt="Product Image"
+                className="w-[30rem] h-[30rem] object-cover rounded-r-lg shadow-sm"
+              />
+              <Button
+                variant={"secondary"}
+                className="rounded-full absolute -top-2 -right-2"
+              >
+                <XIcon />
+              </Button>
+            </div>
           </div>
 
-          <div className="flex flex-col w-[40rem] gap-4 mt-4">
+          <section className="flex-col flex gap-2 p-4">
             <div className="flex gap-4 items-center">
-              <h1 className="text-lg font-semibold text-gray-500">
-                Product Description:
+              <h1 className="text-3xl font-semibold font-mono">
+                {product?.productName}
               </h1>
+              <PencilIcon size={20} />
+            </div>
+
+            <div className="flex gap-4 w-fit items-center">
+              <p className="text-xl">{product?.brand}</p>
               <PencilIcon size={16} />
             </div>
 
-            <div className="tracking-wide text-justify text-gray-500">
-              {product?.description}
+            <div className="flex gap-4 items-center">
+              <p className="text-blue-700 text-2xl font-semibold my-4">
+                {formattedPrice}
+              </p>
+              <PencilIcon size={16} />
             </div>
-          </div>
-        </section>
+
+            <div className="flex gap-4 items-center">
+              <div>
+                {product?.categories.map((category) => (
+                  <CategoryBadge category={category} />
+                ))}
+              </div>
+              <PencilIcon size={16} />
+            </div>
+
+            <div className="flex flex-col w-[40rem] gap-4 mt-4">
+              <div className="flex gap-4 items-center">
+                <h1 className="text-lg font-semibold text-gray-500">
+                  Product Description:
+                </h1>
+                <PencilIcon size={16} />
+              </div>
+
+              <div className="tracking-wide text-justify text-gray-500">
+                {product?.description}
+              </div>
+            </div>
+          </section>
+        </div>
       </div>
     </AdminLayout>
   );
