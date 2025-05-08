@@ -25,7 +25,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
       className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden w-[12rem] lg:w-[14rem] transition hover:shadow-lg"
     >
       <img
-        src={image}
+        src={"http://localhost:8000" + image}
         alt={productName}
         className="h-44 lg:h-48 w-full object-cover"
       />
