@@ -117,7 +117,7 @@ const ProductView = ({ product }: { product: Product }) => {
           {formattedPrice}
         </p>
 
-        <div>
+        <div className="flex gap-2">
           {product.categories.map((category) => (
             <CategoryBadge category={category} />
           ))}
