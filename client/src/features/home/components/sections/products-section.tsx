@@ -19,7 +19,7 @@ const ProductsSection: React.FC = () => {
   }, [isFetched, categories]);
 
   if (!activeCategory) {
-    return <div>Loading...</div>;
+    return <></>;
   }
 
   return (

@@ -5,13 +5,12 @@ import { Button } from "@/components/ui/button";
 import { useParams } from "react-router";
 import { useFetchProductById } from "../../api/query";
 import AdminLayout from "@/layouts/admin-layout";
-import { ImagePlusIcon, PencilIcon, XIcon } from "lucide-react";
+import { ImagePlusIcon, PencilIcon, PlusIcon, XIcon } from "lucide-react";
 import { breadcrumbList } from "./admin-products";
 import { BreadcrumbItem, useBreadcrumb } from "@/features/breadcrumbs/store";
 
 const ProductEditView = () => {
   const [mainImage, setMainImage] = useState<string>("");
-  const [formattedPrice, setFormattedPrice] = useState<string>("");
 
   const { setActivePage, setBreadcrumbList } = useBreadcrumb();
 
@@ -31,22 +30,15 @@ const ProductEditView = () => {
       setActivePage(activePage);
 
       setMainImage(product!.images[0]);
-      setFormattedPrice(
-        new Intl.NumberFormat("fil-PH", {
-          style: "currency",
-          currency: "PHP",
-          minimumFractionDigits: 0,
-          maximumFractionDigits: 2,
-        }).format(parseFloat(product!.price.toString()))
-      );
     }
   }, [product]);
 
   return (
     <AdminLayout>
-      <div className="flex flex-col items-center gap-8 p-12">
-        <div className="flex w-full justify-end">
-          <Button>Update Details</Button>
+      <div className="flex flex-col items-center gap-8 px-12">
+        <div className="flex w-full gap-2 justify-end">
+          <Button variant={"secondary"}>Cancel</Button>
+          <Button>Update</Button>
         </div>
 
         <div className="flex  gap-40">
@@ -101,31 +93,69 @@ const ProductEditView = () => {
 
           <section className="flex-col flex gap-2 p-4">
             <div className="flex gap-4 items-center">
-              <h1 className="text-3xl font-semibold font-mono">
-                {product?.productName}
-              </h1>
+              <input
+                value={product?.productName}
+                type="text"
+                className="text-3xl font-semibold font-mono focus:outline-none focus:border-b-1 border-gray-500 w-auto"
+              />
               <PencilIcon size={20} />
             </div>
 
             <div className="flex gap-4 w-fit items-center">
-              <p className="text-xl">{product?.brand}</p>
+              <input
+                value={product?.brand}
+                type="text"
+                size={product?.brand?.length || 1}
+                className="text-xl focus:outline-none focus:border-b border-gray-500"
+              />
               <PencilIcon size={16} />
             </div>
 
-            <div className="flex gap-4 items-center">
-              <p className="text-blue-700 text-2xl font-semibold my-4">
-                {formattedPrice}
-              </p>
-              <PencilIcon size={16} />
-            </div>
-
-            <div className="flex gap-4 items-center">
+            <div className="flex relative gap-4 items-center">
               <div>
-                {product?.categories.map((category) => (
-                  <CategoryBadge category={category} />
-                ))}
+                <span className="text-blue-700 text-2xl font-semibold">
+                  &#8369;
+                </span>
+                <input
+                  value={product?.price}
+                  type="number"
+                  style={{
+                    width: `${product?.price?.toString().length || 1}ch`,
+                  }}
+                  className="text-blue-700 text-2xl font-semibold my-4 focus:outline-none focus:border-b border-gray-500 [&::-webkit-inner-spin-button]:appearance-none [&::-moz-appearance]:textfield"
+                />
               </div>
               <PencilIcon size={16} />
+            </div>
+
+            <div className="flex gap-4 flex-col w-1/2 my-4">
+              <div className="space-y-2">
+                <div className={cn("flex gap-2 border rounded-md p-1")}>
+                  <input
+                    className={cn(
+                      "w-full border-0 focus-visible:ring-0 focus:outline-none px-4"
+                    )}
+                    type="text"
+                    placeholder="Add a category..."
+                  />
+                  <Button type="button">
+                    <PlusIcon className="h-4 w-4" />
+                  </Button>
+                </div>
+              </div>
+
+              <div className="flex gap-4 items-center">
+                {product?.categories.map((category) => (
+                  <CategoryBadge
+                    category={category}
+                    action={
+                      <button>
+                        <XIcon size={16} />
+                      </button>
+                    }
+                  />
+                ))}
+              </div>
             </div>
 
             <div className="flex flex-col w-[40rem] gap-4 mt-4">
