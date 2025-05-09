@@ -1,4 +1,4 @@
-import { Route, Routes } from "react-router";
+import { Navigate, Route, Routes } from "react-router";
 import Home from "./features/home/pages/home";
 import UserProducts from "./features/products/pages/user/user-products";
 import Dashboard from "./features/dashboard/dashboard";
@@ -26,6 +26,10 @@ function App() {
           element={<ProductEditView />}
         />
 
+        <Route
+          path="/admin"
+          element={<Navigate to={"/admin/dashboard"} replace />}
+        />
         <Route path="/admin/dashboard" element={<Dashboard />} />
         <Route path="/admin/products" element={<AdminProducts />} />
         <Route
