@@ -23,7 +23,7 @@ import { CategoryBadge } from "@/features/categories/components/category-badge";
 import ProductForm from "../../components/product-form";
 import { useNavigate } from "react-router";
 import { BreadcrumbItem, useBreadcrumb } from "@/features/breadcrumbs/store";
-import { useProductFormStore } from "../../store";
+import { useProductFormStore } from "../../useProductForm";
 
 export const columns: ColumnDef<ProductDTO>[] = [
   // Checkbox column

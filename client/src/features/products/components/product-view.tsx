@@ -4,6 +4,7 @@ import { cn } from "@/lib/utils";
 import { CategoryBadge } from "@/features/categories/components/category-badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useAutoResizeTextarea } from "../hooks/use-autoresize-textarea";
 
 export const ProductViewSkeleton = () => {
   return (
@@ -69,6 +70,7 @@ export const ProductViewSkeleton = () => {
 
 const ProductView = ({ product }: { product: Product }) => {
   const [mainImage, setMainImage] = useState<string>("");
+  const textareaRef = useAutoResizeTextarea("");
 
   const formattedPrice = new Intl.NumberFormat("fil-PH", {
     style: "currency",
@@ -79,6 +81,7 @@ const ProductView = ({ product }: { product: Product }) => {
 
   useLayoutEffect(() => {
     setMainImage(product.images[0]);
+    textareaRef.current!.value = product.description;
   }, [product]);
 
   return (
@@ -107,7 +110,7 @@ const ProductView = ({ product }: { product: Product }) => {
         />
       </div>
 
-      <section className="flex-col flex gap-2 p-4">
+      <section className="flex-col flex gap-2 p-4 w-full">
         <h1 className="text-3xl font-semibold font-mono">
           {product.productName}
         </h1>
@@ -133,9 +136,12 @@ const ProductView = ({ product }: { product: Product }) => {
             Product Description:
           </h1>
 
-          <div className="tracking-wide text-justify text-gray-500">
-            {product.description}
-          </div>
+          <textarea
+            ref={textareaRef}
+            disabled={true}
+            className="w-full text-gray-500 tracking-wide text-justify bg-transparent border-0  resize-none overflow-hidden"
+            style={{ minHeight: "6rem" }}
+          />
         </div>
       </section>
     </div>

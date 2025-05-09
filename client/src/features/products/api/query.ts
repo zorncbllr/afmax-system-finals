@@ -8,7 +8,7 @@ import {
 import { Product, ProductDTO } from "../types";
 import { queryClient } from "@/main";
 import toast from "react-hot-toast";
-import { useProductFormStore } from "../store";
+import { useProductFormStore } from "../useProductForm";
 
 export const useFetchProducts = () =>
   useQuery<ProductDTO[]>({

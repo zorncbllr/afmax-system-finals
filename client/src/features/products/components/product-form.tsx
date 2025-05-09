@@ -16,7 +16,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import Modal from "@/components/modal";
-import { useProductFormStore } from "../store";
+import { useProductFormStore } from "../useProductForm";
 import useProductForm from "../hooks/product-form-hook";
 
 export default function ProductForm() {
