@@ -34,14 +34,14 @@ const UserLayout: React.FC<LayoutRouteProps> = ({ children }) => {
   }, []);
 
   return (
-    <div className="w-full h-screen flex">
+    <div className="w-full h-screen flex overflow-hidden">
       <SideBar />
 
       <div className="flex flex-col w-full">
         <Header />
 
-        <main className="p-4 w-full h-full grid bg-gray-50">
-          <div className="p-4 border rounded-lg text-gray-700 bg-white flex flex-col gap-4">
+        <main className="p-4 w-full h-full max-h-[53rem] grid bg-gray-50">
+          <div className="p-4 border rounded-lg text-gray-700 bg-white flex flex-col gap-4 overflow-y-scroll">
             <AppBreadcrumb />
 
             <div>{children}</div>
