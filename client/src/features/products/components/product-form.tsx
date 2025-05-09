@@ -6,10 +6,6 @@ import { Textarea } from "@/components/ui/textarea";
 import { Separator } from "@/components/ui/separator";
 import { CategoryBadge } from "@/features/categories/components/category-badge";
 import { cn } from "@/lib/utils";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { ProductFormSchema } from "@/features/products/types";
-import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Form,
   FormControl,
@@ -19,108 +15,22 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { useEffect, useState } from "react";
-import { useCreateProduct } from "@/features/products/api/query";
 import Modal from "@/components/modal";
-import { useProductForm } from "../hooks/useProductForm";
+import { useProductFormStore } from "../store";
+import useProductForm from "../hooks/product-form-hook";
 
 export default function ProductForm() {
-  const { mutate } = useCreateProduct();
-  const { isOpen, setIsOpen } = useProductForm();
+  const { isOpen, setIsOpen } = useProductFormStore();
 
-  const [imagePreviews, setImagePreviews] = useState<string[]>([]);
-  const [category, SetCategory] = useState<string>("");
-
-  const form = useForm<z.infer<typeof ProductFormSchema>>({
-    resolver: zodResolver(ProductFormSchema),
-    defaultValues: {
-      productName: "",
-      brand: "",
-      description: "",
-      price: 0,
-      categories: [],
-      images: new DataTransfer().files,
-    },
-  });
-
-  const appendCategory = () => {
-    if (category != "") {
-      form.setValue("categories", [...form.getValues("categories"), category]);
-      SetCategory("");
-    }
-  };
-
-  const removeCategory = (index: number) => {
-    const categories = form.getValues("categories");
-    categories.splice(index, 1);
-    form.setValue("categories", categories);
-  };
-
-  useEffect(() => {
-    const generatePreviews = async () => {
-      if (form.watch("images")?.length > 0) {
-        const previews = await Promise.all(
-          Array.from(form.watch("images")).map((file) =>
-            URL.createObjectURL(file)
-          )
-        );
-        setImagePreviews(previews);
-      } else {
-        setImagePreviews([]);
-      }
-    };
-
-    generatePreviews();
-  }, [form.watch("images")]);
-
-  useEffect(() => {
-    if (form.getValues("categories").length > 0) {
-      form.clearErrors("categories");
-    }
-  }, [form.watch("categories")]);
-
-  useEffect(() => {
-    setTimeout(() => {
-      imagePreviews.forEach((image) => {
-        URL.revokeObjectURL(image);
-      });
-
-      form.clearErrors();
-
-      setImagePreviews([]);
-      SetCategory("");
-
-      form.reset({
-        productName: "",
-        brand: "",
-        description: "",
-        price: 0,
-        categories: [],
-        images: new DataTransfer().files,
-      });
-    }, 300);
-  }, [isOpen]);
-
-  const submitHandler = (values: z.infer<typeof ProductFormSchema>) => {
-    const formData = new FormData();
-
-    formData.set("productName", values.productName);
-    formData.set("brand", values.brand);
-    formData.set("description", values.description);
-    formData.set("price", values.price.toString());
-
-    for (const image of values.images) {
-      formData.append("images[]", image, image.name);
-    }
-
-    console.log(formData.getAll("images[]"));
-
-    for (const category of values.categories) {
-      formData.append("categories[]", category);
-    }
-
-    mutate(formData);
-  };
+  const {
+    form,
+    category,
+    imagePreviews,
+    SetCategory,
+    appendCategory,
+    removeCategory,
+    submitHandler,
+  } = useProductForm();
 
   return (
     <Modal isOpen={isOpen} setIsOpen={setIsOpen}>
@@ -270,7 +180,7 @@ export default function ProductForm() {
                       <FormField
                         control={form.control}
                         name="categories"
-                        render={({ field, fieldState }) => (
+                        render={({ fieldState }) => (
                           <FormItem className="grid gap-2">
                             <FormLabel>Categories</FormLabel>
                             <FormControl>

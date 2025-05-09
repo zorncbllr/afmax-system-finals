@@ -23,7 +23,7 @@ import { CategoryBadge } from "@/features/categories/components/category-badge";
 import ProductForm from "../../components/product-form";
 import { useNavigate } from "react-router";
 import { BreadcrumbItem, useBreadcrumb } from "@/features/breadcrumbs/store";
-import { useProductForm } from "../../hooks/useProductForm";
+import { useProductFormStore } from "../../store";
 
 export const columns: ColumnDef<ProductDTO>[] = [
   // Checkbox column
@@ -160,7 +160,7 @@ export const columns: ColumnDef<ProductDTO>[] = [
 ];
 
 const AddButton = () => {
-  const { setIsOpen } = useProductForm();
+  const { setIsOpen } = useProductFormStore();
 
   return <Button onClick={() => setIsOpen(true)}>Add Product</Button>;
 };

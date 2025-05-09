@@ -8,7 +8,7 @@ import {
 import { Product, ProductDTO } from "../types";
 import { queryClient } from "@/main";
 import toast from "react-hot-toast";
-import { useProductForm } from "../hooks/useProductForm";
+import { useProductFormStore } from "../store";
 
 export const useFetchProducts = () =>
   useQuery<ProductDTO[]>({
@@ -24,7 +24,7 @@ export const useFetchProductById = (productId: number) =>
 
 export const useCreateProduct = () => {
   const client = queryClient;
-  const { setIsOpen } = useProductForm();
+  const { setIsOpen } = useProductFormStore();
 
   return useMutation({
     mutationKey: ["products"],
