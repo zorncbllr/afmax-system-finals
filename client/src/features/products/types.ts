@@ -23,6 +23,15 @@ export interface Product {
   isFeatured: boolean;
 }
 
+export interface ProductError {
+  productName: string;
+  description: string;
+  brand: string;
+  price: number;
+  images: string;
+  categories: string;
+}
+
 export const ProductFormSchema = z.object({
   productName: z.string().min(1, "Product name is required"),
   brand: z.string().min(1, "Brand is required"),

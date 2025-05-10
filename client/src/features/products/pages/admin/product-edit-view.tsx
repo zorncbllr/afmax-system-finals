@@ -91,6 +91,9 @@ const ProductEditView = () => {
                   <Button
                     type="button"
                     variant={"secondary"}
+                    onClick={() => {
+                      if (imagePreviews.length > 0) removeImage(0);
+                    }}
                     className="rounded-full absolute -top-2 -right-2"
                   >
                     <XIcon />

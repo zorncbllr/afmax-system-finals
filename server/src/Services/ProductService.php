@@ -201,7 +201,7 @@ class ProductService
             }
         } catch (PDOException $e) {
 
-            // $this->database->rollBack();
+            $this->database->rollBack();
 
             foreach ($hashedImages as $uploadedImage) {
                 unlink($uploadedImage);

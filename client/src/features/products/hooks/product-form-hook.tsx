@@ -1,16 +1,17 @@
 import { useEffect, useState } from "react";
-import { ProductFormSchema } from "../types";
+import { ProductError, ProductFormSchema } from "../types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { useProductFormStore } from "../store";
 import { useCreateProduct } from "../api/query";
+import { AxiosError } from "axios";
 
 const useProductForm = () => {
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
   const [category, SetCategory] = useState<string>("");
   const { isOpen } = useProductFormStore();
-  const { mutate } = useCreateProduct();
+  const { mutate, isError, error } = useCreateProduct();
 
   const form = useForm<z.infer<typeof ProductFormSchema>>({
     resolver: zodResolver(ProductFormSchema),
@@ -23,6 +24,19 @@ const useProductForm = () => {
       images: new DataTransfer().files,
     },
   });
+
+  if (isError) {
+    const err = error as AxiosError<ProductError>;
+    const data = err.response?.data;
+
+    if (data?.description) {
+      form.setError("description", { message: data.description });
+    }
+
+    if (data?.images) {
+      form.setError("images", { message: data.images });
+    }
+  }
 
   const appendCategory = () => {
     if (category != "") {

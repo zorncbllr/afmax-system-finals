@@ -44,7 +44,7 @@ export const updateProduct = async ({
 }: {
   productId: number;
   product: FormData;
-}) => {
+}): Promise<SuccessResponse> => {
   return (
     await axiosInstance.post<SuccessResponse>(
       `/products/update/${productId}`,

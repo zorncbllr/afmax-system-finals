@@ -48,7 +48,9 @@ export const useCreateProduct = () => {
     },
 
     onError: (error) => {
-      console.log(error);
+      toast.error("Product creation failed.", {
+        position: "top-right",
+      });
     },
   });
 };
@@ -86,13 +88,13 @@ export const useUpdateProduct = () => {
         queryKey: ["product"],
       });
 
-      toast.success(data.message, {
+      toast.success("Product has been updated.", {
         position: "top-right",
       });
     },
 
     onError: (error) => {
-      console.log(error);
+      toast.error("Product update failed.", { position: "top-right" });
     },
   });
 };
