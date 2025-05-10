@@ -7,6 +7,7 @@ return [
         "POST",
         "PATCH",
         "DELETE",
+        "PUT",
         "OPTIONS"
     ],
     "allowed_headers" => [

@@ -2,7 +2,6 @@
 
 namespace Src\Controllers;
 
-use Rakit\Validation\Validator;
 use Src\Core\App;
 use Src\Core\Exceptions\ServiceException;
 use Src\Core\Interfaces\IResource;

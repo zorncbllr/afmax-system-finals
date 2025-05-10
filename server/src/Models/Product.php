@@ -2,6 +2,8 @@
 
 namespace Src\Models;
 
+use Src\Core\Request;
+
 class Product
 {
     public int $productId;
@@ -16,8 +18,6 @@ class Product
     /** @var array<string> $categories */
     public array $categories;
 
-
-    /** @return Product */
     public static function fromRow(array $row): Product
     {
         $product = new Product();
@@ -33,6 +33,20 @@ class Product
 
         $product->images = $row['images'] !== null ? explode(",", $row["images"]) : [];
         $product->categories = $row['categories'] !== null ? explode(",", $row["categories"]) : [];
+
+        return $product;
+    }
+
+    public static function fromRequest(Request $request): Product
+    {
+        $product = new Product();
+
+        $product->productName = $request->productName;
+        $product->brand = $request->brand;
+        $product->price = $request->price;
+        $product->description = $request->description;
+        $product->categories = $request->categories;
+        $product->images = [];
 
         return $product;
     }

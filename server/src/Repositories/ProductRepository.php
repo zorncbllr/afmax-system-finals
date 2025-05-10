@@ -4,6 +4,7 @@ namespace Src\Repositories;
 
 use PDO;
 use Src\Core\Database;
+use Src\Models\Brand;
 use Src\Models\Product;
 use Src\Models\ProductDTO;
 
@@ -74,7 +75,7 @@ class ProductRepository
         return Product::fromRow($stmt->fetch(PDO::FETCH_ASSOC));
     }
 
-    public function createProduct(Product $product): Product
+    public function createProduct(Product $product, Brand $brand): Product
     {
         $stmt = $this->database->prepare("INSERT INTO brands (brandName) VALUES (:brandName)");
         $stmt->execute(["brandName" => $product->brand]);
@@ -87,30 +88,11 @@ class ProductRepository
         $stmt->execute([
             "productName" => $product->productName,
             "description" => $product->description,
-            "brandId" => $this->database->lastInsertId(),
+            "brandId" => $brand->brandId,
             "price" => $product->price
         ]);
 
         $product->productId = $this->database->lastInsertId();
-
-        $query = "INSERT INTO productImages (productId, imagePath) VALUES ";
-
-        $images = [];
-        $parameters = [];
-
-        foreach ($product->images as $index => $image) {
-            array_push($images, "(:productId, :imagePath$index)");
-            $parameters["imagePath$index"] = $image;
-        }
-
-        $query .= implode(",", $images);
-
-        $stmt = $this->database->prepare($query);
-
-        $stmt->execute([
-            "productId" => $product->productId,
-            ...$parameters
-        ]);
 
         return $product;
     }
@@ -119,5 +101,23 @@ class ProductRepository
     {
         $stmt = $this->database->prepare("DELETE FROM products WHERE productId = :productId");
         $stmt->execute(["productId" => $productId]);
+    }
+
+    public function updateProduct(Product $product)
+    {
+        $stmt = $this->database->prepare(
+            "UPDATE INTO products 
+            SET productName = :productName,
+            price = :price,
+            description = :description
+            WHERE productId = :productId"
+        );
+
+        $stmt->execute([
+            "productId" => $product->productId,
+            "productName" => $product->productName,
+            "price" => $product->price,
+            "description" => $product->description
+        ]);
     }
 }
