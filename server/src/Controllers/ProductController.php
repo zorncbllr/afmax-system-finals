@@ -60,8 +60,21 @@ class ProductController implements IResource
 
     public function update(Request $request, string $id)
     {
-        status(200);
-        return json($request);
+        try {
+            $this->productService->updateProduct($request);
+
+            status(204);
+            return json([
+                "message" => "Product has been updated",
+                "description" => "You can now see updated product details."
+            ]);
+        } catch (ServiceException $e) {
+
+            status(400);
+            return json([
+                "message" => $e->getMessage()
+            ]);
+        }
     }
 
     public function delete(Request $request, string $id)

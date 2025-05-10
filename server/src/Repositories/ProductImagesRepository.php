@@ -12,17 +12,23 @@ class ProductImagesRepository
     public function __construct(protected Database $database) {}
 
     /** @return array<ProductImage> */
-    public function getProductImages(Product $product): array
+    public function getNotIncluded(Product $product): array
     {
-        $stmt = $this->database->prepare(
-            "SELECT 
-                productImageId as imageId,
-                imagePath as image 
-            FROM productImages 
-            WHERE productId = :productId"
-        );
+        $query = "SELECT productImageId as imageId, imagePath as image FROM productImages WHERE productId = :productId";
 
-        $stmt->execute(["productId" => $product->productId]);
+        $parameters = [];
+
+        foreach ($product->images as $index => $image) {
+            $query .= " AND imagePath != :imagePath$index";
+            $parameters["imagePath$index"] = $image;
+        }
+
+        $stmt = $this->database->prepare($query);
+
+        $stmt->execute([
+            "productId" => $product->productId,
+            ...$parameters
+        ]);
 
         return $stmt->fetchAll(PDO::FETCH_CLASS, ProductImage::class);
     }
@@ -49,12 +55,26 @@ class ProductImagesRepository
         ]);
     }
 
-    public function detachImagesFrom(Product $product)
-    {
-        $stmt = $this->database->prepare(
-            "DELETE FROM productImages WHERE productId = :productId"
-        );
 
-        $stmt->execute(["productId" => $product->productId]);
+    /** @param array<ProductImage> $images */
+    public function removeImages(array $images, int $productId)
+    {
+        $query = "DELETE FROM productImages WHERE productId = :productId";
+
+        $parameters = [];
+        foreach ($images as $index => $image) {
+            $parameters["imagePath$index"] = $image->image;
+        }
+
+        $keys = array_map(fn($key) => ":$key", array_keys($parameters));
+
+        $query .= " AND imagePath IN (" . implode(",", $keys) . ")";
+
+        $stmt = $this->database->prepare($query);
+
+        $stmt->execute([
+            "productId" => $productId,
+            ...$parameters
+        ]);
     }
 }

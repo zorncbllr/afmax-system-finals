@@ -82,12 +82,17 @@ export const useUpdateProduct = () => {
 
     onSuccess: (data) => {
       console.log(data);
-      // client.invalidateQueries({
-      //   queryKey: ["product"],
-      // });
-      // toast.success(data.message, {
-      //   position: "top-right",
-      // });
+      client.invalidateQueries({
+        queryKey: ["product"],
+      });
+
+      toast.success(data.message, {
+        position: "top-right",
+      });
+    },
+
+    onError: (error) => {
+      console.log(error);
     },
   });
 };

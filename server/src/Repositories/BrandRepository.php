@@ -4,6 +4,7 @@ namespace Src\Repositories;
 
 use Src\Core\Database;
 use Src\Models\Brand;
+use Src\Models\Product;
 
 class BrandRepository
 {
@@ -19,6 +20,22 @@ class BrandRepository
         $stmt->execute(["brandName" => $brandName]);
 
         return $stmt->fetchObject(Brand::class);
+    }
+
+    public function hasOtherDependants(Brand $brand, Product $product): bool
+    {
+        $stmt = $this->database->prepare(
+            "SELECT COUNT(*) FROM products 
+            WHERE brandId = :brandId 
+            AND productId != :productId"
+        );
+
+        $stmt->execute([
+            "brandId" => $brand->brandId,
+            "productId" => $product->productId
+        ]);
+
+        return (int) $stmt->fetchColumn() > 0;
     }
 
     public function createBrand(string $brandName): Brand

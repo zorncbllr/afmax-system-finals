@@ -143,14 +143,17 @@ class ProductService
 
     public function updateProduct(Request $request)
     {
+        $hashedImages = [];
+
+        $product = Product::fromRequest($request);
+        $product->images = $request->existingImages ?? [];
+
+        $product->productId = (int) $request->params->id;
+
         try {
-            $this->database->beginTransaction();
+            // $this->database->beginTransaction();
 
-            $product = Product::fromRequest($request);
-
-            $product->productId = $request->params->productId;
-
-            $images = $this->imagesRepository->getProductImages($product);
+            $images = $this->imagesRepository->getNotIncluded($product);
 
             $publicDir = parseDir(__DIR__) . "/../../public";
 
@@ -158,30 +161,53 @@ class ProductService
                 unlink($publicDir . $productImage->image);
             }
 
-            $this->imagesRepository->detachImagesFrom($product);
+            if (!empty($images)) {
+                $this->imagesRepository->removeImages($images, $product->productId);
+            }
 
-            $hashedImages = [];
+            $product->images = [];
 
-            $this->handleUploads(
-                images: $request->files->images,
-                product: $product,
-                hashedImages: $hashedImages
-            );
+            try {
+                $this->handleUploads(
+                    images: $request->files->images,
+                    product: $product,
+                    hashedImages: $hashedImages
+                );
 
-            $this->productRepository->updateProduct($product);
+                $this->imagesRepository->attachImagesTo($product);
+            } catch (TypeError $e) {
+            }
 
-            $this->imagesRepository->attachImagesTo($product);
+            try {
+                $this->productRepository->updateProduct($product);
+            } catch (PDOException $e) {
+                return json($e->getMessage());
+            }
 
-            $brand = $this->brandRepository->getBrandByName($product->brand);
-        } catch (PDOException $_) {
+            $prevProduct = $this->productRepository->getProductById($product->productId);
 
-            $this->database->rollBack();
+            $brand = $this->brandRepository->getBrandByName($prevProduct->brand);
+
+            if (
+                $this->brandRepository->hasOtherDependants($brand, $prevProduct) &&
+                $brand->brandName !== $product->brand
+            ) {
+                $brand = $this->brandRepository->createBrand($product->brand);
+                $this->productRepository->updateToNewBrand($brand, $product);
+            } else {
+
+                $brand->brandName = $product->brand;
+                $this->brandRepository->updateBrand($brand);
+            }
+        } catch (PDOException $e) {
+
+            // $this->database->rollBack();
 
             foreach ($hashedImages as $uploadedImage) {
                 unlink($uploadedImage);
             }
 
-            throw new ServiceException("Unable to update product.");
+            throw new ServiceException($e->getMessage());
         }
     }
 

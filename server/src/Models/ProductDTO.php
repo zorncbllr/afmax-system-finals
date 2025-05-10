@@ -22,7 +22,7 @@ class ProductDTO
         $productDTO->brand = $row["brand"];
         $productDTO->price = $row["price"];
         $productDTO->isFeatured = $row["isFeatured"];
-        $productDTO->image = $row["image"];
+        $productDTO->image = $row["image"] ?? "No image";
 
         $productDTO->categories = $row['categories'] !== null ? explode(",", $row["categories"]) : [];
 

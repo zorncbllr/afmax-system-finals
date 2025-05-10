@@ -41,9 +41,9 @@ const ProductEditView = () => {
               <Button>Update</Button>
             </div>
 
-            <div className="flex  gap-40">
-              <div className="flex w-fit gap-4">
-                <div className="flex flex-col gap-4">
+            <div className="flex flex-col items-center xl:flex-row gap-40 ">
+              <div className="flex flex-col-reverse items-center xl:flex-row w-fit gap-4">
+                <div className="flex flex-row xl:flex-col gap-4">
                   <div className="relative flex justify-center items-center w-[9rem] h-[9rem] border border-dashed border-blue-500 bg-blue-50 shadow-sm rounded-lg">
                     <input
                       type="file"

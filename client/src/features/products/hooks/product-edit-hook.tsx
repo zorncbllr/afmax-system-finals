@@ -3,10 +3,9 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import { useFetchProductById, useUpdateProduct } from "../api/query";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { ProductFormSchema } from "../types";
+import { string, z } from "zod";
+import { ProductEditFormSchema } from "../types";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { urlToFile } from "@/lib/url-to-file";
 import { breadcrumbList } from "../pages/admin/admin-products";
 
 export const useEditProductForm = () => {
@@ -19,8 +18,8 @@ export const useEditProductForm = () => {
   const { productId } = useParams();
   const { data: product } = useFetchProductById(parseInt(productId!));
 
-  const form = useForm<z.infer<typeof ProductFormSchema>>({
-    resolver: zodResolver(ProductFormSchema),
+  const form = useForm<z.infer<typeof ProductEditFormSchema>>({
+    resolver: zodResolver(ProductEditFormSchema),
     defaultValues: {
       productName: "",
       brand: "",
@@ -31,7 +30,7 @@ export const useEditProductForm = () => {
     },
   });
 
-  const submitHandler = (values: z.infer<typeof ProductFormSchema>) => {
+  const submitHandler = (values: z.infer<typeof ProductEditFormSchema>) => {
     const formData = new FormData();
 
     formData.set("productName", values.productName);
@@ -46,6 +45,17 @@ export const useEditProductForm = () => {
     for (const category of values.categories) {
       formData.append("categories[]", category);
     }
+
+    for (const img of imagePreviews) {
+      if (!img.match(/blob/)) {
+        formData.append(
+          "existingImages[]",
+          img.replace("http://localhost:8000", "")
+        );
+      }
+    }
+
+    console.log(formData.getAll("images[]"));
 
     mutate({ product: formData, productId: product!.productId });
   };
@@ -115,19 +125,6 @@ export const useEditProductForm = () => {
       setImagePreviews(
         product.images.map((img) => `http://localhost:8000${img}`)
       );
-
-      const updateImages = async () => {
-        const files = await Promise.all(
-          product.images.map((url) => urlToFile(url))
-        );
-
-        const dataTransfer = new DataTransfer();
-        files.forEach((file) => dataTransfer.items.add(file));
-
-        form.setValue("images", dataTransfer.files);
-      };
-
-      updateImages();
 
       form.setValue("productName", product.productName);
       form.setValue("brand", product.brand);

@@ -26,12 +26,12 @@ class ProductRepository
             GROUP_CONCAT(DISTINCT c.categoryName) AS categories
         FROM products p
         JOIN brands b ON b.brandId = p.brandId
-        JOIN (
+        LEFT JOIN (
             SELECT productId, MIN(productImageId) AS firstImageId
             FROM productImages
             GROUP BY productId
         ) firstImages ON firstImages.productId = p.productId
-        JOIN productImages pi ON pi.productImageId = firstImages.firstImageId
+        LEFT JOIN productImages pi ON pi.productImageId = firstImages.firstImageId
         LEFT JOIN productCategories pc ON p.productId = pc.productId
         LEFT JOIN categories c ON pc.categoryId = c.categoryId
         GROUP BY p.`productId`"
@@ -103,7 +103,7 @@ class ProductRepository
     public function updateProduct(Product $product)
     {
         $stmt = $this->database->prepare(
-            "UPDATE INTO products 
+            "UPDATE products 
             SET productName = :productName,
             price = :price,
             description = :description
@@ -114,7 +114,21 @@ class ProductRepository
             "productId" => $product->productId,
             "productName" => $product->productName,
             "price" => $product->price,
-            "description" => $product->description
+            "description" => $product->description,
+        ]);
+    }
+
+    public function updateToNewBrand(Brand $brand, Product $product)
+    {
+        $stmt = $this->database->prepare(
+            "UPDATE products
+            SET brandId = :brandId
+            WHERE productId = :productId"
+        );
+
+        $stmt->execute([
+            "productId" => $product->productId,
+            "brandId" => $brand->brandId
         ]);
     }
 }
