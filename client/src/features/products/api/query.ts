@@ -46,6 +46,10 @@ export const useCreateProduct = () => {
         position: "top-right",
       });
     },
+
+    onError: (error) => {
+      console.log(error);
+    },
   });
 };
 

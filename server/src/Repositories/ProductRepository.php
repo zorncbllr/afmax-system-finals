@@ -77,9 +77,6 @@ class ProductRepository
 
     public function createProduct(Product $product, Brand $brand): Product
     {
-        $stmt = $this->database->prepare("INSERT INTO brands (brandName) VALUES (:brandName)");
-        $stmt->execute(["brandName" => $product->brand]);
-
         $stmt = $this->database->prepare(
             "INSERT INTO products (productName, description, brandId, price)
             VALUES (:productName, :description, :brandId, :price)"

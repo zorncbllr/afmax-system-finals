@@ -72,7 +72,12 @@ class ProductService
         try {
             $this->database->beginTransaction();
 
-            $brand = $this->brandRepository->createBrand($product->brand);
+            try {
+                $brand = $this->brandRepository->createBrand($product->brand);
+            } catch (PDOException $e) {
+
+                $brand = $this->brandRepository->getBrandByName($product->brand);
+            }
 
             $product = $this->productRepository->createProduct($product, $brand);
 
@@ -82,6 +87,7 @@ class ProductService
                 try {
                     $category = $this->categoryRepository->createCategory($categoryName);
                 } catch (PDOException $_) {
+
                     $category = $this->categoryRepository->findCategoryByName($categoryName);
                 }
 
@@ -99,7 +105,7 @@ class ProductService
                 unlink($uploadedImage);
             }
 
-            throw new ServiceException("Failed to create new product.");
+            throw new ServiceException($e->getMessage());
         }
     }
 
