@@ -151,7 +151,7 @@ class ProductService
         $product->productId = (int) $request->params->id;
 
         try {
-            // $this->database->beginTransaction();
+            $this->database->beginTransaction();
 
             $images = $this->imagesRepository->getNotIncluded($product);
 
