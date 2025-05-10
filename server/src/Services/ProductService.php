@@ -65,7 +65,8 @@ class ProductService
 
         $this->handleUploads(
             images: $request->files->images,
-            product: $product
+            product: $product,
+            hashedImages: $hashedImages
         );
 
         try {
@@ -150,13 +151,16 @@ class ProductService
 
         $this->imagesRepository->detachImagesFrom($product);
 
+        $hashedImages = [];
+
         $this->handleUploads(
             images: $request->files->images,
-            product: $product
+            product: $product,
+            hashedImages: $hashedImages
         );
     }
 
-    protected function handleUploads($images, Product $product)
+    protected function handleUploads($images, array &$hashedImages, Product &$product)
     {
         $uploadDir = parseDir(__DIR__) . "/../../public/images";
 
