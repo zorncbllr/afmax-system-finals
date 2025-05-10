@@ -137,27 +137,46 @@ class ProductService
 
     public function updateProduct(Request $request)
     {
-        $product = Product::fromRequest($request);
+        try {
+            $this->database->beginTransaction();
 
-        $product->productId = $request->params->productId;
+            $product = Product::fromRequest($request);
 
-        $images = $this->imagesRepository->getProductImages($product);
+            $product->productId = $request->params->productId;
 
-        $publicDir = parseDir(__DIR__) . "/../../public";
+            $images = $this->imagesRepository->getProductImages($product);
 
-        foreach ($images as $productImage) {
-            unlink($publicDir . $productImage->image);
+            $publicDir = parseDir(__DIR__) . "/../../public";
+
+            foreach ($images as $productImage) {
+                unlink($publicDir . $productImage->image);
+            }
+
+            $this->imagesRepository->detachImagesFrom($product);
+
+            $hashedImages = [];
+
+            $this->handleUploads(
+                images: $request->files->images,
+                product: $product,
+                hashedImages: $hashedImages
+            );
+
+            $this->productRepository->updateProduct($product);
+
+            $this->imagesRepository->attachImagesTo($product);
+
+            $brand = $this->brandRepository->getBrandByName($product->brand);
+        } catch (PDOException $_) {
+
+            $this->database->rollBack();
+
+            foreach ($hashedImages as $uploadedImage) {
+                unlink($uploadedImage);
+            }
+
+            throw new ServiceException("Unable to update product.");
         }
-
-        $this->imagesRepository->detachImagesFrom($product);
-
-        $hashedImages = [];
-
-        $this->handleUploads(
-            images: $request->files->images,
-            product: $product,
-            hashedImages: $hashedImages
-        );
     }
 
     protected function handleUploads($images, array &$hashedImages, Product &$product)
