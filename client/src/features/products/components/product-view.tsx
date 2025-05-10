@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 import { CategoryBadge } from "@/features/categories/components/category-badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useAutoResizeTextarea } from "../hooks/use-autoresize-textarea";
+import { useAutoResizeTextarea } from "../hooks/autoresize-hook";
 
 export const ProductViewSkeleton = () => {
   return (

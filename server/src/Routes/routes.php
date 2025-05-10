@@ -3,12 +3,12 @@
 use Src\Controllers\CategoryController;
 use Src\Controllers\FeaturedCategoryController;
 use Src\Controllers\InventoryController;
-use Src\Controllers\ProductController;
 use Src\Core\Router;
+
 
 $router = new Router(base: "/api/v1");
 
-$router->resource("products", ProductController::class);
+(require("products.php"))($router);
 
 $router->get(
     "/featured/categories",

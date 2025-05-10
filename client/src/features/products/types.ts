@@ -38,3 +38,8 @@ export const ProductFormSchema = z.object({
     .array(z.string().min(1))
     .min(1, "At least one category is required"),
 });
+
+export interface ProductUpdateProps {
+  productId: number;
+  product: FormData;
+}

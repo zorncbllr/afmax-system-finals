@@ -1,5 +1,11 @@
 import { axiosInstance } from "../../../lib/api";
-import { Product, ProductDTO } from "../types";
+import {
+  Product,
+  ProductDTO,
+  ProductFormSchema,
+  ProductUpdateProps,
+} from "../types";
+import { z } from "zod";
 
 interface SuccessResponse {
   message: string;
@@ -30,4 +36,24 @@ export const deleteProduct = async (
   productId: number
 ): Promise<SuccessResponse> => {
   return (await axiosInstance.delete(`/products/${productId}`)).data;
+};
+
+export const updateProduct = async ({
+  productId,
+  product,
+}: {
+  productId: number;
+  product: FormData;
+}) => {
+  return (
+    await axiosInstance.post<SuccessResponse>(
+      `/products/update/${productId}`,
+      product,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    )
+  ).data;
 };

@@ -23,7 +23,7 @@ class Router implements HTTPMethodInterface
     public string $base;
     public $_404;
 
-    function __construct(string $base = "", array $middlewares = [])
+    public  function __construct(string $base = "", array $middlewares = [])
     {
         $this->request = new Request();
         $this->request->setParams([]);

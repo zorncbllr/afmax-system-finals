@@ -1,18 +1,8 @@
-import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 import { CategoryBadge } from "@/features/categories/components/category-badge";
 import { Button } from "@/components/ui/button";
-import { useParams } from "react-router";
-import { useFetchProductById } from "../../api/query";
 import AdminLayout from "@/layouts/admin-layout";
 import { ImagePlusIcon, PencilIcon, PlusIcon, XIcon } from "lucide-react";
-import { breadcrumbList } from "./admin-products";
-import { BreadcrumbItem, useBreadcrumb } from "@/features/breadcrumbs/store";
-import { useForm } from "react-hook-form";
-import { ProductFormSchema } from "../../types";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-import { urlToFile } from "@/lib/url-to-file";
 import {
   Form,
   FormControl,
@@ -22,72 +12,28 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@headlessui/react";
-import { useAutoResizeTextarea } from "../../hooks/use-autoresize-textarea";
+import { useAutoResizeTextarea } from "../../hooks/autoresize-hook";
+import { useEditProductForm } from "../../hooks/product-edit-hook";
 
 const ProductEditView = () => {
-  const [mainImage, setMainImage] = useState<string>("");
-  const [category, SetCategory] = useState<string>("");
-
-  const { setActivePage, setBreadcrumbList } = useBreadcrumb();
-
-  const { productId } = useParams();
-  const { data: product, isFetched } = useFetchProductById(
-    parseInt(productId!)
-  );
-
-  const form = useForm<z.infer<typeof ProductFormSchema>>({
-    resolver: zodResolver(ProductFormSchema),
-    defaultValues: {
-      productName: "",
-      brand: "",
-      description: "",
-      price: 0,
-      categories: [],
-      images: new DataTransfer().files,
-    },
-  });
-
-  useEffect(() => {
-    if (product) {
-      const activePage: BreadcrumbItem = {
-        href: `/admin/products/edit/${product.productId.toString()}`,
-        itemName: product.productName,
-      };
-
-      setBreadcrumbList([...breadcrumbList, activePage]);
-      setActivePage(activePage);
-
-      const updateImages = async () => {
-        const files = await Promise.all(
-          product.images.map((url) => urlToFile(url))
-        );
-
-        const dataTransfer = new DataTransfer();
-        files.forEach((file) => dataTransfer.items.add(file));
-
-        form.setValue("images", dataTransfer.files);
-      };
-
-      updateImages();
-
-      form.setValue("productName", product.productName);
-      form.setValue("brand", product.brand);
-      form.setValue("price", product.price);
-      form.setValue("description", product.description);
-      form.setValue("categories", product.categories);
-
-      setMainImage(product!.images[0]);
-    }
-  }, [product]);
+  const {
+    form,
+    category,
+    imagePreviews,
+    addImages,
+    SetCategory,
+    appendCategory,
+    removeCategory,
+    removeImage,
+    submitHandler,
+  } = useEditProductForm();
 
   return (
     <AdminLayout>
       <Form {...form}>
         <form
           encType="multipart/form-data"
-          onSubmit={form.handleSubmit((value) => {
-            console.log(value);
-          })}
+          onSubmit={form.handleSubmit(submitHandler)}
         >
           <div className="flex flex-col items-center gap-8 px-12">
             <div className="flex w-full gap-2 justify-end">
@@ -104,6 +50,7 @@ const ProductEditView = () => {
                       multiple
                       accept="image/*"
                       className="placeholder-transparent text-transparent w-full h-full z-50"
+                      onChange={addImages}
                     />
                     <ImagePlusIcon
                       className="absolute text-blue-500"
@@ -111,21 +58,23 @@ const ProductEditView = () => {
                     />
                   </div>
 
-                  {product?.images.map((image) => (
+                  {imagePreviews.map((image, index) => (
                     <div className="relative">
                       <img
-                        src={"http://localhost:8000" + image}
+                        src={image}
                         alt="Product Image"
                         className={cn(
                           "w-[9rem] h-[9rem] object-cover shadow-sm",
-                          image == mainImage
+                          index == 0
                             ? " rounded-r-lg border-l-4 border-blue-500"
                             : "rounded-lg"
                         )}
                       />
                       <Button
+                        type="button"
                         variant={"secondary"}
                         className="rounded-full absolute -top-2 -right-2"
+                        onClick={() => removeImage(index)}
                       >
                         <XIcon />
                       </Button>
@@ -135,11 +84,12 @@ const ProductEditView = () => {
 
                 <div className="relative">
                   <img
-                    src={"http://localhost:8000" + mainImage}
+                    src={imagePreviews[0]}
                     alt="Product Image"
                     className="w-[30rem] h-[30rem] object-cover rounded-r-lg shadow-sm"
                   />
                   <Button
+                    type="button"
                     variant={"secondary"}
                     className="rounded-full absolute -top-2 -right-2"
                   >
@@ -252,6 +202,7 @@ const ProductEditView = () => {
                               variant={
                                 fieldState.error ? "destructive" : "default"
                               }
+                              onClick={appendCategory}
                             >
                               <PlusIcon className="h-4 w-4" />
                             </Button>
@@ -273,6 +224,7 @@ const ProductEditView = () => {
                                     className={
                                       fieldState.error ? "text-destructive" : ""
                                     }
+                                    onClick={() => removeCategory(index)}
                                   >
                                     <XIcon className="h-3 w-3" />
                                   </button>

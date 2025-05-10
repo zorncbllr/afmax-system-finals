@@ -4,11 +4,12 @@ import {
   deleteProduct,
   getProductById,
   getProducts,
+  updateProduct,
 } from "./service";
-import { Product, ProductDTO } from "../types";
+import { Product, ProductDTO, ProductUpdateProps } from "../types";
 import { queryClient } from "@/main";
 import toast from "react-hot-toast";
-import { useProductFormStore } from "../useProductForm";
+import { useProductFormStore } from "../store";
 
 export const useFetchProducts = () =>
   useQuery<ProductDTO[]>({
@@ -63,6 +64,26 @@ export const useDeleteProduct = () => {
       toast.success(data.message, {
         position: "top-right",
       });
+    },
+  });
+};
+
+export const useUpdateProduct = () => {
+  const client = queryClient;
+
+  return useMutation({
+    mutationKey: ["product"],
+    mutationFn: async (productProps: ProductUpdateProps) =>
+      updateProduct(productProps),
+
+    onSuccess: (data) => {
+      console.log(data);
+      // client.invalidateQueries({
+      //   queryKey: ["product"],
+      // });
+      // toast.success(data.message, {
+      //   position: "top-right",
+      // });
     },
   });
 };
