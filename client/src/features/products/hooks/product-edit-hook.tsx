@@ -134,6 +134,14 @@ export const useEditProductForm = () => {
     }
   }, [product]);
 
+  useEffect(() => {
+    return () => {
+      for (const img of imagePreviews) {
+        URL.revokeObjectURL(img);
+      }
+    };
+  }, []);
+
   return {
     imagePreviews,
     category,

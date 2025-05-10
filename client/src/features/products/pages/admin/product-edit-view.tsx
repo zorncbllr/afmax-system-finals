@@ -14,6 +14,7 @@ import {
 import { Input } from "@headlessui/react";
 import { useAutoResizeTextarea } from "../../hooks/autoresize-hook";
 import { useEditProductForm } from "../../hooks/product-edit-hook";
+import { useNavigate } from "react-router";
 
 const ProductEditView = () => {
   const {
@@ -28,6 +29,8 @@ const ProductEditView = () => {
     submitHandler,
   } = useEditProductForm();
 
+  const navigate = useNavigate();
+
   return (
     <AdminLayout>
       <Form {...form}>
@@ -37,7 +40,13 @@ const ProductEditView = () => {
         >
           <div className="flex flex-col items-center gap-8 px-12">
             <div className="flex w-full gap-2 justify-end">
-              <Button variant={"secondary"}>Cancel</Button>
+              <Button
+                type="button"
+                onClick={() => navigate("/admin/products")}
+                variant={"secondary"}
+              >
+                Cancel
+              </Button>
               <Button>Update</Button>
             </div>
 
