@@ -273,7 +273,7 @@ const InventoryForm = () => {
                             <SelectItem value="365">In a year</SelectItem>
                           </SelectContent>
                         </Select>
-                        <div className="rounded-md border mt-2">
+                        <div className="rounded-md border mt-2 flex justify-center">
                           <Calendar
                             mode="single"
                             selected={field.value}
