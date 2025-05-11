@@ -57,7 +57,7 @@ CREATE TABLE inventories (
     unitId INT,
     productId INT NOT NULL,
     quantity INT,
-    expiration DATE NOT NULL DEFAULT '9999-12-31',
+    expiration DATE DEFAULT NULL,
     createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (unitId) REFERENCES units(unitId),
