@@ -36,4 +36,13 @@ class UnitRepository
 
         return $unit;
     }
+
+    public function deleteUnit(int $unitId)
+    {
+        $stmt = $this->database->prepare(
+            "DELETE FROM units WHERE unitId = :unitId"
+        );
+
+        $stmt->execute(["unitId" => $unitId]);
+    }
 }

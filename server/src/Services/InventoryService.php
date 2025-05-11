@@ -12,6 +12,7 @@ use Src\Models\DTOs\InventoryDTO;
 use Src\Models\Unit;
 use Src\Repositories\InventoryRepository;
 use Src\Repositories\UnitRepository;
+use TypeError;
 
 class InventoryService
 {
@@ -88,11 +89,29 @@ class InventoryService
 
     public function deleteInventory(int $inventoryId)
     {
-        try {
-            $this->inventoryRepository->deleteInventory($inventoryId);
-        } catch (PDOException $e) {
 
-            throw new ServiceException("Unable to delete inventory item");
+        try {
+            $this->database->beginTransaction();
+
+            $inventory = $this->inventoryDTOFactory->makeInventoryDTO(
+                row: $this->inventoryRepository->getInventoryDataById($inventoryId)
+            );
+
+            $unit = $this->unitRepository->getUnitByName($inventory->unit);
+
+            $this->inventoryRepository->deleteInventory($inventoryId);
+
+            $this->database->commit();
+        } catch (TypeError $e) {
+
+            $this->database->rollBack();
+
+            throw new ServiceException("Inventory item not found.");
+        }
+
+        try {
+            $this->unitRepository->deleteUnit($unit->unitId);
+        } catch (PDOException $e) {
         }
     }
 
