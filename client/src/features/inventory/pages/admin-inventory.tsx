@@ -9,6 +9,8 @@ import { useFetchInventoryData } from "@/features/inventory/hooks";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { StatusBadge } from "@/features/inventory/components/status-badge";
+import { useInventoryStore } from "../store";
+import InventoryForm from "../components/inventory-form";
 
 const columns: ColumnDef<Inventory>[] = [
   {
@@ -75,7 +77,11 @@ export const breadcrumbList: BreadcrumbItem[] = [
   },
 ];
 
-const AddItemButton = () => <Button>Add Item</Button>;
+const AddItemButton = () => {
+  const { setIsOpen } = useInventoryStore();
+
+  return <Button onClick={() => setIsOpen(true)}>Add Item</Button>;
+};
 
 const AdminInventory = () => {
   const { setActiveItem, sidebarProps } = useSidebar();
@@ -99,6 +105,8 @@ const AdminInventory = () => {
           actions={[<AddItemButton />]}
         />
       )}
+
+      <InventoryForm />
     </AdminLayout>
   );
 };

@@ -191,12 +191,26 @@ class ProductService
                 $this->brandRepository->hasOtherDependants($brand, $prevProduct) &&
                 $brand->brandName !== $product->brand
             ) {
-                $brand = $this->brandRepository->createBrand($product->brand);
-                $this->productRepository->updateToNewBrand($brand, $product);
+                try {
+                    $brand = $this->brandRepository->createBrand($product->brand);
+                } catch (PDOException $e) {
+                    $brand = $this->brandRepository->getBrandByName($product->brand);
+                }
             } else {
 
-                $brand->brandName = $product->brand;
-                $this->brandRepository->updateBrand($brand);
+                try {
+                    $brand->brandName = $product->brand;
+                    $this->brandRepository->updateBrand($brand);
+                } catch (PDOException $e) {
+                    $brand = $this->brandRepository->getBrandByName($product->brand);
+                }
+            }
+
+            $this->productRepository->updateToNewBrand($brand, $product);
+
+            try {
+                $this->brandRepository->deleteBrandByName($prevProduct->brand);
+            } catch (PDOException $e) {
             }
 
             $tobeDeleted = [];
