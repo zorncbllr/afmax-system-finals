@@ -32,6 +32,19 @@ class InventoryService
         );
     }
 
+    public function getInventoryById(int $inventoryId): InventoryDTO
+    {
+        $rawInventory = $this
+            ->inventoryRepository
+            ->getInventoryDataById($inventoryId);
+
+        if (empty($rawInventory)) {
+            throw new ServiceException("Inventory item not found.");
+        }
+
+        return $this->inventoryDTOFactory->makeInventoryDTO($rawInventory);
+    }
+
     public function createNewInventory(Request $request)
     {
         try {

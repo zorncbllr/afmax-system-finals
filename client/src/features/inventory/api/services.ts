@@ -5,6 +5,12 @@ export const fetchInventoryData = async (): Promise<Inventory[]> => {
   return (await axiosInstance.get<Inventory[]>("/inventory")).data;
 };
 
+export const fetchInventoryById = async (
+  inventoryId: number
+): Promise<Inventory> => {
+  return (await axiosInstance.get<Inventory>(`/inventory/${inventoryId}`)).data;
+};
+
 export const createInventory = async (
   inventoryData: InventoryForm
 ): Promise<SuccessResponse> => {

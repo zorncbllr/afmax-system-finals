@@ -25,6 +25,22 @@ class InventoryController
         return json($inventoryData);
     }
 
+    public function getInventoryDataById(int $inventoryId)
+    {
+        try {
+            $inventoryData = $this
+                ->inventoryService
+                ->getInventoryById($inventoryId);
+
+            status(200);
+            return json($inventoryData);
+        } catch (ServiceException $e) {
+
+            status(404);
+            return json(["message" => $e->getMessage()]);
+        }
+    }
+
     public function createNewInventory(Request $request)
     {
         try {

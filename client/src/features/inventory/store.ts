@@ -1,12 +1,22 @@
 import { create } from "zustand";
 
 interface InventoryStore {
-  isOpen: boolean;
-  setIsOpen: (value: boolean) => void;
+  isCreationFormOpen: boolean;
+  isEditFormOpen: boolean;
+  inventoryId: number;
+
+  setIsCreationFormOpen: (value: boolean) => void;
+  setIsEditFormOpen: (value: boolean) => void;
+  setInventoryId: (inventoryId: number) => void;
 }
 
 export const useInventoryStore = create<InventoryStore>((set) => ({
-  isOpen: false,
+  isCreationFormOpen: false,
+  isEditFormOpen: false,
 
-  setIsOpen: (value) => set(() => ({ isOpen: value })),
+  inventoryId: -1,
+
+  setIsCreationFormOpen: (value) => set(() => ({ isCreationFormOpen: value })),
+  setIsEditFormOpen: (value) => set(() => ({ isEditFormOpen: value })),
+  setInventoryId: (inventoryId) => set(() => ({ inventoryId })),
 }));

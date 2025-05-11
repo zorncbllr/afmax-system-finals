@@ -1,10 +1,13 @@
+import { UseFormReturn } from "react-hook-form";
 import { z } from "zod";
+import { ProductDTO } from "../products/types";
 
 export interface Inventory {
   inventoryId: number;
   quantity: number;
   unit: string;
   product: string;
+  productId: number;
   abbreviation: string;
   expiration: string;
   dateStocked: string;
@@ -43,3 +46,31 @@ export interface InventoryErrorResponse {
 }
 
 export type InventoryForm = z.infer<typeof InventoryFormSchema>;
+
+export interface InventoryFormProps {
+  form: UseFormReturn<
+    {
+      productId: number;
+      unit: string;
+      abbreviation: string;
+      quantity: number;
+      expiration?: Date | undefined;
+    },
+    any,
+    {
+      productId: number;
+      unit: string;
+      abbreviation: string;
+      quantity: number;
+      expiration?: Date | undefined;
+    }
+  >;
+  products?: ProductDTO[];
+  isOpen: boolean;
+  openDate: boolean;
+  openSelect: boolean;
+  setIsOpen: (value: boolean) => void;
+  setOpenDate: React.Dispatch<React.SetStateAction<boolean>>;
+  setOpenSelect: React.Dispatch<React.SetStateAction<boolean>>;
+  submitHandler: (value: InventoryForm) => void;
+}

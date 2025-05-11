@@ -8,7 +8,7 @@ import { useInventoryStore } from "../store";
 
 export const useCreateInventory = () => {
   const client = queryClient;
-  const { setIsOpen } = useInventoryStore();
+  const { setIsCreationFormOpen } = useInventoryStore();
 
   return useMutation({
     mutationKey: ["inventory"],
@@ -18,7 +18,7 @@ export const useCreateInventory = () => {
     onSuccess: (data) => {
       console.log(data);
 
-      setIsOpen(false);
+      setIsCreationFormOpen(false);
 
       client.invalidateQueries({
         queryKey: ["inventory"],

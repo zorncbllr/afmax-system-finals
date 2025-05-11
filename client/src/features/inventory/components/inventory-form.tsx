@@ -40,21 +40,19 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Form } from "@/components/ui/form";
-import useInventoryForm from "../hooks/inventory-form-hook";
+import { InventoryFormProps } from "../types";
 
-const InventoryForm = () => {
-  const {
-    form,
-    products,
-    isOpen,
-    openDate,
-    openSelect,
-    setIsOpen,
-    setOpenDate,
-    setOpenSelect,
-    submitHandler,
-  } = useInventoryForm();
-
+const InventoryForm = ({
+  form,
+  isOpen,
+  openDate,
+  openSelect,
+  setIsOpen,
+  setOpenDate,
+  setOpenSelect,
+  submitHandler,
+  products,
+}: InventoryFormProps) => {
   return (
     <Modal variant="sm" isOpen={isOpen} setIsOpen={setIsOpen}>
       <Form {...form}>

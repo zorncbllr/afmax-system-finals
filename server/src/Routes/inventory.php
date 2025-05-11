@@ -10,8 +10,8 @@ return function (Router $router) {
         ->get([InventoryController::class, "getInventoryData"])
         ->post([InventoryController::class, "createNewInventory"]);
 
-    $router->delete(
-        "/inventory/{inventoryId}",
-        [InventoryController::class, 'deleteInventory']
-    );
+    $router
+        ->route("/inventory/{inventoryId}")
+        ->get([InventoryController::class, "getInventoryDataById"])
+        ->delete([InventoryController::class, 'deleteInventory']);
 };

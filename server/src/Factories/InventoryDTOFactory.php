@@ -12,6 +12,7 @@ class InventoryDTOFactory
         $inventory = new InventoryDTO();
 
         $inventory->inventoryId = $row["inventoryId"];
+        $inventory->productId = $row["productId"];
         $inventory->unit = $row["unit"] ?? "----";
         $inventory->product = $row["product"];
         $inventory->abbreviation = $row["abbreviation"] ?? "----";

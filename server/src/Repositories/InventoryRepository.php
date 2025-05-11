@@ -17,12 +17,13 @@ class InventoryRepository
         $stmt = $this->database->prepare(
             "SELECT 
             i.`inventoryId`,
-            quantity, 
-            `productName` as product, 
-            `unitName` as unit, 
-            abbreviation,  
+            i.`quantity`,
+            p.`productId`, 
+            p.`productName` as product, 
+            u.`unitName` as unit, 
+            u.`abbreviation`,  
             i.`updatedAt` as dateStocked,
-            i.expiration
+            i.`expiration`
             FROM inventories i
             LEFT JOIN units u
             ON i.`unitId` = u.`unitId`
@@ -33,6 +34,31 @@ class InventoryRepository
         $stmt->execute();
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getInventoryDataById(int $inventoryId)
+    {
+        $stmt = $this->database->prepare(
+            "SELECT 
+            i.`inventoryId`,
+            i.`quantity`,
+            p.`productId`, 
+            p.`productName` as product, 
+            u.`unitName` as unit, 
+            u.`abbreviation`,  
+            i.`updatedAt` as dateStocked,
+            i.`expiration`
+            FROM inventories i
+            LEFT JOIN units u
+            ON i.`unitId` = u.`unitId`
+            JOIN products p
+            ON p.`productId` = i.`productId`
+            WHERE i.`inventoryId` = :inventoryId"
+        );
+
+        $stmt->execute(["inventoryId" => $inventoryId]);
+
+        return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
     public function createInventory(int $productId): Inventory

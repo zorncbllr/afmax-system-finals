@@ -19,6 +19,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { MoreHorizontal, PencilIcon, Trash2 } from "lucide-react";
 import { useDeleteInventory } from "../api/mutations";
+import CreateInventoryForm from "../components/inventory-creation-form";
+import EditInventoryForm from "../components/inventory-edit-form";
 
 const columns: ColumnDef<Inventory>[] = [
   {
@@ -83,6 +85,7 @@ const columns: ColumnDef<Inventory>[] = [
     cell: ({ row }) => {
       const raw = row.original;
       const { mutate: deleteInventory } = useDeleteInventory();
+      const { setIsEditFormOpen, setInventoryId } = useInventoryStore();
 
       return (
         <DropdownMenu>
@@ -93,7 +96,12 @@ const columns: ColumnDef<Inventory>[] = [
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => {
+                setInventoryId(raw.inventoryId);
+                setIsEditFormOpen(true);
+              }}
+            >
               <PencilIcon className="mr-2 h-4 w-4" />
               Edit
             </DropdownMenuItem>
@@ -123,15 +131,16 @@ export const breadcrumbList: BreadcrumbItem[] = [
 ];
 
 const AddItemButton = () => {
-  const { setIsOpen } = useInventoryStore();
+  const { setIsCreationFormOpen } = useInventoryStore();
 
-  return <Button onClick={() => setIsOpen(true)}>Add Item</Button>;
+  return <Button onClick={() => setIsCreationFormOpen(true)}>Add Item</Button>;
 };
 
 const AdminInventory = () => {
   const { setActiveItem, sidebarProps } = useSidebar();
   const { setBreadcrumbList, setActivePage } = useBreadcrumb();
   const { data: inventoryData, isFetched } = useFetchInventoryData();
+  const { inventoryId } = useInventoryStore();
 
   useEffect(() => {
     setActiveItem(sidebarProps?.sections[0].items[2]);
@@ -151,7 +160,8 @@ const AdminInventory = () => {
         />
       )}
 
-      <InventoryForm />
+      <CreateInventoryForm />
+      <EditInventoryForm inventoryId={inventoryId} />
     </AdminLayout>
   );
 };
