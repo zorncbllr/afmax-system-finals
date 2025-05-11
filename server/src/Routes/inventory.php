@@ -9,4 +9,9 @@ return function (Router $router) {
         ->route("/inventory")
         ->get([InventoryController::class, "getInventoryData"])
         ->post([InventoryController::class, "createNewInventory"]);
+
+    $router->delete(
+        "/inventory/{inventoryId}",
+        [InventoryController::class, 'deleteInventory']
+    );
 };

@@ -38,4 +38,21 @@ class InventoryController
             return json(["message" => $e->getMessage()]);
         }
     }
+
+    public function deleteInventory(Request $request)
+    {
+        try {
+            $this
+                ->inventoryService
+                ->deleteInventory(
+                    inventoryId: (int) $request->params->inventoryId
+                );
+        } catch (ServiceException $e) {
+
+            status(400);
+            return json(["message" => $e->getMessage()]);
+        }
+    }
+
+    public function updateInventory(Request $request) {}
 }

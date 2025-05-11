@@ -70,4 +70,13 @@ class InventoryRepository
             "expiration" => $inventory->expiration
         ]);
     }
+
+    public function deleteInventory(int $inventoryId)
+    {
+        $stmt = $this->database->prepare(
+            "DELETE FROM inventories WHERE inventoryId = :inventoryId"
+        );
+
+        $stmt->execute(["inventoryId" => $inventoryId]);
+    }
 }

@@ -18,6 +18,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { MoreHorizontal, PencilIcon, Trash2 } from "lucide-react";
+import { useDeleteInventory } from "../api/mutations";
 
 const columns: ColumnDef<Inventory>[] = [
   {
@@ -80,6 +81,9 @@ const columns: ColumnDef<Inventory>[] = [
   {
     id: "actions",
     cell: ({ row }) => {
+      const raw = row.original;
+      const { mutate: deleteInventory } = useDeleteInventory();
+
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -93,7 +97,10 @@ const columns: ColumnDef<Inventory>[] = [
               <PencilIcon className="mr-2 h-4 w-4" />
               Edit
             </DropdownMenuItem>
-            <DropdownMenuItem className="text-red-500">
+            <DropdownMenuItem
+              className="text-red-500"
+              onClick={() => deleteInventory(raw.inventoryId)}
+            >
               <Trash2 className="mr-2 h-4 w-4 text-red-500" />
               Delete
             </DropdownMenuItem>

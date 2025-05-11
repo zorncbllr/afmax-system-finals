@@ -12,3 +12,11 @@ export const createInventory = async (
     await axiosInstance.post<SuccessResponse>("/inventory", inventoryData)
   ).data;
 };
+
+export const deleteInventory = async (
+  inventoryId: number
+): Promise<SuccessResponse> => {
+  return (
+    await axiosInstance.delete<SuccessResponse>(`/inventory/${inventoryId}`)
+  ).data;
+};

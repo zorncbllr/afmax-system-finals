@@ -72,4 +72,16 @@ class InventoryService
             throw new ServiceException("Unable to create inventory item.");
         }
     }
+
+    public function deleteInventory(int $inventoryId)
+    {
+        try {
+            $this->inventoryRepository->deleteInventory($inventoryId);
+        } catch (PDOException $e) {
+
+            throw new ServiceException("Unable to delete inventory item");
+        }
+    }
+
+    public function updateInventory(Request $request) {}
 }
