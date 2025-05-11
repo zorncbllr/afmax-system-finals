@@ -1,6 +1,7 @@
 import Modal from "@/components/modal";
 import { useInventoryStore } from "../store";
 import ModalLayout from "@/layouts/modal-layout";
+import { addDays, format, startOfDay } from "date-fns";
 import {
   PackagePlusIcon,
   CalendarIcon,
@@ -19,10 +20,8 @@ import {
 } from "@/components/ui/command";
 
 import { useFetchProducts } from "@/features/products/api/query";
-import { useState } from "react";
-import { Label } from "@/components/ui/label";
+import { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
-import { addDays, format } from "date-fns";
 import { Calendar } from "@/components/ui/calendar";
 import {
   Popover,
@@ -36,144 +35,259 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import { Form } from "@/components/ui/form";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { inventoryFormSchema } from "../types";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 const InventoryForm = () => {
   const { isOpen, setIsOpen } = useInventoryStore();
-  const [open, setOpen] = useState(false);
-  const [value, setValue] = useState("");
-  const [date, setDate] = useState<Date>();
-
   const { data: products } = useFetchProducts();
+  const [openSelect, setOpenSelect] = useState<boolean>(false);
+  const [openDate, setOpenDate] = useState<boolean>(false);
+
+  const form = useForm<z.infer<typeof inventoryFormSchema>>({
+    resolver: zodResolver(inventoryFormSchema),
+    defaultValues: {
+      unit: "",
+      product: "",
+      abbreviation: "",
+      quantity: 0,
+      expiration: undefined,
+    },
+  });
+
+  const submitHandler = (value: z.infer<typeof inventoryFormSchema>) => {
+    console.log(value);
+  };
+
+  useEffect(() => {
+    setTimeout(() => {
+      form.reset({
+        unit: "",
+        product: "",
+        abbreviation: "",
+        quantity: 0,
+        expiration: undefined,
+      });
+    }, 500);
+  }, [isOpen]);
 
   return (
     <Modal variant="sm" isOpen={isOpen} setIsOpen={setIsOpen}>
-      <Form>
-        <form>
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(submitHandler)}>
           <ModalLayout
             heading="Add New Item"
             subHeading="Please fill all fields required to create an item."
             icon={PackagePlusIcon}
           >
-            <div className="px-4 py-8 grid gap-8">
-              <div className="grid gap-2 w-full">
-                <Label>Select From Products</Label>
-                <Popover open={open} onOpenChange={setOpen}>
-                  <PopoverTrigger asChild>
-                    <Button
-                      variant="outline"
-                      role="combobox"
-                      aria-expanded={open}
-                      className="justify-between"
-                    >
-                      {value
-                        ? products?.find(
-                            (product) => product.productName === value
-                          )?.productName
-                        : "----"}
-                      <ChevronsUpDown className="opacity-50" />
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="p-0 w-[25rem]">
-                    <Command>
-                      <CommandInput
-                        placeholder="Search"
-                        className="h-9 w-full"
-                      />
-                      <CommandList>
-                        <CommandEmpty>No framework found.</CommandEmpty>
-                        <CommandGroup>
-                          {products?.map((product) => (
-                            <CommandItem
-                              key={product.productId}
-                              value={product.productName}
-                              onSelect={(currentValue) => {
-                                setValue(
-                                  currentValue === value ? "" : currentValue
-                                );
-                                setOpen(false);
-                              }}
-                            >
-                              {product.productName}
-                              <Check
-                                className={cn(
-                                  "ml-auto",
-                                  value === product.productName
-                                    ? "opacity-100"
-                                    : "opacity-0"
-                                )}
-                              />
-                            </CommandItem>
-                          ))}
-                        </CommandGroup>
-                      </CommandList>
-                    </Command>
-                  </PopoverContent>
-                </Popover>
-              </div>
+            <div className="px-4 py-8 grid gap-6">
+              <FormField
+                control={form.control}
+                name="product"
+                render={({ field }) => (
+                  <FormItem className="grid gap-2 w-full">
+                    <FormLabel>Select From Products</FormLabel>
+                    <Popover open={openSelect} onOpenChange={setOpenSelect}>
+                      <PopoverTrigger asChild>
+                        <FormControl>
+                          <Button
+                            variant="outline"
+                            role="combobox"
+                            className="justify-between"
+                            aria-expanded={
+                              form.getValues("product") ? true : false
+                            }
+                          >
+                            {field.value
+                              ? products?.find(
+                                  (product) =>
+                                    product.productName === field.value
+                                )?.productName
+                              : "Select product..."}
+                            <ChevronsUpDown className="ml-2 h-4 w-4 opacity-50" />
+                          </Button>
+                        </FormControl>
+                      </PopoverTrigger>
+                      <PopoverContent className="p-0 w-[25rem]">
+                        <Command>
+                          <CommandInput
+                            placeholder="Search products..."
+                            className="h-9"
+                          />
+                          <CommandList>
+                            <CommandEmpty>No products found.</CommandEmpty>
+                            <CommandGroup>
+                              {products?.map((product) => (
+                                <CommandItem
+                                  key={product.productId}
+                                  value={product.productName}
+                                  onSelect={() => {
+                                    form.setValue(
+                                      "product",
+                                      product.productName
+                                    );
+                                    setOpenSelect(false);
+                                    form.clearErrors("product");
+                                  }}
+                                >
+                                  {product.productName}
+                                  <Check
+                                    className={cn(
+                                      "ml-auto h-4 w-4",
+                                      field.value === product.productName
+                                        ? "opacity-100"
+                                        : "opacity-0"
+                                    )}
+                                  />
+                                </CommandItem>
+                              ))}
+                            </CommandGroup>
+                          </CommandList>
+                        </Command>
+                      </PopoverContent>
+                    </Popover>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-              <div className="grid gap-2">
-                <Label>Quantity</Label>
-                <Input type="number" />
-              </div>
+              <FormField
+                control={form.control}
+                name="quantity"
+                render={({ field }) => (
+                  <FormItem>
+                    <div className="grid gap-2">
+                      <FormLabel>Quantity</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="number"
+                          placeholder="Enter quantity"
+                          min={0}
+                          {...field}
+                          onChange={(e) =>
+                            field.onChange(parseInt(e.target.value))
+                          }
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </div>
+                  </FormItem>
+                )}
+              />
 
               <div className="flex gap-4">
-                <div className="grid gap-2">
-                  <Label>Unit</Label>
-                  <Input />
-                </div>
+                <FormField
+                  control={form.control}
+                  name="unit"
+                  render={({ field }) => (
+                    <FormItem>
+                      <div className="grid gap-2">
+                        <FormLabel>Unit</FormLabel>
+                        <FormControl>
+                          <Input
+                            placeholder="Enter unit (e.g., grams, liters)"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </div>
+                    </FormItem>
+                  )}
+                />
 
-                <div className="grid gap-2">
-                  <Label>Unit Abbreviation</Label>
-                  <Input />
-                </div>
+                <FormField
+                  control={form.control}
+                  name="abbreviation"
+                  render={({ field }) => (
+                    <FormItem>
+                      <div className="grid gap-2">
+                        <FormLabel>Unit Abbreviation</FormLabel>
+                        <FormControl>
+                          <Input
+                            placeholder="Enter abbreviation (e.g., kg, mL)"
+                            maxLength={5}
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </div>
+                    </FormItem>
+                  )}
+                />
               </div>
 
-              <div className="grid gap-2">
-                <Label>Expiration Date</Label>
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <Button
-                      variant={"outline"}
-                      className={cn(
-                        "w-[25rem] justify-start text-left font-normal",
-                        !date && "text-muted-foreground"
-                      )}
-                    >
-                      <CalendarIcon />
-                      {date ? format(date, "PPP") : <span>Pick a date</span>}
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent
-                    align="start"
-                    className="flex w-[25rem] flex-col space-y-2 p-2"
-                  >
-                    <Select
-                      onValueChange={(value) =>
-                        setDate(addDays(new Date(), parseInt(value)))
-                      }
-                    >
-                      <SelectTrigger className="w-1/3">
-                        <SelectValue placeholder="Select" />
-                      </SelectTrigger>
-                      <SelectContent position="popper">
-                        <SelectItem value="0">None</SelectItem>
-                        <SelectItem value="3">In 3 days</SelectItem>
-                        <SelectItem value="7">In a week</SelectItem>
-                        <SelectItem value="30">In a month</SelectItem>
-                        <SelectItem value="365">In a Year</SelectItem>
-                      </SelectContent>
-                    </Select>
-                    <div className="rounded-md flex justify-center border">
-                      <Calendar
-                        mode="single"
-                        selected={date}
-                        onSelect={setDate}
-                      />
-                    </div>
-                  </PopoverContent>
-                </Popover>
-              </div>
+              <FormField
+                control={form.control}
+                name="expiration"
+                render={({ field }) => (
+                  <FormItem className="grid gap-2">
+                    <FormLabel>Expiration Date</FormLabel>
+                    <Popover open={openDate} onOpenChange={setOpenDate}>
+                      <PopoverTrigger asChild>
+                        <FormControl>
+                          <Button
+                            variant={"outline"}
+                            className={cn(
+                              "w-[25rem] justify-start text-left font-normal",
+                              !field.value && "text-muted-foreground",
+                              form.formState.errors?.expiration &&
+                                "border-red-500"
+                            )}
+                          >
+                            <CalendarIcon className="mr-2 h-4 w-4" />
+                            {field.value ? (
+                              format(field.value, "PPP")
+                            ) : (
+                              <span>Pick a date</span>
+                            )}
+                          </Button>
+                        </FormControl>
+                      </PopoverTrigger>
+                      <PopoverContent align="start" className="w-[25rem] p-2">
+                        <Select
+                          onValueChange={(value) =>
+                            field.onChange(
+                              addDays(new Date(), parseInt(value)),
+                              setOpenDate(false)
+                            )
+                          }
+                        >
+                          <SelectTrigger>
+                            <SelectValue placeholder="Quick select" />
+                          </SelectTrigger>
+                          <SelectContent position="popper">
+                            <SelectItem value="0">Today</SelectItem>
+                            <SelectItem value="3">In 3 days</SelectItem>
+                            <SelectItem value="7">In a week</SelectItem>
+                            <SelectItem value="30">In a month</SelectItem>
+                            <SelectItem value="365">In a year</SelectItem>
+                          </SelectContent>
+                        </Select>
+                        <div className="rounded-md border mt-2">
+                          <Calendar
+                            mode="single"
+                            selected={field.value}
+                            onSelect={field.onChange}
+                            disabled={(date) => date < new Date()}
+                            initialFocus
+                          />
+                        </div>
+                      </PopoverContent>
+                    </Popover>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
             </div>
           </ModalLayout>
 
