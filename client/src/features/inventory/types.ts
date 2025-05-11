@@ -8,3 +8,11 @@ export interface Inventory {
   dateStocked: string;
   isExpired: boolean;
 }
+
+export interface InventoryForm {
+  product: string;
+  unit: string;
+  abbreviation: string;
+  quantity: number;
+  expiration: Date;
+}

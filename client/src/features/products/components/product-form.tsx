@@ -34,7 +34,7 @@ export default function ProductForm() {
   } = useProductForm();
 
   return (
-    <Modal isOpen={isOpen} setIsOpen={setIsOpen}>
+    <Modal variant="lg" isOpen={isOpen} setIsOpen={setIsOpen}>
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(submitHandler)}

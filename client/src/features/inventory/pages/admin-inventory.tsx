@@ -5,7 +5,7 @@ import { BreadcrumbItem, useBreadcrumb } from "@/features/breadcrumbs/store";
 import { ColumnDef } from "@tanstack/react-table";
 import { Inventory } from "@/features/inventory/types";
 import { DataTable } from "@/components/data-table";
-import { useFetchInventoryData } from "@/features/inventory/hooks";
+import { useFetchInventoryData } from "@/features/inventory/api/query";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { StatusBadge } from "@/features/inventory/components/status-badge";

@@ -87,7 +87,6 @@ export const useUpdateProduct = () => {
       updateProduct(productProps),
 
     onSuccess: (data) => {
-      console.log(data);
       client.invalidateQueries({
         queryKey: ["product"],
       });
@@ -98,7 +97,6 @@ export const useUpdateProduct = () => {
     },
 
     onError: (error) => {
-      console.log(error);
       toast.error("Product update failed.", { position: "top-right" });
     },
   });
