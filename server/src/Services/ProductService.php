@@ -174,6 +174,7 @@ class ProductService
         $hashedImages = [];
 
         try {
+            $this->database->beginTransaction();
 
             $notIncludedImages = $this
                 ->productImagesRepository
@@ -307,7 +308,11 @@ class ProductService
                         ->createRelationship($category, $product);
                 }
             }
+
+            $this->database->commit();
         } catch (PDOException $e) {
+
+            $this->database->rollBack();
 
             foreach ($hashedImages as $uploadedImage) {
                 unlink($uploadedImage["uploadPath"]);
