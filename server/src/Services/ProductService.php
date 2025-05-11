@@ -6,6 +6,11 @@ use PDOException;
 use Src\Core\Database;
 use Src\Core\Exceptions\ServiceException;
 use Src\Core\Request;
+use Src\Factories\ProductDTOFactory;
+use Src\Models\Brand;
+use Src\Models\DTOs\ProductDetailsDTO;
+use Src\Models\DTOs\ProductDTO;
+use Src\Models\DTOs\ProductTableDTO;
 use Src\Models\Product;
 use Src\Repositories\BrandRepository;
 use Src\Repositories\CategoryRepository;
@@ -17,73 +22,86 @@ use TypeError;
 
 class ProductService
 {
-    protected ProductRepository $productRepository;
-    protected CategoryRepository $categoryRepository;
-    protected ProductCategoryRepository $pivotRepository;
-    protected InventoryRepository $inventoryRepository;
-    protected ProductImagesRepository $imagesRepository;
-    protected BrandRepository $brandRepository;
-
     public function __construct(
         protected Database $database,
-    ) {
-        $this->productRepository = new ProductRepository($this->database);
-        $this->categoryRepository = new CategoryRepository($this->database);
-        $this->pivotRepository = new ProductCategoryRepository($this->database);
-        $this->inventoryRepository = new InventoryRepository($this->database);
-        $this->imagesRepository = new ProductImagesRepository($this->database);
-        $this->brandRepository = new BrandRepository($this->database);
+        protected ProductRepository $productRepository,
+        protected CategoryRepository $categoryRepository,
+        protected ProductCategoryRepository $productCategoryRepository,
+        protected InventoryRepository $inventoryRepository,
+        protected ProductImagesRepository $productImagesRepository,
+        protected BrandRepository $brandRepository,
+        protected ProductDTOFactory $productDTOFactory
+    ) {}
+
+    /** @return array<ProductDTO> */
+    public function getAllProductDTOs(): array
+    {
+        $products = array_map(
+            fn($row) => $this->productDTOFactory->makeProductDTO($row),
+            $this->productRepository->getAllProducts()
+        );
+
+        return $products;
     }
 
-    /** @return array<Product> */
-    public function getAllProducts(): array
+    /** @return array<ProductTableDTO> */
+    public function getAllProductTableDTOs(): array
     {
-        return $this->productRepository->getAllProducts();
+        $products = array_map(
+            fn($row) => $this->productDTOFactory->makeProductTableDTO($row),
+            $this->productRepository->getAllProducts()
+        );
+
+        return $products;
     }
 
     /** @return Product */
-    public function getProductById(int $productId): Product
+    public function getProductDetails(int $productId): ProductDetailsDTO
     {
-        try {
-            $product = $this->productRepository->getProductById($productId);
+        $row = $this->productRepository->getProductDetails($productId);
 
-            if (!$product) {
-                throw new ServiceException("Product not found.");
-            }
-
-            return $product;
-        } catch (TypeError $e) {
+        if (!$row) {
             throw new ServiceException("Product not found.");
         }
+
+        $productDetails = $this->productDTOFactory->makeProductDetailsDTO($row);
+
+        return $productDetails;
     }
 
     public function createProduct(Request $request)
     {
         $hashedImages = [];
 
-        $product = Product::fromRequest($request);
-
-        $this->handleUploads(
-            images: $request->files->images,
-            product: $product,
-            hashedImages: $hashedImages
-        );
-
         try {
             $this->database->beginTransaction();
 
             try {
-                $brand = $this->brandRepository->createBrand($product->brand);
+                $brand = $this->brandRepository->createBrand($request->brand);
             } catch (PDOException $e) {
 
-                $brand = $this->brandRepository->getBrandByName($product->brand);
+                $brand = $this->brandRepository->getBrandByName($request->brand);
             }
 
-            $product = $this->productRepository->createProduct($product, $brand);
+            $product = new Product();
 
-            $this->imagesRepository->attachImagesTo($product);
+            $product->productName = $request->productName;
+            $product->price = $request->price;
+            $product->brandId = $brand->brandId;
+            $product->description = $request->description;
 
-            foreach ($product->categories as $categoryName) {
+            $product = $this->productRepository->createProduct($product);
+
+            $hashedImages = $this->getHashedImages($request);
+
+            $this
+                ->productImagesRepository
+                ->appendImages(
+                    productId: $product->productId,
+                    images: array_map(fn($img) => $img["savePath"], $hashedImages)
+                );
+
+            foreach ($request->categories as $categoryName) {
                 try {
                     $category = $this->categoryRepository->createCategory($categoryName);
                 } catch (PDOException $_) {
@@ -91,10 +109,10 @@ class ProductService
                     $category = $this->categoryRepository->findCategoryByName($categoryName);
                 }
 
-                $this->pivotRepository->connectCategoryToProduct($category, $product);
+                $this->productCategoryRepository->createRelationship($category, $product);
             }
 
-            $this->inventoryRepository->createInventoryFor($product);
+            $this->inventoryRepository->createInventory($product->productId);
 
             $this->database->commit();
         } catch (PDOException $e) {
@@ -102,7 +120,7 @@ class ProductService
             $this->database->rollBack();
 
             foreach ($hashedImages as $uploadedImage) {
-                unlink($uploadedImage);
+                unlink($uploadedImage['uploadPath']);
             }
 
             throw new ServiceException($e->getMessage());
@@ -112,7 +130,7 @@ class ProductService
 
     public function deleteProduct(int $productId)
     {
-        $relations = $this->pivotRepository->getRelationshipsWith($productId);
+        $relations = $this->productCategoryRepository->getRelationships($productId);
 
         if (empty($relations)) {
             throw new ServiceException("Product not found.");
@@ -120,10 +138,12 @@ class ProductService
 
         $product = $this->productRepository->getProductById($productId);
 
+        $images = $this->productImagesRepository->getImagesFor($productId);
+
         $publicDir = parseDir(__DIR__) . "/../../public";
 
-        foreach ($product->images as $image) {
-            unlink($publicDir . $image);
+        foreach ($images as $image) {
+            unlink($publicDir . $image->imagePath);
         }
 
         $this->productRepository->deleteProduct($productId);
@@ -136,127 +156,171 @@ class ProductService
         }
 
         try {
-            $this->brandRepository->deleteBrandByName($product->brand);
+            $this->brandRepository->deleteBrand($product->brandId);
         } catch (PDOException $_) {
         }
     }
 
     public function updateProduct(Request $request)
     {
+
+        $product = new Product();
+        $product->productId = (int) $request->params->productId;
+        $product->productName = $request->productName;
+        $product->price = $request->price;
+        $product->description = $request->description;
+
+        $existingImages = $request->existingImages ?? [];
         $hashedImages = [];
 
-        $product = Product::fromRequest($request);
-        $product->images = $request->existingImages ?? [];
-
-        $product->productId = (int) $request->params->id;
-
         try {
-            $images = $this->imagesRepository->getNotIncluded($product);
+
+            $notIncludedImages = $this
+                ->productImagesRepository
+                ->getNotIncluded($product->productId, $existingImages);
 
             $publicDir = parseDir(__DIR__) . "/../../public";
 
-            foreach ($images as $productImage) {
-                unlink($publicDir . $productImage->image);
+            foreach ($notIncludedImages as $image) {
+                unlink($publicDir . $image->imagePath);
             }
 
-            if (!empty($images)) {
-                $this->imagesRepository->removeImages($images, $product->productId);
+            if (!empty($notIncludedImages)) {
+                $this
+                    ->productImagesRepository
+                    ->removeImages($notIncludedImages, $product->productId);
             }
-
-            $product->images = [];
 
             try {
-                $this->handleUploads(
-                    images: $request->files->images,
-                    product: $product,
-                    hashedImages: $hashedImages
-                );
-
-                $this->imagesRepository->attachImagesTo($product);
+                $hashedImages = $this->getHashedImages($request);
             } catch (TypeError $e) {
             }
 
-            try {
-                $this->productRepository->updateProduct($product);
-            } catch (PDOException $e) {
-
-                throw new ServiceException("Unable to update product.");
+            if (!empty($hashedImages)) {
+                $this
+                    ->productImagesRepository
+                    ->appendImages(
+                        productId: $product->productId,
+                        images: array_map(fn($img) => $img["savePath"], $hashedImages),
+                    );
             }
 
             $prevProduct = $this->productRepository->getProductById($product->productId);
 
-            $brand = $this->brandRepository->getBrandByName($prevProduct->brand);
+            $prevBrand = $this->brandRepository->getBrandById($prevProduct->brandId);
+
+            $brandName = $request->brand;
 
             if (
-                $this->brandRepository->hasOtherDependants($brand, $prevProduct) &&
-                $brand->brandName !== $product->brand
+                $this->brandRepository->hasOtherDependants($prevBrand, $prevProduct)
+                &&   $prevBrand->brandName != $brandName
             ) {
+
                 try {
-                    $brand = $this->brandRepository->createBrand($product->brand);
+                    $brand = $this->brandRepository->createBrand($brandName);
                 } catch (PDOException $e) {
-                    $brand = $this->brandRepository->getBrandByName($product->brand);
+                    $brand = $this->brandRepository->getBrandByName($brandName);
                 }
             } else {
 
                 try {
-                    $brand->brandName = $product->brand;
+                    $brand = new Brand();
+                    $brand->brandId = $prevBrand->brandId;
+                    $brand->brandName = $brandName;
+
                     $this->brandRepository->updateBrand($brand);
                 } catch (PDOException $e) {
-                    $brand = $this->brandRepository->getBrandByName($product->brand);
+
+                    $brand = $this->brandRepository->getBrandByName($brandName);
                 }
             }
 
-            $this->productRepository->updateToNewBrand($brand, $product);
+            $product->brandId = $brand->brandId;
+
+            $this->productRepository->updateProduct($product);
 
             try {
-                $this->brandRepository->deleteBrandByName($prevProduct->brand);
+                $this->brandRepository->deleteBrand($prevBrand->brandId);
             } catch (PDOException $e) {
             }
 
             $tobeDeleted = [];
-            foreach ($prevProduct->categories as $category) {
-                if (!in_array($category, $product->categories)) {
-                    array_push($tobeDeleted, $category);
+
+            $prevCategories = $this
+                ->productRepository
+                ->getAssociatedCategories($product->productId);
+
+            foreach ($prevCategories as $category) {
+                if (!in_array($category->categoryName, $request->categories)) {
+                    array_push($tobeDeleted, $category->categoryName);
                 }
             }
 
             foreach ($tobeDeleted as $categoryName) {
                 try {
-                    $category = $this->categoryRepository->findCategoryByName($categoryName);
+                    $category = $this
+                        ->categoryRepository
+                        ->findCategoryByName($categoryName);
 
-                    $this->pivotRepository->removeConnection($category, $prevProduct);
-                    $this->categoryRepository->deleteCategory($category->categoryId);
+                    $this
+                        ->productCategoryRepository
+                        ->removeConnection($category, $prevProduct);
+
+                    $this
+                        ->categoryRepository
+                        ->deleteCategory($category->categoryId);
                 } catch (PDOException $_) {
                 }
             }
 
-            $tobeCreatedCategories = array_filter(
-                $product->categories,
-                fn($category) => !in_array($category, $prevProduct->categories)
+            $prevCategories = $this
+                ->productRepository
+                ->getAssociatedCategories($product->productId);
+
+            $prevCategoryNames = array_map(
+                fn($category) => $category->categoryName,
+                $prevCategories
             );
 
-            foreach ($tobeCreatedCategories as $categoryName) {
+            $categoryNames = array_filter(
+                $request->categories,
+                fn($category) => !in_array($category, $prevCategoryNames)
+            );
+
+            foreach ($categoryNames as $categoryName) {
                 try {
-                    $category = $this->categoryRepository->createCategory($categoryName);
-                    $this->pivotRepository->connectCategoryToProduct($category, $product);
+                    $category = $this
+                        ->categoryRepository
+                        ->createCategory($categoryName);
+
+                    $this
+                        ->productCategoryRepository
+                        ->createRelationship($category, $product);
                 } catch (PDOException $_) {
 
-                    $category = $this->categoryRepository->findCategoryByName($categoryName);
-                    $this->pivotRepository->connectCategoryToProduct($category, $product);
+                    $category = $this
+                        ->categoryRepository
+                        ->findCategoryByName($categoryName);
+
+                    $this
+                        ->productCategoryRepository
+                        ->createRelationship($category, $product);
                 }
             }
         } catch (PDOException $e) {
 
             foreach ($hashedImages as $uploadedImage) {
-                unlink($uploadedImage);
+                unlink($uploadedImage["uploadPath"]);
             }
 
             throw new ServiceException($e->getMessage());
         }
     }
 
-    protected function handleUploads($images, array &$hashedImages, Product &$product)
+    protected function getHashedImages(Request $request): array
     {
+        $hashedImages = [];
+        $images = $request->files->images;
         $uploadDir = parseDir(__DIR__) . "/../../public/images";
 
         if (!is_dir($uploadDir)) mkdir($uploadDir);
@@ -268,9 +332,13 @@ class ProductService
             if (move_uploaded_file($images->tmp_name[$i], $uploadPath)) {
                 $imagePath = "/images/" . $hashedImageName;
 
-                array_push($product->images, $imagePath);
-                array_push($hashedImages, $uploadPath);
+                array_push($hashedImages, [
+                    "uploadPath" => $uploadPath,
+                    "savePath" => $imagePath
+                ]);
             }
         }
+
+        return $hashedImages;
     }
 }

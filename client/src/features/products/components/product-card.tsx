@@ -21,6 +21,13 @@ const ProductCard: React.FC<ProductCardProps> = ({
 }) => {
   const navigator = useNavigate();
 
+  const formattedPrice = new Intl.NumberFormat("fil-PH", {
+    style: "currency",
+    currency: "PHP",
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 2,
+  }).format(parseFloat(price.toString()));
+
   return (
     <div
       onClick={() => navigator(`/products/${productId}`)}
@@ -39,9 +46,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
       <div className="p-4">
         <h3 className="text-lg font-semibold text-gray-800">{productName}</h3>
         <p className="text-sm text-gray-500">{brand}</p>
-        <p className="mt-2 text-blue-600 font-bold">
-          ${price.toLocaleString()}
-        </p>
+        <p className="mt-2 text-blue-600 font-bold">{formattedPrice}</p>
       </div>
     </div>
   );

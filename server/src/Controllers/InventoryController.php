@@ -2,9 +2,9 @@
 
 namespace Src\Controllers;
 
-use Src\Core\App;
 use Src\Core\Interfaces\IResource;
 use Src\Core\Request;
+use Src\Providers\InventoryServiceProvider;
 use Src\Services\InventoryService;
 
 class InventoryController implements IResource
@@ -13,7 +13,7 @@ class InventoryController implements IResource
 
     public function __construct()
     {
-        $this->inventoryService = new InventoryService(App::getDatabase());
+        $this->inventoryService = InventoryServiceProvider::makeInventoryService();
     }
 
 

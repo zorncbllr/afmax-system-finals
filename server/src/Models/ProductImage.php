@@ -4,6 +4,6 @@ namespace Src\Models;
 
 class ProductImage
 {
-    public int $imageId;
-    public string $image;
+    public int $productImageId;
+    public string $imagePath;
 }

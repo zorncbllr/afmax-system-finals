@@ -6,16 +6,18 @@ use Src\Middlewares\Validators\ProductValidator;
 
 return function (Router $router) {
 
-    $router->get("/products", [ProductController::class, "getAll"]);
-    $router->get("/products/{id}", [ProductController::class, "getById"]);
+    $router->get("/products", [ProductController::class, "getProductDTOs"]);
+    $router->get("/products/{productId}", [ProductController::class, "getProductDetails"]);
+
+    $router->get("/admin/products", [ProductController::class, "getProductTableDTOs"]);
 
     $router
         ->middleware(ProductValidator::class)
-        ->post("/products", [ProductController::class, 'create']);
+        ->post("/products", [ProductController::class, 'createProduct']);
 
     $router
         ->middleware(ProductValidator::class)
-        ->post("/products/update/{id}", [ProductController::class, 'update']);
+        ->post("/products/update/{productId}", [ProductController::class, 'updateProduct']);
 
-    $router->delete("/products/{id}", [ProductController::class, 'delete']);
+    $router->delete("/products/{productId}", [ProductController::class, 'deleteProduct']);
 };

@@ -5,6 +5,7 @@ namespace Src\Controllers;
 use Src\Core\App;
 use Src\Core\Exceptions\ServiceException;
 use Src\Core\Request;
+use Src\Providers\FeaturedServiceProvider;
 use Src\Services\FeaturedService;
 
 class FeaturedController
@@ -13,7 +14,7 @@ class FeaturedController
 
     public function __construct()
     {
-        $this->featuredCategoryService = new FeaturedService(database: App::getDatabase());
+        $this->featuredCategoryService = FeaturedServiceProvider::makeFeaturedService();
     }
 
     public function getAllFeatured()

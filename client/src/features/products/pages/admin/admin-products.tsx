@@ -3,11 +3,8 @@ import AdminLayout from "../../../../layouts/admin-layout";
 import { useEffect } from "react";
 import { DataTable } from "@/components/data-table";
 
-import { ProductDTO } from "@/features/products/types";
-import {
-  useDeleteProduct,
-  useFetchProducts,
-} from "@/features/products/api/query";
+import { ProductTableDTO } from "@/features/products/types";
+import { useFetchAdminProducts } from "@/features/products/api/queries";
 
 import { ColumnDef } from "@tanstack/react-table";
 import {
@@ -34,8 +31,9 @@ import { useNavigate } from "react-router";
 import { BreadcrumbItem, useBreadcrumb } from "@/features/breadcrumbs/store";
 import { useProductFormStore } from "../../store";
 import { useSetFeatured } from "@/features/featured-products/query";
+import { useDeleteProduct } from "../../api/mutations";
 
-export const columns: ColumnDef<ProductDTO>[] = [
+export const columns: ColumnDef<ProductTableDTO>[] = [
   // Checkbox column
   {
     id: "select",
@@ -209,7 +207,7 @@ export const breadcrumbList: BreadcrumbItem[] = [
 
 const AdminProducts = () => {
   const { setActiveItem, sidebarProps } = useSidebar();
-  const { data, isFetched } = useFetchProducts();
+  const { data, isFetched } = useFetchAdminProducts();
   const { setActivePage, setBreadcrumbList } = useBreadcrumb();
 
   useEffect(() => {

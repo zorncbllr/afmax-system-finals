@@ -2,33 +2,40 @@
 
 namespace Src\Controllers;
 
-use Src\Core\App;
 use Src\Core\Exceptions\ServiceException;
-use Src\Core\Interfaces\IResource;
 use Src\Core\Request;
+use Src\Providers\ProductServiceProvider;
 use Src\Services\ProductService;
 
-class ProductController implements IResource
+class ProductController
 {
     protected ProductService $productService;
 
     public function __construct()
     {
-        $this->productService = new ProductService(database: App::getDatabase());
+        $this->productService = ProductServiceProvider::makeProductService();
     }
 
-    public function getAll(Request $request)
+    public function getProductDTOs()
     {
-        $products = $this->productService->getAllProducts();
+        $products = $this->productService->getAllProductDTOs();
 
         status(200);
         return json($products);
     }
 
-    public function getById(Request $request, string $id)
+    public function getProductTableDTOs()
+    {
+        $products = $this->productService->getAllProductTableDTOs();
+
+        status(200);
+        return json($products);
+    }
+
+    public function getProductDetails(string $productId)
     {
         try {
-            $product = $this->productService->getProductById((int) $id);
+            $product = $this->productService->getProductDetails((int) $productId);
 
             status(200);
             return json($product);
@@ -39,7 +46,7 @@ class ProductController implements IResource
         }
     }
 
-    public function create(Request $request)
+    public function createProduct(Request $request)
     {
         try {
             $this->productService->createProduct($request);
@@ -58,7 +65,7 @@ class ProductController implements IResource
         }
     }
 
-    public function update(Request $request, string $id)
+    public function updateProduct(Request $request, string $productId)
     {
         try {
             $this->productService->updateProduct($request);
@@ -77,10 +84,10 @@ class ProductController implements IResource
         }
     }
 
-    public function delete(Request $request, string $id)
+    public function deleteProduct(Request $request, string $productId)
     {
         try {
-            $this->productService->deleteProduct((int) $id);
+            $this->productService->deleteProduct((int) $productId);
 
             status(200);
             return json([

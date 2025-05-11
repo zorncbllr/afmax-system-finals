@@ -3,7 +3,7 @@ import AdminLayout from "../../../../layouts/admin-layout";
 import ProductView, {
   ProductViewSkeleton,
 } from "@/features/products/components/product-view";
-import { useFetchProductById } from "@/features/products/api/query";
+import { useFetchProductById } from "@/features/products/api/queries";
 import PageNotFound from "@/components/page-not-found";
 
 import { breadcrumbList } from "./admin-products";

@@ -7,10 +7,19 @@ export interface ProductDTO {
   price: number;
   image: string;
   isFeatured: boolean;
+}
+
+export interface ProductTableDTO {
+  productId: number;
+  productName: string;
+  brand: string;
+  price: number;
+  image: string;
+  isFeatured: boolean;
   categories: string[];
 }
 
-export interface Product {
+export interface ProductDetails {
   productId: number;
   productName: string;
   description: string;

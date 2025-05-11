@@ -1,7 +1,6 @@
 import Modal from "@/components/modal";
-import { useInventoryStore } from "../store";
 import ModalLayout from "@/layouts/modal-layout";
-import { addDays, format, startOfDay } from "date-fns";
+import { addDays, format } from "date-fns";
 import {
   PackagePlusIcon,
   CalendarIcon,
@@ -19,8 +18,6 @@ import {
   CommandList,
 } from "@/components/ui/command";
 
-import { useFetchProducts } from "@/features/products/api/query";
-import { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Calendar } from "@/components/ui/calendar";
 import {
@@ -43,43 +40,20 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Form } from "@/components/ui/form";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { inventoryFormSchema } from "../types";
-import { zodResolver } from "@hookform/resolvers/zod";
+import useInventoryForm from "../hooks/inventory-form-hook";
 
 const InventoryForm = () => {
-  const { isOpen, setIsOpen } = useInventoryStore();
-  const { data: products } = useFetchProducts();
-  const [openSelect, setOpenSelect] = useState<boolean>(false);
-  const [openDate, setOpenDate] = useState<boolean>(false);
-
-  const form = useForm<z.infer<typeof inventoryFormSchema>>({
-    resolver: zodResolver(inventoryFormSchema),
-    defaultValues: {
-      unit: "",
-      product: "",
-      abbreviation: "",
-      quantity: 0,
-      expiration: undefined,
-    },
-  });
-
-  const submitHandler = (value: z.infer<typeof inventoryFormSchema>) => {
-    console.log(value);
-  };
-
-  useEffect(() => {
-    setTimeout(() => {
-      form.reset({
-        unit: "",
-        product: "",
-        abbreviation: "",
-        quantity: 0,
-        expiration: undefined,
-      });
-    }, 500);
-  }, [isOpen]);
+  const {
+    form,
+    products,
+    isOpen,
+    openDate,
+    openSelect,
+    setIsOpen,
+    setOpenDate,
+    setOpenSelect,
+    submitHandler,
+  } = useInventoryForm();
 
   return (
     <Modal variant="sm" isOpen={isOpen} setIsOpen={setIsOpen}>
@@ -93,7 +67,7 @@ const InventoryForm = () => {
             <div className="px-4 py-8 grid gap-6">
               <FormField
                 control={form.control}
-                name="product"
+                name="productId"
                 render={({ field }) => (
                   <FormItem className="grid gap-2 w-full">
                     <FormLabel>Select From Products</FormLabel>
@@ -104,16 +78,13 @@ const InventoryForm = () => {
                             variant="outline"
                             role="combobox"
                             className="justify-between"
-                            aria-expanded={
-                              form.getValues("product") ? true : false
-                            }
+                            aria-expanded={form.getValues("productId") > 0}
                           >
                             {field.value
                               ? products?.find(
-                                  (product) =>
-                                    product.productName === field.value
+                                  (product) => product.productId === field.value
                                 )?.productName
-                              : "Select product..."}
+                              : "----"}
                             <ChevronsUpDown className="ml-2 h-4 w-4 opacity-50" />
                           </Button>
                         </FormControl>
@@ -133,18 +104,18 @@ const InventoryForm = () => {
                                   value={product.productName}
                                   onSelect={() => {
                                     form.setValue(
-                                      "product",
-                                      product.productName
+                                      "productId",
+                                      product.productId
                                     );
                                     setOpenSelect(false);
-                                    form.clearErrors("product");
+                                    form.clearErrors("productId");
                                   }}
                                 >
                                   {product.productName}
                                   <Check
                                     className={cn(
                                       "ml-auto h-4 w-4",
-                                      field.value === product.productName
+                                      field.value === product.productId
                                         ? "opacity-100"
                                         : "opacity-0"
                                     )}

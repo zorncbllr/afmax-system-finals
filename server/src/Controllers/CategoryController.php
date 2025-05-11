@@ -2,10 +2,10 @@
 
 namespace Src\Controllers;
 
-use Src\Core\App;
 use Src\Core\Exceptions\ServiceException;
 use Src\Core\Interfaces\IResource;
 use Src\Core\Request;
+use Src\Providers\CategoryServiceProvider;
 use Src\Services\CategoryService;
 
 class CategoryController implements IResource
@@ -14,7 +14,7 @@ class CategoryController implements IResource
 
     public function __construct()
     {
-        $this->categoryService = new CategoryService(database: App::getDatabase());
+        $this->categoryService = CategoryServiceProvider::makeCategoryService();
     }
 
     public function getAll(Request $request)
@@ -28,7 +28,7 @@ class CategoryController implements IResource
     public function getById(Request $request, string $id)
     {
         try {
-            $category = $this->categoryService->getCategoryById((int) $id);
+            $category = $this->categoryService->getCategoryProducts((int) $id);
 
             status(200);
             return json($category);

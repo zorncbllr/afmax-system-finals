@@ -1,27 +1,9 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
-import {
-  createProduct,
-  deleteProduct,
-  getProductById,
-  getProducts,
-  updateProduct,
-} from "./service";
-import { Product, ProductDTO, ProductUpdateProps } from "../types";
+import { useMutation } from "@tanstack/react-query";
+import { useProductFormStore } from "../store";
+import { createProduct, deleteProduct, updateProduct } from "./services";
 import { queryClient } from "@/main";
 import toast from "react-hot-toast";
-import { useProductFormStore } from "../store";
-
-export const useFetchProducts = () =>
-  useQuery<ProductDTO[]>({
-    queryKey: ["products"],
-    queryFn: getProducts,
-  });
-
-export const useFetchProductById = (productId: number) =>
-  useQuery<Product>({
-    queryKey: ["product"],
-    queryFn: () => getProductById(productId),
-  });
+import { ProductUpdateProps } from "../types";
 
 export const useCreateProduct = () => {
   const client = queryClient;
@@ -48,6 +30,8 @@ export const useCreateProduct = () => {
     },
 
     onError: (error) => {
+      console.log(error);
+
       toast.error("Product creation failed.", {
         position: "top-right",
       });
@@ -97,6 +81,7 @@ export const useUpdateProduct = () => {
     },
 
     onError: (error) => {
+      console.log(error);
       toast.error("Product update failed.", { position: "top-right" });
     },
   });

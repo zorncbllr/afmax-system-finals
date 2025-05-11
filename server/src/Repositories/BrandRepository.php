@@ -22,6 +22,17 @@ class BrandRepository
         return $stmt->fetchObject(Brand::class);
     }
 
+    public function getBrandById(int $brandId): Brand
+    {
+        $stmt = $this->database->prepare(
+            "SELECT * FROM brands WHERE brandId = :brandId"
+        );
+
+        $stmt->execute(["brandId" => $brandId]);
+
+        return $stmt->fetchObject(Brand::class);
+    }
+
     public function hasOtherDependants(Brand $brand, Product $product): bool
     {
         $stmt = $this->database->prepare(
@@ -40,27 +51,27 @@ class BrandRepository
 
     public function createBrand(string $brandName): Brand
     {
-        $brand = new Brand();
-        $brand->brandName = $brandName;
-
         $stmt = $this->database->prepare(
             "INSERT INTO brands (brandName) VALUES (:brandName)"
         );
 
-        $stmt->execute(["brandName" => $brand->brandName]);
+        $stmt->execute(["brandName" => $brandName]);
 
+        $brand = new Brand();
+
+        $brand->brandName = $brandName;
         $brand->brandId = $this->database->lastInsertId();
 
         return $brand;
     }
 
-    public function deleteBrandByName(string $brandName)
+    public function deleteBrand(int $brandId)
     {
         $stmt = $this->database->prepare(
-            "DELETE FROM brands WHERE brandName = :brandName"
+            "DELETE FROM brands WHERE brandId = :brandId"
         );
 
-        $stmt->execute(["brandName" => $brandName]);
+        $stmt->execute(["brandId" => $brandId]);
     }
 
     public function updateBrand(Brand $brand)

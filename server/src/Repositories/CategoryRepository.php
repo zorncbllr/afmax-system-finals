@@ -5,15 +5,15 @@ namespace Src\Repositories;
 use PDO;
 use Src\Core\Database;
 use Src\Models\Category;
-use Src\Models\CategoryDTO;
-use Src\Models\Product;
+use Src\Models\DTOs\CategoryDTO;
+use Src\Models\DTOs\CategoryProductDTO;
 
 class CategoryRepository
 {
     public function __construct(protected Database $database) {}
 
 
-    public function findCategoryByName(string $categoryName): CategoryDTO
+    public function findCategoryByName(string $categoryName): Category
     {
         $stmt = $this->database->prepare(
             "SELECT * FROM categories WHERE categoryName = :categoryName"
@@ -21,28 +21,23 @@ class CategoryRepository
 
         $stmt->execute(["categoryName" => $categoryName]);
 
-        return $stmt->fetchObject(CategoryDTO::class);
+        return $stmt->fetchObject(Category::class);
     }
+
 
     /** @return array<CategoryDTO> */
     public function getAllCategories(): array
     {
         $stmt = $this->database->prepare(
-            "SELECT * FROM categories;"
+            "SELECT * FROM categories ORDER BY categoryId ASC"
         );
 
         $stmt->execute();
 
-        $categories = array_map(
-            fn($row) => CategoryDTO::fromRow($row),
-            $stmt->fetchAll(PDO::FETCH_ASSOC)
-        );
-
-        return $categories;
+        return $stmt->fetchAll(PDO::FETCH_CLASS, CategoryDTO::class);
     }
 
-    /** @return Category */
-    public function getCategoryById(int $categoryId): Category
+    public function getAssociatedProducts(int $categoryId): array
     {
         $stmt = $this->database->prepare(
             "SELECT 
@@ -69,15 +64,19 @@ class CategoryRepository
 
         $stmt->execute(["categoryId" => $categoryId]);
 
-        return Category::fromRow($stmt->fetchAll(PDO::FETCH_ASSOC));
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function createCategory(string $categoryName): CategoryDTO
+    public function createCategory(string $categoryName): Category
     {
-        $stmt = $this->database->prepare("INSERT INTO categories (categoryName) VALUES (:categoryName)");
+        $stmt = $this->database->prepare(
+            "INSERT INTO categories (categoryName) VALUES (:categoryName)"
+        );
+
         $stmt->execute(['categoryName' => $categoryName]);
 
-        $category = new CategoryDTO();
+        $category = new Category();
+
         $category->categoryId = $this->database->lastInsertId();
         $category->categoryName = $categoryName;
 

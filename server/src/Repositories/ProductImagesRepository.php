@@ -4,21 +4,21 @@ namespace Src\Repositories;
 
 use PDO;
 use Src\Core\Database;
-use Src\Models\Product;
 use Src\Models\ProductImage;
 
 class ProductImagesRepository
 {
     public function __construct(protected Database $database) {}
 
+    /** @param array<string> $images */
     /** @return array<ProductImage> */
-    public function getNotIncluded(Product $product): array
+    public function getNotIncluded(int $productId, array $images): array
     {
-        $query = "SELECT productImageId as imageId, imagePath as image FROM productImages WHERE productId = :productId";
+        $query = "SELECT productImageId, imagePath FROM productImages WHERE productId = :productId";
 
         $parameters = [];
 
-        foreach ($product->images as $index => $image) {
+        foreach ($images as $index => $image) {
             $query .= " AND imagePath != :imagePath$index";
             $parameters["imagePath$index"] = $image;
         }
@@ -26,31 +26,44 @@ class ProductImagesRepository
         $stmt = $this->database->prepare($query);
 
         $stmt->execute([
-            "productId" => $product->productId,
+            "productId" => $productId,
             ...$parameters
         ]);
 
         return $stmt->fetchAll(PDO::FETCH_CLASS, ProductImage::class);
     }
 
-    public function attachImagesTo(Product $product)
+    /** @return array<ProductImage> */
+    public function getImagesFor(int $productId): array
+    {
+        $stmt = $this->database->prepare(
+            "SELECT * FROM productImages WHERE productId = :productId"
+        );
+
+        $stmt->execute(["productId" => $productId]);
+
+        return $stmt->fetchAll(PDO::FETCH_CLASS, ProductImage::class);
+    }
+
+    /** @param array<string> $images */
+    public function appendImages(int $productId, array $images)
     {
         $query = "INSERT INTO productImages (productId, imagePath) VALUES ";
 
-        $images = [];
+        $keys = [];
         $parameters = [];
 
-        foreach ($product->images as $index => $image) {
-            array_push($images, "(:productId, :imagePath$index)");
+        foreach ($images as $index => $image) {
+            array_push($keys, "(:productId, :imagePath$index)");
             $parameters["imagePath$index"] = $image;
         }
 
-        $query .= implode(",", $images);
+        $query .= implode(",", $keys);
 
         $stmt = $this->database->prepare($query);
 
         $stmt->execute([
-            "productId" => $product->productId,
+            "productId" => $productId,
             ...$parameters
         ]);
     }
@@ -63,7 +76,7 @@ class ProductImagesRepository
 
         $parameters = [];
         foreach ($images as $index => $image) {
-            $parameters["imagePath$index"] = $image->image;
+            $parameters["imagePath$index"] = $image->imagePath;
         }
 
         $keys = array_map(fn($key) => ":$key", array_keys($parameters));

@@ -3,21 +3,25 @@
 namespace Src\Services;
 
 use Src\Core\Database;
-use Src\Models\Inventory;
+use Src\Factories\InventoryDTOFactory;
+use Src\Models\DTOs\InventoryDTO;
 use Src\Repositories\InventoryRepository;
 
 class InventoryService
 {
-    protected InventoryRepository $inventoryRepository;
 
-    public function __construct(protected Database $database)
-    {
-        $this->inventoryRepository = new InventoryRepository($this->database);
-    }
+    public function __construct(
+        protected Database $database,
+        protected InventoryRepository $inventoryRepository,
+        protected InventoryDTOFactory $inventoryDTOFactory
+    ) {}
 
-    /** @return array<Inventory> */
+    /** @return array<InventoryDTO> */
     public function getInventoryData(): array
     {
-        return $this->inventoryRepository->getInventoryData();
+        return array_map(
+            fn($row) => $this->inventoryDTOFactory->makeInventoryDTO($row),
+            $this->inventoryRepository->getInventoryData()
+        );
     }
 }

@@ -1,11 +1,5 @@
 import { axiosInstance } from "../../../lib/api";
-import {
-  Product,
-  ProductDTO,
-  ProductFormSchema,
-  ProductUpdateProps,
-} from "../types";
-import { z } from "zod";
+import { ProductDetails, ProductDTO, ProductTableDTO } from "../types";
 
 interface SuccessResponse {
   message: string;
@@ -16,8 +10,15 @@ export const getProducts = async (): Promise<ProductDTO[]> => {
   return (await axiosInstance.get<ProductDTO[]>("/products")).data;
 };
 
-export const getProductById = async (productId: number): Promise<Product> => {
-  return (await axiosInstance.get<Product>(`/products/${productId}`)).data;
+export const getAdminProducts = async (): Promise<ProductTableDTO[]> => {
+  return (await axiosInstance.get<ProductTableDTO[]>("/admin/products")).data;
+};
+
+export const getProductById = async (
+  productId: number
+): Promise<ProductDetails> => {
+  return (await axiosInstance.get<ProductDetails>(`/products/${productId}`))
+    .data;
 };
 
 export const createProduct = async (

@@ -11,9 +11,9 @@ export interface Inventory {
   isExpired: boolean;
 }
 
-export const inventoryFormSchema = z
+export const InventoryFormSchema = z
   .object({
-    product: z.string().min(1, "Please select a product"),
+    productId: z.number().min(0, "Please select a product"),
     unit: z.string().min(2, "Must be at least 2 characters"),
     abbreviation: z
       .string()

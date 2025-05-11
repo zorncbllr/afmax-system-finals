@@ -12,7 +12,6 @@ class InventoryRepository
 
     public function __construct(protected Database $database) {}
 
-    /** @return array<Inventory> */
     public function getInventoryData(): array
     {
         $stmt = $this->database->prepare(
@@ -33,18 +32,42 @@ class InventoryRepository
 
         $stmt->execute();
 
-        return array_map(
-            fn($row) => Inventory::fromRow($row),
-            $stmt->fetchAll(PDO::FETCH_ASSOC)
-        );
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function createInventoryFor(Product $product)
+    public function createInventory(int $productId): Inventory
     {
         $stmt = $this->database->prepare(
             "INSERT INTO inventories (productId) VALUES (:productId);"
         );
 
-        $stmt->execute(["productId" => $product->productId]);
+        $stmt->execute(["productId" => $productId]);
+
+        $inventory = new Inventory();
+
+        $inventory->inventoryId = $this->database->lastInsertId();
+        $inventory->productId = $productId;
+
+        return $inventory;
+    }
+
+    public function updateInventory(Inventory $inventory)
+    {
+        $stmt = $this->database->prepare(
+            "UPDATE inventories
+            SET productId = :productId,
+            unitId = :unitId,
+            quantity = :quantity,
+            expiration = :expiration
+            WHERE inventoryId = :inventoryId"
+        );
+
+        $stmt->execute([
+            "inventoryId" => $inventory->inventoryId,
+            "productId" => $inventory->productId,
+            "unitId" => $inventory->unitId,
+            "quantity" => $inventory->quantity,
+            "expiration" => $inventory->expiration
+        ]);
     }
 }

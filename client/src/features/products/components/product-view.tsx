@@ -1,11 +1,11 @@
 import { useLayoutEffect, useState } from "react";
-import { Product } from "../types";
 import { cn } from "@/lib/utils";
 import { CategoryBadge } from "@/features/categories/components/category-badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useAutoResizeTextarea } from "../hooks/autoresize-hook";
 import { FlameIcon } from "lucide-react";
+import { ProductDetails } from "../types";
 
 export const ProductViewSkeleton = () => {
   return (
@@ -69,7 +69,7 @@ export const ProductViewSkeleton = () => {
   );
 };
 
-const ProductView = ({ product }: { product: Product }) => {
+const ProductView = ({ product }: { product: ProductDetails }) => {
   const [mainImage, setMainImage] = useState<string>("");
   const textareaRef = useAutoResizeTextarea("");
 

@@ -4,8 +4,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { useProductFormStore } from "../store";
-import { useCreateProduct } from "../api/query";
 import { AxiosError } from "axios";
+import { useCreateProduct } from "../api/mutations";
 
 const useProductForm = () => {
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);

@@ -4,25 +4,25 @@ namespace Src\Services;
 
 use PDOException;
 use Src\Core\Database;
-use Src\Core\Exceptions\ServiceException;
+use Src\Factories\CategoryProductDTOFactory;
+use Src\Factories\ProductDTOFactory;
 use Src\Models\Category;
-use Src\Models\ProductDTO;
+use Src\Models\DTOs\CategoryProductDTO;
 use Src\Repositories\FeaturedRepository;
 
 class FeaturedService
 {
-    protected FeaturedRepository $featuredCategoryRepository;
 
     public function __construct(
-        protected Database $database
-    ) {
-        $this->featuredCategoryRepository = new FeaturedRepository($this->database);
-    }
+        protected Database $database,
+        protected FeaturedRepository $featuredRepository,
+        protected ProductDTOFactory $productDTOFactory
+    ) {}
 
     /** @return array<Category> */
     public function getAllFeatured(int $categoryLimit, int $productsLimit): array
     {
-        $rawCategoryProducts = $this->featuredCategoryRepository
+        $rawCategoryProducts = $this->featuredRepository
             ->getAllFeatured($categoryLimit, $productsLimit);
 
         $processedCategoryProducts = [];
@@ -30,7 +30,7 @@ class FeaturedService
         foreach ($rawCategoryProducts as $categoryRow) {
             $rawProducts = json_decode($categoryRow["products"], associative: true);
 
-            $category = new Category();
+            $category = new CategoryProductDTO();
 
             $category->categoryId = $categoryRow["categoryId"];
             $category->categoryName = $categoryRow["categoryName"];
@@ -39,7 +39,7 @@ class FeaturedService
             foreach ($rawProducts as $productRow) {
                 array_push(
                     $category->products,
-                    ProductDTO::fromRow($productRow)
+                    $this->productDTOFactory->makeProductDTO($productRow)
                 );
             }
 
@@ -52,7 +52,7 @@ class FeaturedService
     public function setFeatured(int $productId, bool $value)
     {
         try {
-            $this->featuredCategoryRepository->setFeatured($productId, $value);
+            $this->featuredRepository->setFeatured($productId, $value);
         } catch (PDOException $e) {
             status(400);
             json($e->getMessage());

@@ -4,15 +4,13 @@ namespace Src\Repositories;
 
 use PDO;
 use Src\Core\Database;
-use Src\Models\Brand;
+use Src\Models\Category;
 use Src\Models\Product;
-use Src\Models\ProductDTO;
 
 class ProductRepository
 {
     public function __construct(protected Database $database) {}
 
-    /** @return array<ProductDTO> */
     public function getAllProducts(): array
     {
         $stmt = $this->database->prepare(
@@ -38,16 +36,10 @@ class ProductRepository
         );
         $stmt->execute();
 
-        $products = array_map(
-            fn($row) => ProductDTO::fromRow($row),
-            $stmt->fetchAll(PDO::FETCH_ASSOC)
-        );
-
-        return $products;
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    /** @return Product */
-    public function getProductById(int $productId): Product
+    public function getProductDetails(int $productId): array
     {
         $stmt = $this->database->prepare(
             "SELECT 
@@ -72,10 +64,39 @@ class ProductRepository
 
         $stmt->execute(["productId" => $productId]);
 
-        return Product::fromRow($stmt->fetch(PDO::FETCH_ASSOC));
+        return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    public function createProduct(Product $product, Brand $brand): Product
+    public function getProductById(int $productId): Product
+    {
+        $stmt = $this->database->prepare(
+            "SELECT * FROM products WHERE productId = :productId"
+        );
+
+        $stmt->execute(["productId" => $productId]);
+
+        return $stmt->fetchObject(Product::class);
+    }
+
+    /** @return array<Category> */
+    public function getAssociatedCategories(int $productId): array
+    {
+        $stmt = $this->database->prepare(
+            "SELECT c.categoryId, c.categoryName 
+            FROM products p
+            JOIN productCategories pc
+            ON p.productId = pc.productId
+            JOIN categories c 
+            ON pc.categoryId = c.categoryId
+            WHERE p.productId = :productId"
+        );
+
+        $stmt->execute(["productId" => $productId]);
+
+        return $stmt->fetchAll(PDO::FETCH_CLASS, Category::class);
+    }
+
+    public function createProduct(Product $product): Product
     {
         $stmt = $this->database->prepare(
             "INSERT INTO products (productName, description, brandId, price)
@@ -85,7 +106,7 @@ class ProductRepository
         $stmt->execute([
             "productName" => $product->productName,
             "description" => $product->description,
-            "brandId" => $brand->brandId,
+            "brandId" => $product->brandId,
             "price" => $product->price
         ]);
 
@@ -106,7 +127,8 @@ class ProductRepository
             "UPDATE products 
             SET productName = :productName,
             price = :price,
-            description = :description
+            description = :description,
+            brandId = :brandId
             WHERE productId = :productId"
         );
 
@@ -114,21 +136,8 @@ class ProductRepository
             "productId" => $product->productId,
             "productName" => $product->productName,
             "price" => $product->price,
+            "brandId" => $product->brandId,
             "description" => $product->description,
-        ]);
-    }
-
-    public function updateToNewBrand(Brand $brand, Product $product)
-    {
-        $stmt = $this->database->prepare(
-            "UPDATE products
-            SET brandId = :brandId
-            WHERE productId = :productId"
-        );
-
-        $stmt->execute([
-            "productId" => $product->productId,
-            "brandId" => $brand->brandId
         ]);
     }
 }

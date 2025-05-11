@@ -1,7 +1,7 @@
 import { useSidebar } from "@/features/sidebar/store";
 import UserLayout from "../../../../layouts/user-layout";
 import { useEffect } from "react";
-import { useFetchProducts } from "@/features/products/api/query";
+import { useFetchProducts } from "@/features/products/api/queries";
 import ProductCard from "@/features/products/components/product-card";
 import { BreadcrumbItem, useBreadcrumb } from "@/features/breadcrumbs/store";
 

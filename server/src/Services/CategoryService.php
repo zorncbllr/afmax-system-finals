@@ -4,20 +4,17 @@ namespace Src\Services;
 
 use Src\Core\Database;
 use Src\Core\Exceptions\ServiceException;
-use Src\Models\Category;
-use Src\Models\CategoryDTO;
+use Src\Factories\CategoryProductDTOFactory;
+use Src\Models\DTOs\CategoryProductDTO;
 use Src\Repositories\CategoryRepository;
-use TypeError;
 
 class CategoryService
 {
-    protected CategoryRepository $categoryRepository;
-
     public function __construct(
-        protected Database $database
-    ) {
-        $this->categoryRepository = new CategoryRepository($this->database);
-    }
+        protected Database $database,
+        protected CategoryProductDTOFactory $categoryProductDTOFactory,
+        protected CategoryRepository $categoryRepository
+    ) {}
 
     /** @return array<CategoryDTO> */
     public function getAllCategories(): array
@@ -26,18 +23,16 @@ class CategoryService
     }
 
     /** @return Category */
-    public function getCategoryById(int $categoryId): Category
+    public function getCategoryProducts(int $categoryId): CategoryProductDTO
     {
-        try {
-            $category = $this->categoryRepository->getCategoryById($categoryId);
+        $rawData = $this->categoryRepository->getAssociatedProducts($categoryId);
 
-            if (!$category) {
-                throw new ServiceException("Category not found.");
-            }
-
-            return $category;
-        } catch (TypeError $e) {
+        if (empty($rawData)) {
             throw new ServiceException("Category not found.");
         }
+
+        $categoryProducts = $this->categoryProductDTOFactory->makeCategoryProductDTO($rawData);
+
+        return $categoryProducts;
     }
 }
