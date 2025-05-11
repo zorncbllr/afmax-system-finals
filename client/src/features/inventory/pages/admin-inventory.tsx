@@ -5,12 +5,19 @@ import { BreadcrumbItem, useBreadcrumb } from "@/features/breadcrumbs/store";
 import { ColumnDef } from "@tanstack/react-table";
 import { Inventory } from "@/features/inventory/types";
 import { DataTable } from "@/components/data-table";
-import { useFetchInventoryData } from "@/features/inventory/api/query";
+import { useFetchInventoryData } from "@/features/inventory/api/queries";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { StatusBadge } from "@/features/inventory/components/status-badge";
 import { useInventoryStore } from "../store";
 import InventoryForm from "../components/inventory-form";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { MoreHorizontal, PencilIcon, Trash2 } from "lucide-react";
 
 const columns: ColumnDef<Inventory>[] = [
   {
@@ -43,6 +50,11 @@ const columns: ColumnDef<Inventory>[] = [
   {
     accessorKey: "quantity",
     header: "Quantity",
+    cell: ({ row }) => {
+      const raw = row.original;
+
+      return `${raw.quantity} ${raw.abbreviation}`;
+    },
   },
   {
     accessorKey: "unit",
@@ -62,6 +74,32 @@ const columns: ColumnDef<Inventory>[] = [
     cell: ({ row }) => {
       const status = row.original.isExpired ? "expired" : "active";
       return <StatusBadge status={status} size="sm" />;
+    },
+  },
+
+  {
+    id: "actions",
+    cell: ({ row }) => {
+      return (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" className="h-8 w-8 p-0">
+              <span className="sr-only">Open menu</span>
+              <MoreHorizontal className="h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuItem>
+              <PencilIcon className="mr-2 h-4 w-4" />
+              Edit
+            </DropdownMenuItem>
+            <DropdownMenuItem className="text-red-500">
+              <Trash2 className="mr-2 h-4 w-4 text-red-500" />
+              Delete
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      );
     },
   },
 ];

@@ -1,13 +1,7 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { getFeaturedCategories, setIsFeatured } from "./service";
 import { queryClient } from "@/main";
+import { useMutation } from "@tanstack/react-query";
+import { setIsFeatured } from "./services";
 import toast from "react-hot-toast";
-
-export const useFetchFeaturedCategories = () =>
-  useQuery({
-    queryKey: ["featured"],
-    queryFn: getFeaturedCategories,
-  });
 
 export const useSetFeatured = () => {
   const client = queryClient;

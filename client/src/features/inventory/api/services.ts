@@ -1,0 +1,14 @@
+import { axiosInstance } from "@/lib/api";
+import { Inventory, InventoryForm, SuccessResponse } from "../types";
+
+export const fetchInventoryData = async (): Promise<Inventory[]> => {
+  return (await axiosInstance.get<Inventory[]>("/inventory")).data;
+};
+
+export const createInventory = async (
+  inventoryData: InventoryForm
+): Promise<SuccessResponse> => {
+  return (
+    await axiosInstance.post<SuccessResponse>("/inventory", inventoryData)
+  ).data;
+};

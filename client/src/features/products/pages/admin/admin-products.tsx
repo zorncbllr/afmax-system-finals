@@ -30,7 +30,7 @@ import ProductForm from "../../components/product-form";
 import { useNavigate } from "react-router";
 import { BreadcrumbItem, useBreadcrumb } from "@/features/breadcrumbs/store";
 import { useProductFormStore } from "../../store";
-import { useSetFeatured } from "@/features/featured-products/query";
+import { useSetFeatured } from "@/features/featured-products/mutations";
 import { useDeleteProduct } from "../../api/mutations";
 
 export const columns: ColumnDef<ProductTableDTO>[] = [
@@ -178,7 +178,7 @@ export const columns: ColumnDef<ProductTableDTO>[] = [
               onClick={() => mutateDelete(product.productId)}
               className="text-red-500"
             >
-              <Trash2 className="mr-2 h-4 w-4" />
+              <Trash2 className="mr-2 h-4 w-4 text-red-500" />
               Delete
             </DropdownMenuItem>
           </DropdownMenuContent>

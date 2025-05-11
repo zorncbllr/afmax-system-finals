@@ -3,16 +3,18 @@ import { useInventoryStore } from "../store";
 import { useFetchProducts } from "@/features/products/api/queries";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { InventoryFormSchema } from "../types";
-import { z } from "zod";
+import { InventoryForm, InventoryFormSchema } from "../types";
+import { useCreateInventory } from "../api/mutations";
 
 const useInventoryForm = () => {
+  const { mutate } = useCreateInventory();
+
   const { isOpen, setIsOpen } = useInventoryStore();
   const { data: products } = useFetchProducts();
   const [openSelect, setOpenSelect] = useState<boolean>(false);
   const [openDate, setOpenDate] = useState<boolean>(false);
 
-  const form = useForm<z.infer<typeof InventoryFormSchema>>({
+  const form = useForm<InventoryForm>({
     resolver: zodResolver(InventoryFormSchema),
     defaultValues: {
       unit: "",
@@ -23,9 +25,7 @@ const useInventoryForm = () => {
     },
   });
 
-  const submitHandler = (value: z.infer<typeof InventoryFormSchema>) => {
-    console.log(value);
-  };
+  const submitHandler = (value: InventoryForm) => mutate(value);
 
   useEffect(() => {
     setTimeout(() => {

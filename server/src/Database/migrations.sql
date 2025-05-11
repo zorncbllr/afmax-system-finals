@@ -48,7 +48,7 @@ CREATE TABLE productCategories (
 
 CREATE TABLE units (
     unitId INT PRIMARY KEY AUTO_INCREMENT,
-    unitName VARCHAR(100) NOT NULL,
+    unitName VARCHAR(100) UNIQUE NOT NULL,
     abbreviation VARCHAR(50)
 );
 
@@ -57,9 +57,10 @@ CREATE TABLE inventories (
     unitId INT,
     productId INT NOT NULL,
     quantity INT,
-    expiration DATETIME DEFAULT NULL,
+    expiration DATE NOT NULL DEFAULT '9999-12-31',
     createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (unitId) REFERENCES units(unitId),
-    FOREIGN KEY (productId) REFERENCES products(productId) ON DELETE CASCADE
+    FOREIGN KEY (productId) REFERENCES products(productId) ON DELETE CASCADE,
+    UNIQUE KEY uniqueInventory (unitId, productId, expiration)
 );

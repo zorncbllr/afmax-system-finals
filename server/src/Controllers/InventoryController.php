@@ -2,12 +2,12 @@
 
 namespace Src\Controllers;
 
-use Src\Core\Interfaces\IResource;
+use Src\Core\Exceptions\ServiceException;
 use Src\Core\Request;
 use Src\Providers\InventoryServiceProvider;
 use Src\Services\InventoryService;
 
-class InventoryController implements IResource
+class InventoryController
 {
     protected InventoryService $inventoryService;
 
@@ -17,7 +17,7 @@ class InventoryController implements IResource
     }
 
 
-    public function getAll(Request $request)
+    public function getInventoryData()
     {
         $inventoryData = $this->inventoryService->getInventoryData();
 
@@ -25,11 +25,17 @@ class InventoryController implements IResource
         return json($inventoryData);
     }
 
-    public function getById(Request $request, string $id) {}
+    public function createNewInventory(Request $request)
+    {
+        try {
+            $this->inventoryService->createNewInventory($request);
 
-    public function create(Request $request) {}
+            status(200);
+            return json(["message" => "Created new inventory item."]);
+        } catch (ServiceException $e) {
 
-    public function update(Request $request, string $id) {}
-
-    public function delete(Request $request, string $id) {}
+            status(400);
+            return json(["message" => $e->getMessage()]);
+        }
+    }
 }

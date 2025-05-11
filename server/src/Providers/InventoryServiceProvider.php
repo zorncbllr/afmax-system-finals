@@ -5,6 +5,7 @@ namespace Src\Providers;
 use Src\Core\App;
 use Src\Factories\InventoryDTOFactory;
 use Src\Repositories\InventoryRepository;
+use Src\Repositories\UnitRepository;
 use Src\Services\InventoryService;
 
 class InventoryServiceProvider
@@ -16,6 +17,7 @@ class InventoryServiceProvider
         return new InventoryService(
             database: $database,
             inventoryRepository: new InventoryRepository($database),
+            unitRepository: new UnitRepository($database),
             inventoryDTOFactory: new InventoryDTOFactory()
         );
     }

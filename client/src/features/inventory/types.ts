@@ -13,7 +13,7 @@ export interface Inventory {
 
 export const InventoryFormSchema = z
   .object({
-    productId: z.number().min(0, "Please select a product"),
+    productId: z.number().min(1, "Please select a product"),
     unit: z.string().min(2, "Must be at least 2 characters"),
     abbreviation: z
       .string()
@@ -33,3 +33,13 @@ export const InventoryFormSchema = z
     message: "Expiration date is required",
     path: ["expiration"],
   });
+
+export interface SuccessResponse {
+  message: string;
+}
+
+export interface InventoryErrorResponse {
+  message: string;
+}
+
+export type InventoryForm = z.infer<typeof InventoryFormSchema>;
