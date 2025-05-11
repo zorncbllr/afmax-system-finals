@@ -180,8 +180,7 @@ class ProductService
                 $this->productRepository->updateProduct($product);
             } catch (PDOException $e) {
 
-                status(409);
-                return json($e->getMessage());
+                throw new ServiceException("Unable to update product.");
             }
 
             $prevProduct = $this->productRepository->getProductById($product->productId);

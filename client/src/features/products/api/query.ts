@@ -71,6 +71,10 @@ export const useDeleteProduct = () => {
         position: "top-right",
       });
     },
+
+    onError: (error) => {
+      toast.error("Unable to delete product.", { position: "top-right" });
+    },
   });
 };
 
