@@ -1,3 +1,4 @@
+import { FlameIcon, HeartIcon } from "lucide-react";
 import React from "react";
 import { useNavigate } from "react-router";
 
@@ -7,6 +8,7 @@ interface ProductCardProps {
   brand: string;
   price: number;
   image: string;
+  isFeatured: boolean;
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({
@@ -15,6 +17,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
   brand,
   price,
   image,
+  isFeatured,
 }) => {
   const navigator = useNavigate();
 
@@ -22,8 +25,12 @@ const ProductCard: React.FC<ProductCardProps> = ({
     <div
       onClick={() => navigator(`/products/${productId}`)}
       key={productId}
-      className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden w-[12rem] lg:w-[14rem] transition hover:shadow-lg"
+      className="bg-white relative rounded-xl shadow-sm border border-gray-200 overflow-hidden w-[12rem] lg:w-[14rem] transition hover:shadow-lg"
     >
+      {isFeatured && (
+        <FlameIcon size={24} className="absolute top-4 right-4 text-blue-500" />
+      )}
+
       <img
         src={"http://localhost:8000" + image}
         alt={productName}

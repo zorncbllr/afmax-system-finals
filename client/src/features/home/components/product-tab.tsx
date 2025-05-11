@@ -1,4 +1,4 @@
-import { useFeaturedStore } from "../store";
+import { useFeaturedStore } from "../../featured-products/store";
 
 function ProductTab() {
   const { categories, activeCategory, setActiveCategory } = useFeaturedStore();

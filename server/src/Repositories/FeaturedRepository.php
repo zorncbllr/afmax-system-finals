@@ -5,11 +5,11 @@ namespace Src\Repositories;
 use PDO;
 use Src\Core\Database;
 
-class FeaturedCategoryRepository
+class FeaturedRepository
 {
     public function __construct(protected Database $database) {}
 
-    public function getFeaturedCategoryProducts(int $categoryLimit, int $productsLimit): array
+    public function getAllFeatured(int $categoryLimit, int $productsLimit): array
     {
         $stmt = $this->database->prepare(
             "SELECT
@@ -65,5 +65,17 @@ class FeaturedCategoryRepository
         $stmt->execute();
 
         return  $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function setFeatured(int $productId, bool $value)
+    {
+        $stmt = $this->database->prepare(
+            "UPDATE products SET isFeatured = :isFeatured WHERE productId = :productId"
+        );
+
+        $stmt->execute([
+            "isFeatured" => (int) $value,
+            "productId" => $productId
+        ]);
     }
 }

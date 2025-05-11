@@ -5,6 +5,7 @@ import { CategoryBadge } from "@/features/categories/components/category-badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useAutoResizeTextarea } from "../hooks/autoresize-hook";
+import { FlameIcon } from "lucide-react";
 
 export const ProductViewSkeleton = () => {
   return (
@@ -111,9 +112,16 @@ const ProductView = ({ product }: { product: Product }) => {
       </div>
 
       <section className="flex-col flex gap-2 p-4 w-full">
-        <h1 className="text-3xl font-semibold font-mono">
-          {product.productName}
-        </h1>
+        <div className="flex justify-between items-center">
+          <h1 className="text-3xl font-semibold font-mono">
+            {product.productName}
+          </h1>
+
+          {product.isFeatured && (
+            <FlameIcon size={24} className="text-blue-500" />
+          )}
+        </div>
+
         <p className="text-xl">{product.brand}</p>
 
         <p className="text-blue-700 text-2xl font-semibold my-4">

@@ -1,19 +1,17 @@
 <?php
 
 use Src\Controllers\CategoryController;
-use Src\Controllers\FeaturedCategoryController;
+use Src\Controllers\FeaturedController;
 use Src\Controllers\InventoryController;
 use Src\Core\Router;
-
 
 $router = new Router(base: "/api/v1");
 
 (require("products.php"))($router);
 
-$router->get(
-    "/featured/categories",
-    [FeaturedCategoryController::class, "getAllFeaturedCategoryProducts"]
-);
+$router->route("/featured")
+    ->get([FeaturedController::class, "getAllFeatured"])
+    ->post([FeaturedController::class, "setFeatured"]);
 
 $router->resource("categories", CategoryController::class);
 

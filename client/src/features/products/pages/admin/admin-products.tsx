@@ -10,7 +10,16 @@ import {
 } from "@/features/products/api/query";
 
 import { ColumnDef } from "@tanstack/react-table";
-import { Check, X, MoreHorizontal, Eye, Trash2, Pencil } from "lucide-react";
+import {
+  Check,
+  X,
+  MoreHorizontal,
+  Eye,
+  Trash2,
+  Pencil,
+  CheckIcon,
+  XIcon,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
@@ -24,6 +33,7 @@ import ProductForm from "../../components/product-form";
 import { useNavigate } from "react-router";
 import { BreadcrumbItem, useBreadcrumb } from "@/features/breadcrumbs/store";
 import { useProductFormStore } from "../../store";
+import { useSetFeatured } from "@/features/featured-products/hooks";
 
 export const columns: ColumnDef<ProductDTO>[] = [
   // Checkbox column
@@ -119,8 +129,9 @@ export const columns: ColumnDef<ProductDTO>[] = [
     id: "actions",
     cell: ({ row }) => {
       const product = row.original;
-      const { mutate } = useDeleteProduct();
+      const { mutate: mutateDelete } = useDeleteProduct();
       const navigator = useNavigate();
+      const { mutate: mutateFeatured } = useSetFeatured();
 
       return (
         <DropdownMenu>
@@ -136,6 +147,26 @@ export const columns: ColumnDef<ProductDTO>[] = [
             >
               <Eye className="mr-2 h-4 w-4" />
               View
+            </DropdownMenuItem>{" "}
+            <DropdownMenuItem
+              onClick={() =>
+                mutateFeatured({
+                  productId: product.productId,
+                  value: !product.isFeatured,
+                })
+              }
+            >
+              {product.isFeatured ? (
+                <>
+                  <XIcon className="mr-2 h-4 w-4" />
+                  Featured
+                </>
+              ) : (
+                <>
+                  <CheckIcon className="mr-2 h-4 w-4" />
+                  Feature
+                </>
+              )}
             </DropdownMenuItem>
             <DropdownMenuItem
               onClick={() =>
@@ -146,7 +177,7 @@ export const columns: ColumnDef<ProductDTO>[] = [
               Edit
             </DropdownMenuItem>
             <DropdownMenuItem
-              onClick={() => mutate(product.productId)}
+              onClick={() => mutateDelete(product.productId)}
               className="text-red-500"
             >
               <Trash2 className="mr-2 h-4 w-4" />
