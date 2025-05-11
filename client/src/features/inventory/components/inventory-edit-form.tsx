@@ -1,26 +1,25 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import useInventoryForm from "../hooks/inventory-form-hook";
 import { useInventoryStore } from "../store";
 import InventoryForm from "./inventory-form";
-import { useFetchInventoryById } from "../api/queries";
+import { Inventory } from "../types";
+import { fetchInventoryById } from "../api/services";
+import { InventoryForm as InventoryFormData } from "../types";
+import { useUpdateInventory } from "../api/mutations";
 
-const EditInventoryForm = ({ inventoryId }: { inventoryId: number }) => {
+const EditInventoryForm = () => {
   const inventoryForm = useInventoryForm();
-  const { isEditFormOpen, setIsEditFormOpen } = useInventoryStore();
+  const { mutate } = useUpdateInventory();
+  const { isEditFormOpen, setIsEditFormOpen, inventoryId } =
+    useInventoryStore();
 
-  const { data: inventory } = useFetchInventoryById(inventoryId);
+  const [inventory, setInventory] = useState<Inventory | undefined>(undefined);
 
   useEffect(() => {
-    setTimeout(() => {
-      inventoryForm.form.reset({
-        unit: "",
-        productId: 0,
-        abbreviation: "",
-        quantity: 0,
-        expiration: undefined,
-      });
-    }, 500);
-  }, [isEditFormOpen]);
+    if (inventoryId > 0) {
+      fetchInventoryById(inventoryId).then((data) => setInventory(data));
+    }
+  }, [inventoryId]);
 
   useEffect(() => {
     if (inventory) {
@@ -34,10 +33,17 @@ const EditInventoryForm = ({ inventoryId }: { inventoryId: number }) => {
     }
   }, [inventory]);
 
+  const submitHandler = (value: InventoryFormData) =>
+    mutate({ inventoryId: inventoryId, inventory: value });
+
   return (
     <InventoryForm
       {...inventoryForm}
+      heading="Edit Inventory Item"
+      subHeading="Please fill all fields required to update an item."
+      buttonLabel="Update"
       isOpen={isEditFormOpen}
+      submitHandler={submitHandler}
       setIsOpen={setIsEditFormOpen}
     />
   );

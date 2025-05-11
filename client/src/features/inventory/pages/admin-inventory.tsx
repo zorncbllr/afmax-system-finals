@@ -140,7 +140,6 @@ const AdminInventory = () => {
   const { setActiveItem, sidebarProps } = useSidebar();
   const { setBreadcrumbList, setActivePage } = useBreadcrumb();
   const { data: inventoryData, isFetched } = useFetchInventoryData();
-  const { inventoryId } = useInventoryStore();
 
   useEffect(() => {
     setActiveItem(sidebarProps?.sections[0].items[2]);
@@ -161,7 +160,7 @@ const AdminInventory = () => {
       )}
 
       <CreateInventoryForm />
-      <EditInventoryForm inventoryId={inventoryId} />
+      <EditInventoryForm />
     </AdminLayout>
   );
 };

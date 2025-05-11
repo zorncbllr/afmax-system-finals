@@ -48,6 +48,9 @@ export interface InventoryErrorResponse {
 export type InventoryForm = z.infer<typeof InventoryFormSchema>;
 
 export interface InventoryFormProps {
+  heading: string;
+  subHeading: string;
+  buttonLabel: string;
   form: UseFormReturn<
     {
       productId: number;

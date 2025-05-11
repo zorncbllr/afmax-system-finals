@@ -70,5 +70,8 @@ class InventoryController
         }
     }
 
-    public function updateInventory(Request $request) {}
+    public function updateInventory(Request $request)
+    {
+        return json($request);
+    }
 }

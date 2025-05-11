@@ -52,14 +52,17 @@ const InventoryForm = ({
   setOpenSelect,
   submitHandler,
   products,
+  heading,
+  subHeading,
+  buttonLabel,
 }: InventoryFormProps) => {
   return (
     <Modal variant="sm" isOpen={isOpen} setIsOpen={setIsOpen}>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(submitHandler)}>
           <ModalLayout
-            heading="Add New Item"
-            subHeading="Please fill all fields required to create an item."
+            heading={heading}
+            subHeading={subHeading}
             icon={PackagePlusIcon}
           >
             <div className="px-4 py-8 grid gap-6">
@@ -261,7 +264,7 @@ const InventoryForm = ({
           </ModalLayout>
 
           <div className="bg-gray-50 gap-4 px-10 pb-4 -mt-4 sm:flex sm:flex-row-reverse">
-            <Button type="submit">Add Item</Button>
+            <Button type="submit">{buttonLabel}</Button>
             <Button
               type="button"
               onClick={() => setIsOpen(false)}
