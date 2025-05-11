@@ -63,6 +63,9 @@ class InventoryController
                 ->deleteInventory(
                     inventoryId: (int) $request->params->inventoryId
                 );
+
+            status(200);
+            return json(["message" => "Inventory item has been deleted."]);
         } catch (ServiceException $e) {
 
             status(400);
