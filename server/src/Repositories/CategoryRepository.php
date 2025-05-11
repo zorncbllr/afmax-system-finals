@@ -84,19 +84,6 @@ class CategoryRepository
         return $category;
     }
 
-    public function connectCategoryToProduct(CategoryDTO $category, Product $product)
-    {
-        $stmt = $this->database->prepare(
-            "INSERT INTO productCategories (categoryId, productId) 
-            VALUES (:categoryId, :productId)"
-        );
-
-        $stmt->execute([
-            "categoryId" => $category->categoryId,
-            "productId" => $product->productId
-        ]);
-    }
-
     public function deleteCategory(int $categoryId)
     {
         $stmt = $this->database->prepare("DELETE FROM categories WHERE categoryId = :categoryId");

@@ -91,7 +91,7 @@ class ProductService
                     $category = $this->categoryRepository->findCategoryByName($categoryName);
                 }
 
-                $this->categoryRepository->connectCategoryToProduct($category, $product);
+                $this->pivotRepository->connectCategoryToProduct($category, $product);
             }
 
             $this->inventoryRepository->createInventoryFor($product);
@@ -151,8 +151,6 @@ class ProductService
         $product->productId = (int) $request->params->id;
 
         try {
-            $this->database->beginTransaction();
-
             $images = $this->imagesRepository->getNotIncluded($product);
 
             $publicDir = parseDir(__DIR__) . "/../../public";
@@ -181,6 +179,8 @@ class ProductService
             try {
                 $this->productRepository->updateProduct($product);
             } catch (PDOException $e) {
+
+                status(409);
                 return json($e->getMessage());
             }
 
@@ -199,9 +199,40 @@ class ProductService
                 $brand->brandName = $product->brand;
                 $this->brandRepository->updateBrand($brand);
             }
-        } catch (PDOException $e) {
 
-            $this->database->rollBack();
+            $tobeDeleted = [];
+            foreach ($prevProduct->categories as $category) {
+                if (!in_array($category, $product->categories)) {
+                    array_push($tobeDeleted, $category);
+                }
+            }
+
+            foreach ($tobeDeleted as $categoryName) {
+                try {
+                    $category = $this->categoryRepository->findCategoryByName($categoryName);
+
+                    $this->pivotRepository->removeConnection($category, $prevProduct);
+                    $this->categoryRepository->deleteCategory($category->categoryId);
+                } catch (PDOException $_) {
+                }
+            }
+
+            $tobeCreatedCategories = array_filter(
+                $product->categories,
+                fn($category) => !in_array($category, $prevProduct->categories)
+            );
+
+            foreach ($tobeCreatedCategories as $categoryName) {
+                try {
+                    $category = $this->categoryRepository->createCategory($categoryName);
+                    $this->pivotRepository->connectCategoryToProduct($category, $product);
+                } catch (PDOException $_) {
+
+                    $category = $this->categoryRepository->findCategoryByName($categoryName);
+                    $this->pivotRepository->connectCategoryToProduct($category, $product);
+                }
+            }
+        } catch (PDOException $e) {
 
             foreach ($hashedImages as $uploadedImage) {
                 unlink($uploadedImage);
