@@ -10,6 +10,6 @@ export const getFeaturedCategories = async (): Promise<
 export const setIsFeatured = async (data: {
   productId: number;
   value: boolean;
-}) => {
+}): Promise<any> => {
   return (await axiosInstance.post("/featured", data)).data;
 };

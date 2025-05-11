@@ -31,19 +31,21 @@ class FeaturedController
     public function setFeatured(Request $request)
     {
         try {
+            $value = $request->body->value;
+
             $this->featuredCategoryService->setFeatured(
                 productId: $request->body->productId,
-                value: $request->body->value
+                value: $value
             );
 
-            status(204);
+            status(200);
             return json([
-                "message" => "Product has been featured."
+                "message" => $value ? "Product has been featured." : "Product removed from featured."
             ]);
         } catch (ServiceException $e) {
 
             status(409);
-            return json($e->getMessage());
+            return json(["message" => "Unable to feature product."]);
         }
     }
 }

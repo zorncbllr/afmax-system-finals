@@ -63,7 +63,7 @@ class ProductController implements IResource
         try {
             $this->productService->updateProduct($request);
 
-            status(204);
+            status(200);
             return json([
                 "message" => "Product has been updated",
                 "description" => "You can now see updated product details."

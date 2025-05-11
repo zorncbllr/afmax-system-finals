@@ -26,7 +26,7 @@ export const useSetFeatured = () => {
         queryKey: ["products"],
       });
 
-      toast.success("Product has been featured.", {
+      toast.success(data.message, {
         position: "top-right",
       });
     },

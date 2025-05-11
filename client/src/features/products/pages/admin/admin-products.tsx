@@ -33,7 +33,7 @@ import ProductForm from "../../components/product-form";
 import { useNavigate } from "react-router";
 import { BreadcrumbItem, useBreadcrumb } from "@/features/breadcrumbs/store";
 import { useProductFormStore } from "../../store";
-import { useSetFeatured } from "@/features/featured-products/hooks";
+import { useSetFeatured } from "@/features/featured-products/query";
 
 export const columns: ColumnDef<ProductDTO>[] = [
   // Checkbox column

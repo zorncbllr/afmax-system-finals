@@ -87,12 +87,11 @@ export const useUpdateProduct = () => {
       updateProduct(productProps),
 
     onSuccess: (data) => {
-      console.log(data);
       client.invalidateQueries({
         queryKey: ["product"],
       });
 
-      toast.success("Product has been updated.", {
+      toast.success(data.message, {
         position: "top-right",
       });
     },
