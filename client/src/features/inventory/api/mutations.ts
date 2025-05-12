@@ -70,6 +70,7 @@ export const useDeleteInventory = () => {
 
 export const useUpdateInventory = () => {
   const client = queryClient;
+  const { setIsEditFormOpen } = useInventoryStore();
 
   return useMutation({
     mutationKey: ["inventory"],
@@ -80,6 +81,7 @@ export const useUpdateInventory = () => {
 
     onSuccess: (data) => {
       console.log(data);
+      setIsEditFormOpen(false);
 
       client.invalidateQueries({
         queryKey: ["inventory"],

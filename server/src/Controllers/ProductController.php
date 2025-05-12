@@ -65,7 +65,7 @@ class ProductController
         }
     }
 
-    public function updateProduct(Request $request, string $productId)
+    public function updateProduct(Request $request)
     {
         try {
             $this->productService->updateProduct($request);

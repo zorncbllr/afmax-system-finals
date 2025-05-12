@@ -120,8 +120,68 @@ class InventoryService
 
     public function updateInventory(Request $request)
     {
-        $inventory = new Inventory();
+        try {
+            $this->database->beginTransaction();
 
-        $inventory->productId = $request->body->productId;
+            $inventory = new Inventory();
+
+            $inventory->inventoryId = $request->params->inventoryId;
+            $inventory->quantity = $request->body->quantity;
+            $inventory->productId = $request->body->productId;
+
+            $inventory->expiration = null;
+
+            if ($request->body->expiration) {
+
+                $inventory->expiration = (new DateTime($request->body->expiration))->format('Y-m-d');
+            }
+
+            $prevInventory = $this
+                ->inventoryRepository
+                ->getInventoryDataById($inventory->inventoryId);
+
+            if (!$prevInventory) {
+                throw new ServiceException("Inventory item not found.");
+            }
+
+            $prevInventory = $this->inventoryDTOFactory->makeInventoryDTO($prevInventory);
+
+            $unit = new Unit();
+            $unit->unitName = $request->body->unit;
+            $unit->abbreviation = strtolower($request->body->abbreviation);
+
+            try {
+                if ($prevInventory->unit != $request->body->unit) {
+                    $unit = $this->unitRepository->createUnit($unit);
+                }
+            } catch (PDOException $e) {
+            }
+
+            $unit = $this->unitRepository->getUnitByName($unit->unitName);
+
+            $inventory->unitId = $unit->unitId;
+
+            $this->inventoryRepository->updateInventory($inventory);
+
+            try {
+                $prevUnit = $this->unitRepository->getUnitByName($prevInventory->unit);
+
+                if ($prevUnit) {
+                    $this->unitRepository->deleteUnit($prevUnit->unitId);
+                }
+            } catch (PDOException $e) {
+            }
+
+            $this->database->commit();
+        } catch (PDOException $e) {
+
+            $this->database->rollBack();
+
+            if ($e->getCode() == 23000) {
+                throw new ServiceException("Duplicated inventory item.");
+            }
+
+            throw new ServiceException("Unable to update inventory item.");
+        }
     }
 }

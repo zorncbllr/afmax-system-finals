@@ -75,6 +75,17 @@ class InventoryController
 
     public function updateInventory(Request $request)
     {
-        return json($request);
+        try {
+            $this
+                ->inventoryService
+                ->updateInventory($request);
+
+            status(200);
+            return json(["message" => "Inventory item has been updated."]);
+        } catch (ServiceException $e) {
+
+            status(400);
+            return json(["message" => $e->getMessage()]);
+        }
     }
 }
