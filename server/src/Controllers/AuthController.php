@@ -18,6 +18,23 @@ class AuthController
         $this->authService = AuthServiceProvider::makeAuthService();
     }
 
+    public function refreshSession(Request $request)
+    {
+        try {
+            $newAccessToken = $this->authService->refreshSession($request);
+
+            status(200);
+            return json([
+                "message" => "Token successfully refresh.",
+                "accessToken" => $newAccessToken
+            ]);
+        } catch (ServiceException $e) {
+
+            status(401);
+            return json(["message" => $e->getMessage()]);
+        }
+    }
+
     public function attemptSignIn(Request $request)
     {
         $validator = new Validator();

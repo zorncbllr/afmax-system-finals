@@ -8,6 +8,7 @@ use Src\Core\Exceptions\ServiceException;
 use Src\Core\Request;
 use Src\Models\User;
 use Src\Repositories\UserRepository;
+use UnexpectedValueException;
 
 class AuthService
 {
@@ -65,7 +66,7 @@ class AuthService
         ]);
 
         setcookie(
-            'refresh_token',
+            'refreshToken',
             $refreshToken,
             [
                 'expires' => time() + 604800,
@@ -78,5 +79,52 @@ class AuthService
         );
 
         return $accessToken;
+    }
+
+    public function refreshSession(Request $request): string
+    {
+        $refreshToken = $request->cookies->refreshToken;
+
+        if (!$refreshToken) {
+            throw new ServiceException("Refresh token missing", 401);
+        }
+
+        try {
+            $payload = $this->jwtService->verify($refreshToken);
+
+            if ($payload['type'] !== 'refresh') {
+                throw new ServiceException('Invalid token type', 401);
+            }
+
+            $accessToken = $this->jwtService->generate([
+                'sub'  => $payload['sub'],
+                'type' => 'access',
+                'exp'  => time() + 3600,
+            ]);
+
+            $newRefreshToken = $this->jwtService->generate([
+                'sub'  => $payload['sub'],
+                'type' => 'refresh',
+                'exp'  => time() + 604800,
+            ]);
+
+            setcookie(
+                'refreshToken',
+                $newRefreshToken,
+                [
+                    'expires' => time() + 604800,
+                    'path' => '/auth/refresh',
+                    'domain' => $_ENV["JWT_ISSUER"],
+                    'secure' => true,
+                    'httponly' => true,
+                    'samesite' => 'Strict'
+                ]
+            );
+
+            return $accessToken;
+        } catch (UnexpectedValueException $e) {
+
+            throw new ServiceException('Invalid token segments', 401);
+        }
     }
 }

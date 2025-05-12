@@ -8,13 +8,14 @@ use AllowDynamicProperties;
 class Request
 {
     public string $method, $uri, $baseUrl;
-    public object $query, $body, $params, $files;
+    public object $query, $body, $params, $files, $cookies;
 
     function __construct()
     {
         $this->body = (object) json_decode(file_get_contents("php://input"), associative: false);
         $this->query = (object) json_decode(json_encode($_GET), associative: false);
         $this->files = (object) json_decode(json_encode($_FILES), associative: false);
+        $this->cookies = (object) json_decode(json_encode($_COOKIE), associative: false);
         $this->method = $_SERVER['REQUEST_METHOD'];
         $this->baseUrl = 'http://' . $_SERVER['HTTP_HOST'];
 
