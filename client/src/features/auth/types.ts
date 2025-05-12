@@ -18,6 +18,8 @@ export const SignInFormSchema = z.object({
   rememberMe: z.boolean(),
 });
 
+export type SignInFormData = z.infer<typeof SignInFormSchema>;
+
 export const SignUpFormSchema = z
   .object({
     fullName: z
@@ -62,3 +64,5 @@ export const SignUpFormSchema = z
     message: "Passwords do not match",
     path: ["passwordConfirmation"],
   });
+
+export type SignUpFormData = z.infer<typeof SignUpFormSchema>;

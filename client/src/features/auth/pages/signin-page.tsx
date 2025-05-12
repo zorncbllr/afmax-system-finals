@@ -6,7 +6,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import AuthLayout from "../../../layouts/auth-layout";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { SignInFormSchema } from "../types";
+import { SignInFormData, SignInFormSchema } from "../types";
 import {
   Form,
   FormControl,
@@ -18,11 +18,13 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { EyeIcon, EyeOffIcon } from "lucide-react";
 import { useState } from "react";
+import { useAttemptSignIn } from "../api/mutations";
 
 const SignInPage = () => {
   const [showPassword, setShowPassword] = useState<boolean>(false);
+  const { mutate } = useAttemptSignIn();
 
-  const form = useForm<z.infer<typeof SignInFormSchema>>({
+  const form = useForm<SignInFormData>({
     resolver: zodResolver(SignInFormSchema),
     defaultValues: {
       email: "",
@@ -31,7 +33,7 @@ const SignInPage = () => {
     },
   });
 
-  const submitHandler = (value: z.infer<typeof SignInFormSchema>) => {};
+  const submitHandler = (value: SignInFormData) => mutate(value);
 
   return (
     <AuthLayout isSignIn={true}>

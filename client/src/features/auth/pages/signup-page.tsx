@@ -1,7 +1,6 @@
 import AuthLayout from "@/layouts/auth-layout";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { SignUpFormSchema } from "../types";
+import { SignUpFormData, SignUpFormSchema } from "../types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Form,
@@ -11,12 +10,14 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { useSignUp } from "../api/mutations";
 
 const SignUpPage = () => {
-  const form = useForm<z.infer<typeof SignUpFormSchema>>({
+  const { mutate } = useSignUp();
+
+  const form = useForm<SignUpFormData>({
     resolver: zodResolver(SignUpFormSchema),
     defaultValues: {
       fullName: "",
@@ -28,7 +29,7 @@ const SignUpPage = () => {
     },
   });
 
-  const submitHandler = (value: z.infer<typeof SignUpFormSchema>) => {};
+  const submitHandler = (value: SignUpFormData) => mutate(value);
 
   return (
     <AuthLayout isSignIn={false}>
