@@ -9,10 +9,10 @@ use Src\Core\Exceptions\ServiceException;
 use Src\Core\Request;
 use Src\Factories\InventoryDTOFactory;
 use Src\Models\DTOs\InventoryDTO;
+use Src\Models\Inventory;
 use Src\Models\Unit;
 use Src\Repositories\InventoryRepository;
 use Src\Repositories\UnitRepository;
-use TypeError;
 
 class InventoryService
 {
@@ -27,9 +27,13 @@ class InventoryService
     /** @return array<InventoryDTO> */
     public function getInventoryData(): array
     {
+        $rawData = $this->inventoryRepository->getInventoryData();
+
+        if (empty($rawData)) return [];
+
         return array_map(
             fn($row) => $this->inventoryDTOFactory->makeInventoryDTO($row),
-            $this->inventoryRepository->getInventoryData()
+            $rawData
         );
     }
 
@@ -39,7 +43,7 @@ class InventoryService
             ->inventoryRepository
             ->getInventoryDataById($inventoryId);
 
-        if (empty($rawInventory)) {
+        if (!$rawInventory) {
             throw new ServiceException("Inventory item not found.");
         }
 
@@ -57,7 +61,12 @@ class InventoryService
 
             $inventory->quantity = $request->body->quantity;
 
-            $inventory->expiration = (new DateTime($request->body->expiration))->format('Y-m-d');
+            $inventory->expiration = null;
+
+            if ($request->body->expiration) {
+
+                $inventory->expiration = (new DateTime($request->body->expiration))->format('Y-m-d');
+            }
 
             $unit = new Unit();
             $unit->unitName = $request->body->unit;
@@ -109,5 +118,10 @@ class InventoryService
         }
     }
 
-    public function updateInventory(Request $request) {}
+    public function updateInventory(Request $request)
+    {
+        $inventory = new Inventory();
+
+        $inventory->productId = $request->body->productId;
+    }
 }

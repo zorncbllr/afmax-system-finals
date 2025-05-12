@@ -6,5 +6,6 @@ class Inventory
 {
     public int $inventoryId, $unitId, $productId;
     public int $quantity;
-    public string $expiration, $createdAt, $updatedAt;
+    public string $createdAt, $updatedAt;
+    public string|null $expiration;
 }

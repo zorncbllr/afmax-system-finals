@@ -82,7 +82,7 @@ const columns: ColumnDef<Inventory>[] = [
     cell: ({ row }) => {
       const expiration = row.original.expiration;
 
-      if (expiration.length > 0) {
+      if (expiration) {
         return expiration;
       }
 

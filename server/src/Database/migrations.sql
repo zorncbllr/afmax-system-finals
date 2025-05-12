@@ -62,5 +62,5 @@ CREATE TABLE inventories (
     updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (unitId) REFERENCES units(unitId) ON DELETE RESTRICT,
     FOREIGN KEY (productId) REFERENCES products(productId) ON DELETE CASCADE,
-    UNIQUE KEY uniqueInventory (unitId, productId, expiration)
+    UNIQUE KEY uniqueInventory (unitId, productId)
 );

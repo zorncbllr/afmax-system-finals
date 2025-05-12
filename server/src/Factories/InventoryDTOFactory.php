@@ -19,7 +19,7 @@ class InventoryDTOFactory
         $inventory->dateStocked = (new DateTime($row["dateStocked"]))->format('F j, Y');
         $inventory->quantity = $row["quantity"] ?? 0;
 
-        $inventory->expiration = $row["expiration"] == null ? "" : (new DateTime($row["expiration"]))->format('F j, Y');
+        $inventory->expiration = $row["expiration"] == null ? null : (new DateTime($row["expiration"]))->format('F j, Y');
         $inventory->isExpired = $row["expiration"] == null ? false : (new DateTime($row["expiration"])) < (new DateTime());
 
         return $inventory;
