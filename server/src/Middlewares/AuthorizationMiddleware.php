@@ -9,29 +9,31 @@ use Src\Repositories\UserRepository;
 
 class AuthorizationMiddleware extends Middleware
 {
+    protected UserRepository $userRepository;
+
+    public function __construct()
+    {
+        $this->userRepository = new UserRepository(App::getDatabase());
+    }
+
     public function runnable(Request $request, callable $next)
     {
         $userId = $request->authId;
 
-        if (!$userId) {
-            status(401);
-            return json(["message" => "Unauthorized access."]);
-        }
+        if (!$userId) $this->throwForbidden();
 
-        $userRepository = new UserRepository(App::getDatabase());
+        $user = $this->userRepository->getUserById($userId);
 
-        $user = $userRepository->getUserById($userId);
+        if (!$user) $this->throwForbidden();
 
-        if (!$user) {
-            status(401);
-            return json(["message" => "Unauthorized access."]);
-        }
-
-        if (!$user->isAdmin) {
-            status(403);
-            return json(["message" => "Forbidden access."]);
-        }
+        if (!$user->isAdmin) $this->throwForbidden();
 
         return $next();
+    }
+
+    protected function throwForbidden()
+    {
+        status(403);
+        return json(["message" => "Forbidden. You do not have permission to perform this action."]);
     }
 }

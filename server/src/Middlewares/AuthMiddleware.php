@@ -9,34 +9,38 @@ use UnexpectedValueException;
 
 class AuthMiddleware extends Middleware
 {
-    function runnable(Request $request, callable $next)
-    {
-        $authorizationHeader = getallheaders()["Authorization"];
+    protected JwtService $jwtService;
 
-        if (!$authorizationHeader) {
-            status(401);
-            return json(["message" => "Unauthorized access."]);
-        }
+    public function __construct()
+    {
+        $this->jwtService = new JwtService();
+    }
+
+    public function runnable(Request $request, callable $next)
+    {
+        $authorizationHeader = $request->headers->Authorization;
+
+        if (!$authorizationHeader) $this->throwUnauthorized();
 
         $token = explode(" ", $authorizationHeader)[1];
 
-        if (empty($token) || !$token) {
-            status(401);
-            return json(["message" => "Unauthorized access."]);
-        }
-
-        $jwtService = new JwtService();
+        if (empty($token) || !$token) $this->throwUnauthorized();
 
         try {
-            $payload = $jwtService->verify($token);
+            $payload = $this->jwtService->verify($token);
 
             $request->authUser = $payload["sub"];
 
             return $next();
         } catch (UnexpectedValueException $e) {
 
-            status(401);
-            return json(["message" => "Unauthorized access."]);
+            $this->throwUnauthorized();
         }
+    }
+
+    protected function throwUnauthorized()
+    {
+        status(401);
+        return json(["message" => "Unauthorized access. Please log in."]);
     }
 }
