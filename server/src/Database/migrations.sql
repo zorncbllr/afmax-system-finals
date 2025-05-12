@@ -60,7 +60,7 @@ CREATE TABLE inventories (
     expiration DATE DEFAULT NULL,
     createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (unitId) REFERENCES units(unitId),
+    FOREIGN KEY (unitId) REFERENCES units(unitId) ON DELETE RESTRICT,
     FOREIGN KEY (productId) REFERENCES products(productId) ON DELETE CASCADE,
     UNIQUE KEY uniqueInventory (unitId, productId, expiration)
 );

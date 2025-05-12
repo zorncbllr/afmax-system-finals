@@ -89,25 +89,19 @@ class InventoryService
 
     public function deleteInventory(int $inventoryId)
     {
+        $rawInventory = $this->inventoryRepository->getInventoryDataById($inventoryId);
 
-        try {
-            $this->database->beginTransaction();
-
-            $inventory = $this->inventoryDTOFactory->makeInventoryDTO(
-                row: $this->inventoryRepository->getInventoryDataById($inventoryId)
-            );
-
-            $unit = $this->unitRepository->getUnitByName($inventory->unit);
-
-            $this->inventoryRepository->deleteInventory($inventoryId);
-
-            $this->database->commit();
-        } catch (TypeError $e) {
-
-            $this->database->rollBack();
-
+        if (!$rawInventory) {
             throw new ServiceException("Inventory item not found.");
         }
+
+        $inventory = $this->inventoryDTOFactory->makeInventoryDTO($rawInventory);
+
+        $unit = $this->unitRepository->getUnitByName($inventory->unit);
+
+        $this->inventoryRepository->deleteInventory($inventoryId);
+
+        if (!$unit) return;
 
         try {
             $this->unitRepository->deleteUnit($unit->unitId);

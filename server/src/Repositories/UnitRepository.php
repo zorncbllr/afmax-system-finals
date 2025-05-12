@@ -10,7 +10,7 @@ class UnitRepository
 
     public function __construct(protected Database $database) {}
 
-    public function getUnitByName(string $unitName): Unit
+    public function getUnitByName(string $unitName): Unit|bool
     {
         $stmt = $this->database->prepare(
             "SELECT * FROM units WHERE unitName = :unitName"
@@ -18,7 +18,7 @@ class UnitRepository
 
         $stmt->execute(["unitName" => $unitName]);
 
-        return $stmt->fetchObject(Unit::class);
+        return $stmt->fetchObject(Unit::class) ?? false;
     }
 
     public function createUnit(Unit $unit): Unit
