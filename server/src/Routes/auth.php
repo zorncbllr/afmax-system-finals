@@ -11,6 +11,11 @@ return function (Router $router) {
         [AuthController::class, "attemptSignIn"]
     );
 
+    $router->post(
+        "/auth/refresh",
+        [AuthController::class, "refreshSession"]
+    );
+
     $router
         ->middleware(UserValidator::class)
         ->post("/auth/sign-up", [AuthController::class, "signUpUser"]);
