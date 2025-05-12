@@ -79,3 +79,8 @@ export interface SignInError {
   email?: string;
   password?: string;
 }
+
+export interface SuccessSignInResponse {
+  message: string;
+  accessToken: string;
+}

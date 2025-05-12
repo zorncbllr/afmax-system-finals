@@ -2,10 +2,18 @@
 
 use Src\Controllers\FeaturedController;
 use Src\Core\Router;
+use Src\Middlewares\AuthMiddleware;
+use Src\Middlewares\AuthorizationMiddleware;
 
 return function (Router $router) {
 
-    $router->route("/featured")
-        ->get([FeaturedController::class, "getAllFeatured"])
-        ->post([FeaturedController::class, "setFeatured"]);
+    $router
+        ->get("/featured", [FeaturedController::class, "getAllFeatured"]);
+
+    $router
+        ->middleware(
+            AuthMiddleware::class,
+            AuthorizationMiddleware::class
+        )
+        ->post("featured", [FeaturedController::class, "setFeatured"]);
 };

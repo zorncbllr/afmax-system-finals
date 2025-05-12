@@ -1,12 +1,17 @@
 import { axiosInstance } from "@/lib/api";
-import { SignInFormData, SignUpFormData } from "../types";
+import {
+  SignInFormData,
+  SignUpFormData,
+  SuccessSignInResponse,
+} from "../types";
 import { SuccessResponse } from "@/features/inventory/types";
 
 export const attemptSignIn = async (
   data: SignInFormData
-): Promise<SuccessResponse> => {
-  return (await axiosInstance.post<SuccessResponse>("/auth/sign-in", data))
-    .data;
+): Promise<SuccessSignInResponse> => {
+  return (
+    await axiosInstance.post<SuccessSignInResponse>("/auth/sign-in", data)
+  ).data;
 };
 
 export const signUp = async (

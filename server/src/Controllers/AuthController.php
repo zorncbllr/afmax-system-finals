@@ -2,6 +2,7 @@
 
 namespace Src\Controllers;
 
+use Rakit\Validation\Validator;
 use Src\Core\Exceptions\ServiceException;
 use Src\Core\Request;
 use Src\Models\User;
@@ -17,7 +18,52 @@ class AuthController
         $this->authService = AuthServiceProvider::makeAuthService();
     }
 
-    public function attemptSignIn() {}
+    public function attemptSignIn(Request $request)
+    {
+        $validator = new Validator();
+
+        $rules = [
+            "email" => "required|email",
+            "password" => "required"
+        ];
+
+        $validation = $validator->validate([
+            "email" => $request->body->email,
+            "password" => $request->body->password
+        ], $rules);
+
+        if ($validation->fails()) {
+            status(400);
+            return json($validation->errors()->firstOfAll());
+        }
+
+        try {
+            $accessToken = $this->authService->attemptSignIn(
+                email: $request->body->email,
+                password: $request->body->password
+            );
+
+            status(200);
+            return json([
+                "message" => "User successfully signed in.",
+                "accessToken" => $accessToken
+            ]);
+        } catch (ServiceException $e) {
+
+            if ($e->getCode() == 404) {
+                status(404);
+                return json(["email" => $e->getMessage()]);
+            }
+
+            if ($e->getCode() == 400) {
+                status(400);
+                return json(["password" => $e->getMessage()]);
+            }
+
+            status(400);
+            return json(["message" => "Unable to sign in user."]);
+        }
+    }
 
     public function signUpUser(Request $request)
     {

@@ -13,7 +13,8 @@ class AuthService
 {
     public function __construct(
         protected Database $database,
-        protected UserRepository $userRepository
+        protected UserRepository $userRepository,
+        protected JwtService $jwtService
     ) {}
 
     public function signUpUser(Request $request)
@@ -37,5 +38,45 @@ class AuthService
 
             throw new ServiceException("Unable to sign up user.");
         }
+    }
+
+    public function attemptSignIn(string $email, string $password): string
+    {
+        $user = $this->userRepository->getUserByEmail($email);
+
+        if (!$user) {
+            throw new ServiceException("User not found.", 404);
+        }
+
+        if (!password_verify($password, $user->password)) {
+            throw new ServiceException("Incorrect user credentials.", 400);
+        }
+
+        $accessToken = $this->jwtService->generate([
+            'sub' => $user->userId,
+            'type' => 'access',
+            'exp' => time() + 900,
+        ]);
+
+        $refreshToken = $this->jwtService->generate([
+            'sub' => $user->userId,
+            'type' => 'refresh',
+            'exp' => time() + 60 * 60 * 24 * 7,
+        ]);
+
+        setcookie(
+            'refresh_token',
+            $refreshToken,
+            [
+                'expires' => time() + 604800,
+                'path' => '/auth/refresh',
+                'domain' => $_ENV["JWT_ISSUER"],
+                'secure' => true,
+                'httponly' => true,
+                'samesite' => 'Strict'
+            ]
+        );
+
+        return $accessToken;
     }
 }

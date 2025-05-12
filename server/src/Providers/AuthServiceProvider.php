@@ -5,6 +5,7 @@ namespace Src\Providers;
 use Src\Core\App;
 use Src\Repositories\UserRepository;
 use Src\Services\AuthService;
+use Src\Services\JwtService;
 
 class AuthServiceProvider
 {
@@ -14,7 +15,8 @@ class AuthServiceProvider
 
         return new AuthService(
             database: $database,
-            userRepository: new UserRepository($database)
+            userRepository: new UserRepository($database),
+            jwtService: new JwtService()
         );
     }
 }

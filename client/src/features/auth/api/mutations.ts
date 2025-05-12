@@ -15,6 +15,7 @@ export const useAttemptSignIn = () => {
     mutationFn: async (data: SignInFormData) => attemptSignIn(data),
 
     onSuccess: (data) => {
+      console.log(data.accessToken);
       toast.success(data.message, {
         position: "top-right",
       });
