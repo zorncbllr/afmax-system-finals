@@ -15,7 +15,7 @@ export const useAttemptSignIn = () => {
     mutationFn: async (data: SignInFormData) => attemptSignIn(data),
 
     onSuccess: (data) => {
-      toast(data.message, {
+      toast.success(data.message, {
         position: "top-right",
       });
 
@@ -37,7 +37,7 @@ export const useSignUp = () => {
     mutationFn: async (data: SignUpFormData) => signUp(data),
 
     onSuccess: (data) => {
-      toast(data.message, {
+      toast.success(data.message, {
         position: "top-right",
       });
 

@@ -2,6 +2,7 @@
 
 use Src\Controllers\AuthController;
 use Src\Core\Router;
+use Src\Middlewares\Validators\UserValidator;
 
 return function (Router $router) {
 
@@ -10,8 +11,7 @@ return function (Router $router) {
         [AuthController::class, "attemptSignIn"]
     );
 
-    $router->post(
-        "/auth/sign-up",
-        [AuthController::class, "signUpUser"]
-    );
+    $router
+        ->middleware(UserValidator::class)
+        ->post("/auth/sign-up", [AuthController::class, "signUpUser"]);
 };

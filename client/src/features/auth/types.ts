@@ -66,3 +66,16 @@ export const SignUpFormSchema = z
   });
 
 export type SignUpFormData = z.infer<typeof SignUpFormSchema>;
+
+export interface SignUpError {
+  email?: string;
+  password?: string;
+  fullName?: string;
+  phoneNumber?: string;
+  passwordConfirmation?: string;
+}
+
+export interface SignInError {
+  email?: string;
+  password?: string;
+}

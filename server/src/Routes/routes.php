@@ -5,6 +5,7 @@ use Src\Core\Router;
 
 $router = new Router(base: "/api/v1");
 
+(require("auth.php"))($router);
 (require("products.php"))($router);
 (require("inventory.php"))($router);
 (require("featured.php"))($router);

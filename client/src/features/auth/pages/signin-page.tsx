@@ -1,12 +1,8 @@
 import { Link } from "react-router";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import AuthLayout from "../../../layouts/auth-layout";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { SignInFormData, SignInFormSchema } from "../types";
 import {
   Form,
   FormControl,
@@ -15,25 +11,12 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { EyeIcon, EyeOffIcon } from "lucide-react";
-import { useState } from "react";
-import { useAttemptSignIn } from "../api/mutations";
+import { useSignInForm } from "../hooks/signin-hook";
 
 const SignInPage = () => {
-  const [showPassword, setShowPassword] = useState<boolean>(false);
-  const { mutate } = useAttemptSignIn();
-
-  const form = useForm<SignInFormData>({
-    resolver: zodResolver(SignInFormSchema),
-    defaultValues: {
-      email: "",
-      password: "",
-      rememberMe: false,
-    },
-  });
-
-  const submitHandler = (value: SignInFormData) => mutate(value);
+  const { form, showPassword, setShowPassword, submitHandler } =
+    useSignInForm();
 
   return (
     <AuthLayout isSignIn={true}>

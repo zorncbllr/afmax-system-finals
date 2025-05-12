@@ -1,6 +1,6 @@
 import AuthLayout from "@/layouts/auth-layout";
 import { useForm } from "react-hook-form";
-import { SignUpFormData, SignUpFormSchema } from "../types";
+import { SignUpError, SignUpFormData, SignUpFormSchema } from "../types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Form,
@@ -12,24 +12,12 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { useSignUp } from "../api/mutations";
+import { EyeIcon, EyeOffIcon } from "lucide-react";
+import { useSignUpForm } from "../hooks/signup-hook";
 
 const SignUpPage = () => {
-  const { mutate } = useSignUp();
-
-  const form = useForm<SignUpFormData>({
-    resolver: zodResolver(SignUpFormSchema),
-    defaultValues: {
-      fullName: "",
-      email: "",
-      company: "",
-      phoneNumber: "",
-      password: "",
-      passwordConfirmation: "",
-    },
-  });
-
-  const submitHandler = (value: SignUpFormData) => mutate(value);
+  const { form, showPassword, setShowPassword, submitHandler } =
+    useSignUpForm();
 
   return (
     <AuthLayout isSignIn={false}>
@@ -123,11 +111,29 @@ const SignUpPage = () => {
                   Password<span className="text-red-600">*</span>
                 </FormLabel>
                 <FormControl>
-                  <Input
-                    type="password"
-                    placeholder="•••••••• (min 8 characters)"
-                    {...field}
-                  />
+                  <div className="relative">
+                    <Input
+                      placeholder="•••••••• (min 8 characters)"
+                      type={showPassword ? "text" : "password"}
+                      {...field}
+                    />
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      className="absolute right-0 top-1/2 -translate-y-1/2 hover:bg-transparent"
+                      onClick={() => setShowPassword(!showPassword)}
+                    >
+                      {showPassword ? (
+                        <EyeOffIcon className="h-4 w-4 text-muted-foreground" />
+                      ) : (
+                        <EyeIcon className="h-4 w-4 text-muted-foreground" />
+                      )}
+                      <span className="sr-only">
+                        Toggle password visibility
+                      </span>
+                    </Button>
+                  </div>
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -141,14 +147,32 @@ const SignUpPage = () => {
             render={({ field }) => (
               <FormItem className="grid gap-2">
                 <FormLabel>
-                  Confirm Password<span className="text-red-600">*</span>
+                  Password<span className="text-red-600">*</span>
                 </FormLabel>
                 <FormControl>
-                  <Input
-                    type="password"
-                    placeholder="•••••••• (re-enter)"
-                    {...field}
-                  />
+                  <div className="relative">
+                    <Input
+                      placeholder="•••••••• (re-enter password)"
+                      type={showPassword ? "text" : "password"}
+                      {...field}
+                    />
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      className="absolute right-0 top-1/2 -translate-y-1/2 hover:bg-transparent"
+                      onClick={() => setShowPassword(!showPassword)}
+                    >
+                      {showPassword ? (
+                        <EyeOffIcon className="h-4 w-4 text-muted-foreground" />
+                      ) : (
+                        <EyeIcon className="h-4 w-4 text-muted-foreground" />
+                      )}
+                      <span className="sr-only">
+                        Toggle password visibility
+                      </span>
+                    </Button>
+                  </div>
                 </FormControl>
                 <FormMessage />
               </FormItem>
