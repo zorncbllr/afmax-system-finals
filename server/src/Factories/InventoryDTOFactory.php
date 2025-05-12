@@ -13,13 +13,13 @@ class InventoryDTOFactory
 
         $inventory->inventoryId = $row["inventoryId"];
         $inventory->productId = $row["productId"];
-        $inventory->unit = $row["unit"] ?? "----";
+        $inventory->unit = $row["unit"] ?? "";
         $inventory->product = $row["product"];
-        $inventory->abbreviation = $row["abbreviation"] ?? "----";
+        $inventory->abbreviation = $row["abbreviation"] ?? "";
         $inventory->dateStocked = (new DateTime($row["dateStocked"]))->format('F j, Y');
-        $inventory->quantity = $row["quantity"] ?? "----";
+        $inventory->quantity = $row["quantity"] ?? 0;
 
-        $inventory->expiration = $row["expiration"] == null ? "----" : (new DateTime($row["expiration"]))->format('F j, Y');
+        $inventory->expiration = $row["expiration"] == null ? "" : (new DateTime($row["expiration"]))->format('F j, Y');
         $inventory->isExpired = $row["expiration"] == null ? false : (new DateTime($row["expiration"])) < (new DateTime());
 
         return $inventory;

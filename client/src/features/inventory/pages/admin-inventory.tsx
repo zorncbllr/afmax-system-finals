@@ -56,16 +56,38 @@ const columns: ColumnDef<Inventory>[] = [
     cell: ({ row }) => {
       const raw = row.original;
 
-      return `${raw.quantity} ${raw.abbreviation}`;
+      if (raw.quantity > 0) {
+        return `${raw.quantity} ${raw.abbreviation}`;
+      }
+
+      return "----";
     },
   },
   {
     accessorKey: "unit",
     header: "Unit",
+    cell: ({ row }) => {
+      const unit = row.original.unit;
+
+      if (unit.length > 0) {
+        return unit;
+      }
+
+      return "----";
+    },
   },
   {
     accessorKey: "expiration",
     header: "Expiration Date",
+    cell: ({ row }) => {
+      const expiration = row.original.expiration;
+
+      if (expiration.length > 0) {
+        return expiration;
+      }
+
+      return "----";
+    },
   },
   {
     accessorKey: "dateStocked",

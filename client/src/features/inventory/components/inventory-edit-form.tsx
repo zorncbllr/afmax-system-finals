@@ -23,12 +23,17 @@ const EditInventoryForm = () => {
 
   useEffect(() => {
     if (inventory) {
+      const date =
+        inventory.expiration.length > 0
+          ? new Date(inventory.expiration)
+          : new Date();
+
       inventoryForm.form.reset({
         unit: inventory.unit,
         productId: inventory.productId,
         abbreviation: inventory.abbreviation,
         quantity: inventory.quantity,
-        expiration: new Date(inventory.expiration),
+        expiration: date,
       });
     }
   }, [inventory]);
