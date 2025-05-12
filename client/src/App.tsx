@@ -11,6 +11,7 @@ import AdminProductView from "./features/products/pages/admin/admin-product-view
 import PageNotFound from "./components/page-not-found";
 import AdminInventory from "./features/inventory/pages/admin-inventory";
 import ProductEditView from "./features/products/pages/admin/product-edit-view";
+import LoginPage from "./features/auth/pages/login-page";
 
 function App() {
   return (
@@ -18,6 +19,9 @@ function App() {
       <Toaster />
       <Routes>
         <Route path="/" element={<Home />} />
+
+        <Route path="/auth/login" element={<LoginPage />} />
+
         <Route path="/products" element={<UserProducts />} />
 
         <Route path="/products/:productId" element={<UserProductView />} />

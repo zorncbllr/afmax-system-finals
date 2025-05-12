@@ -3,10 +3,12 @@ USE afmax_database;
 DROP TABLE IF EXISTS productImages;
 DROP TABLE IF EXISTS productCategories;
 DROP TABLE IF EXISTS inventories;
+DROP TABLE IF EXISTS address;
 DROP TABLE IF EXISTS units;
 DROP TABLE IF EXISTS products;
 DROP TABLE IF EXISTS brands;
 DROP TABLE IF EXISTS categories;
+DROP TABLE IF EXISTS users;
 
 
 CREATE TABLE brands (
@@ -63,4 +65,28 @@ CREATE TABLE inventories (
     FOREIGN KEY (unitId) REFERENCES units(unitId) ON DELETE RESTRICT,
     FOREIGN KEY (productId) REFERENCES products(productId) ON DELETE CASCADE,
     UNIQUE KEY uniqueInventory (unitId, productId)
+);
+
+CREATE TABLE users (
+  userId INT PRIMARY KEY AUTO_INCREMENT,
+  userPhoto VARCHAR(255),
+  fullName VARCHAR(80) NOT NULL,
+  email VARCHAR(50) UNIQUE NOT NULL,
+  phoneNumber CHAR(11) UNIQUE NOT NULL,
+  isAdmin BOOLEAN DEFAULT FALSE,
+  password VARCHAR(255) NOT NULL,
+  company VARCHAR(80),
+  createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+CREATE TABLE address (
+    addressId INT PRIMARY KEY AUTO_INCREMENT,
+    userId INT NOT NULL,
+    zipCode INT NOT NULL,
+    barangay VARCHAR(120) NOT NULL,
+    city VARCHAR(120) NOT NULL,
+    street VARCHAR(180) NOT NULL,
+    country VARCHAR(100) NOT NULL,
+    FOREIGN KEY (userId) REFERENCES users(userId) ON DELETE CASCADE
 );
