@@ -227,22 +227,26 @@ const InventoryForm = ({
                       </PopoverTrigger>
                       <PopoverContent align="start" className="w-[25rem] p-2">
                         <Select
-                          onValueChange={(value) =>
-                            field.onChange(
-                              addDays(new Date(), parseInt(value)),
-                              setOpenDate(false)
-                            )
-                          }
+                          onValueChange={(value) => {
+                            if (value === "none") {
+                              field.onChange(undefined);
+                            } else {
+                              field.onChange(
+                                addDays(new Date(), parseInt(value))
+                              );
+                            }
+                            setOpenDate(false);
+                          }}
                         >
                           <SelectTrigger>
                             <SelectValue placeholder="Quick select" />
                           </SelectTrigger>
                           <SelectContent position="popper">
-                            <SelectItem value="0">Today</SelectItem>
-                            <SelectItem value="3">In 3 days</SelectItem>
-                            <SelectItem value="7">In a week</SelectItem>
+                            <SelectItem value="none">None</SelectItem>
+                            <SelectItem value="7">In 3 week</SelectItem>
                             <SelectItem value="30">In a month</SelectItem>
                             <SelectItem value="365">In a year</SelectItem>
+                            <SelectItem value="1825">In 5 years</SelectItem>
                           </SelectContent>
                         </Select>
                         <div className="rounded-md border mt-2 flex justify-center">

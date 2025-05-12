@@ -26,7 +26,7 @@ const EditInventoryForm = () => {
       const date =
         inventory.expiration.length > 0
           ? new Date(inventory.expiration)
-          : new Date();
+          : undefined;
 
       inventoryForm.form.reset({
         unit: inventory.unit,
