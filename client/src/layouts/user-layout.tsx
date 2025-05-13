@@ -53,10 +53,10 @@ const sidebarProps: SideBarProps = {
 
 const UserLayout: React.FC<LayoutRouteProps> = ({ children }) => {
   const { setSidebarProps } = useSidebar();
-  const { isAuthenticated } = useAuthStore();
+  const { isAuthenticated, user } = useAuthStore();
 
   useLayoutEffect(() => {
-    if (!isAuthenticated) {
+    if (!isAuthenticated || user?.role != "User") {
       setSidebarProps(sidebarProps);
     } else {
       setSidebarProps(authenticatedSidebarProps);
