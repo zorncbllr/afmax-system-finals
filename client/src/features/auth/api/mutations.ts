@@ -36,7 +36,7 @@ export const useSignUp = () => {
   const navigate = useNavigate();
 
   return useMutation({
-    mutationKey: ["sign-in"],
+    mutationKey: ["sign-up"],
     mutationFn: async (data: SignUpFormData) => signUp(data),
 
     onSuccess: (data) => {

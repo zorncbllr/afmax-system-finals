@@ -31,8 +31,6 @@ export const useCreateProduct = () => {
     },
 
     onError: (error: AxiosError) => {
-      console.log(error);
-
       toast.error("Product creation failed.", {
         position: "top-right",
       });
@@ -61,7 +59,7 @@ export const useDeleteProduct = () => {
       });
     },
 
-    onError: (error) => {
+    onError: (_) => {
       toast.error("Unable to delete product.", { position: "top-right" });
     },
   });
@@ -85,8 +83,7 @@ export const useUpdateProduct = () => {
       });
     },
 
-    onError: (error) => {
-      console.log(error);
+    onError: (_) => {
       toast.error("Product update failed.", { position: "top-right" });
     },
   });

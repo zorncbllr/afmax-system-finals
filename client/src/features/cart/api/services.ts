@@ -12,6 +12,12 @@ export const addToCart = async (
   return (await axiosInstance.post<SuccessResponse>("/user/cart", data)).data;
 };
 
+export const updateCartItem = async (
+  data: CartItemProps
+): Promise<SuccessResponse> => {
+  return (await axiosInstance.patch<SuccessResponse>("/user/cart", data)).data;
+};
+
 export const removeToCart = async ({
   cartItemId,
 }: {

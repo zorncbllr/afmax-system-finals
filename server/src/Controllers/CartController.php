@@ -99,4 +99,22 @@ class CartController
             return json(["message" => $e->getMessage()]);
         }
     }
+
+    public function updateCartItem(Request $request)
+    {
+        $userId = $request->authId;
+        $productId = $request->body->productId;
+        $quantity = $request->body->quantity;
+
+        try {
+            $this->cartService->updateItem($productId, $userId, $quantity);
+
+            status(200);
+            return json(["message" => "Item quantity has been updated."]);
+        } catch (ServiceException $e) {
+
+            status(400);
+            return json(["message" => $e->getMessage()]);
+        }
+    }
 }

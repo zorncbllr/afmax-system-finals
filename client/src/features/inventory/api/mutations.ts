@@ -16,8 +16,6 @@ export const useCreateInventory = () => {
       createInventory(inventoryData),
 
     onSuccess: (data) => {
-      console.log(data);
-
       setIsCreationFormOpen(false);
 
       client.invalidateQueries({
@@ -30,8 +28,6 @@ export const useCreateInventory = () => {
     },
 
     onError: (error: AxiosError<InventoryErrorResponse>) => {
-      console.log(error.response);
-
       toast.error(error.response!.data.message, {
         position: "top-right",
       });
@@ -47,8 +43,6 @@ export const useDeleteInventory = () => {
     mutationFn: async (inventoryId: number) => deleteInventory(inventoryId),
 
     onSuccess: (data) => {
-      console.log(data);
-
       client.invalidateQueries({
         queryKey: ["inventory"],
       });
@@ -59,8 +53,6 @@ export const useDeleteInventory = () => {
     },
 
     onError: (error: AxiosError<InventoryErrorResponse>) => {
-      console.log(error.response);
-
       toast.error(error.response!.data.message, {
         position: "top-right",
       });
@@ -80,7 +72,6 @@ export const useUpdateInventory = () => {
     }) => updateInventory(params),
 
     onSuccess: (data) => {
-      console.log(data);
       setIsEditFormOpen(false);
 
       client.invalidateQueries({
@@ -93,8 +84,6 @@ export const useUpdateInventory = () => {
     },
 
     onError: (error: AxiosError<InventoryErrorResponse>) => {
-      console.log(error.response);
-
       toast.error(error.response!.data.message, {
         position: "top-right",
       });

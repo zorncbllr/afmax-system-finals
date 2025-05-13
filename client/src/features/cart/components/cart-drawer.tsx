@@ -4,16 +4,17 @@ import {
   DialogPanel,
   DialogTitle,
 } from "@headlessui/react";
-import { XIcon } from "lucide-react";
+import { MinusIcon, PlusIcon, XIcon } from "lucide-react";
 import { useCartDrawer } from "../store";
 import { Button } from "@/components/ui/button";
 import { useFetchCartItems } from "../api/queries";
-import { useRemoveToCart } from "../api/mutations";
+import { useRemoveToCart, useUpdateCartItem } from "../api/mutations";
 
 export default function CartDrawer() {
   const { isOpen, setIsOpen } = useCartDrawer();
   const { data: cart } = useFetchCartItems();
   const { mutate: removeItem } = useRemoveToCart();
+  const { mutate: updateItem } = useUpdateCartItem();
 
   return (
     <Dialog open={isOpen} onClose={setIsOpen} className="relative z-10">
@@ -89,10 +90,35 @@ export default function CartDrawer() {
                                   {item.product.brand}
                                 </p>
                               </div>
-                              <div className="flex flex-1 items-end justify-between text-sm">
+                              <div className="flex flex-1 items-center justify-between text-sm">
                                 <p className="text-gray-500">
                                   Qty {item.quantity}
                                 </p>
+
+                                <div className="flex">
+                                  <Button
+                                    onClick={() =>
+                                      updateItem({
+                                        productId: item.product.productId,
+                                        quantity: item.quantity + 1,
+                                      })
+                                    }
+                                    variant={"ghost"}
+                                  >
+                                    <PlusIcon />
+                                  </Button>
+                                  <Button
+                                    onClick={() =>
+                                      updateItem({
+                                        productId: item.product.productId,
+                                        quantity: item.quantity - 1,
+                                      })
+                                    }
+                                    variant={"ghost"}
+                                  >
+                                    <MinusIcon />
+                                  </Button>
+                                </div>
 
                                 <div className="flex">
                                   <button

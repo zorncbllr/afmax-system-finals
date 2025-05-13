@@ -126,4 +126,42 @@ class CartService
             throw new ServiceException("Unable to delete cart item.");
         }
     }
+
+
+    public function updateItem(int $productId, int $userId, int $quantity)
+    {
+        try {
+            $this->database->beginTransaction();
+
+            $cart = $this->cartRepository->findByUserId($userId);
+
+            if (!$cart) {
+                $cart = $this->cartRepository->createCart($userId);
+            }
+
+            $product = $this->productRepository->getProductById($productId);
+
+            if (!$product) {
+                throw new ServiceException("Product does not exist.");
+            }
+
+            $cartItem = $this
+                ->cartItemRepository
+                ->getExistingItem($product->productId, $cart->cartId);
+
+            $this
+                ->cartItemRepository
+                ->updateItem(
+                    $cartItem->cartItemId,
+                    $quantity
+                );
+
+            $this->database->commit();
+        } catch (PDOException $e) {
+
+            $this->database->rollBack();
+
+            throw new ServiceException("Unable to updated item quantity.");
+        }
+    }
 }
