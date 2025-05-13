@@ -27,7 +27,7 @@ const SignUpPage = () => {
     if (isAuthenticated) {
       navigate("/");
     }
-  }, []);
+  }, [isAuthenticated]);
 
   return (
     <AuthLayout isSignIn={false}>

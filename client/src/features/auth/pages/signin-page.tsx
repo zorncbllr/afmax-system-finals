@@ -26,7 +26,7 @@ const SignInPage = () => {
     if (isAuthenticated) {
       navigate("/");
     }
-  }, []);
+  }, [isAuthenticated]);
 
   return (
     <AuthLayout isSignIn={true}>
