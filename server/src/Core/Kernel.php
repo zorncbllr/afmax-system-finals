@@ -49,12 +49,12 @@ use Src\Repositories\\{$capital}Repository;
 
 class {$capital}Controller
 {
-    protected OrderService \${$camel}Service;
+    protected {$capital}Service \${$camel}Service;
 
     public function __construct() 
     {
         \$database = App::getDatabase();
-        
+
         \$this->{$camel}Service = new {$capital}Service(
             database: \$database,
             {$camel}Repository: new {$capital}Repository(\$database)
