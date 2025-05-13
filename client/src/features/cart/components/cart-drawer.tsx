@@ -5,7 +5,7 @@ import {
   DialogTitle,
 } from "@headlessui/react";
 import { MinusIcon, PlusIcon, XIcon } from "lucide-react";
-import { useCartDrawer } from "../store";
+import { useCartDrawer } from "../stores/cart-drawer-store";
 import { Button } from "@/components/ui/button";
 import { useFetchCartItems } from "../api/queries";
 import { useRemoveToCart, useUpdateCartItem } from "../api/mutations";

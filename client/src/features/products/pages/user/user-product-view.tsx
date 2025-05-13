@@ -7,6 +7,7 @@ import { useFetchProductById } from "@/features/products/api/queries";
 import PageNotFound from "@/components/page-not-found";
 import { BreadcrumbItem, useBreadcrumb } from "@/features/breadcrumbs/store";
 import { useEffect } from "react";
+import AddToCartForm from "@/features/cart/components/add-to-cart-form";
 
 const breadcrumbList: BreadcrumbItem[] = [
   {
@@ -54,7 +55,12 @@ const UserProductView = () => {
       {isLoading || isFetching ? (
         <ProductViewSkeleton />
       ) : (
-        product && <ProductView key={productId} product={product} />
+        product && (
+          <>
+            <ProductView key={productId} product={product} />
+            <AddToCartForm product={product} />
+          </>
+        )
       )}
     </UserLayout>
   );

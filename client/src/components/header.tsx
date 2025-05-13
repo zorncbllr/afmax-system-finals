@@ -16,7 +16,7 @@ import { Separator } from "./ui/separator";
 import { useSignOff } from "@/features/auth/api/mutations";
 import { useNavigate } from "react-router";
 import { cn } from "@/lib/utils";
-import { useCartDrawer } from "@/features/cart/store";
+import { useCartDrawer } from "@/features/cart/stores/cart-drawer-store";
 
 const Header = () => {
   const { toggleSidebar } = useSidebar();

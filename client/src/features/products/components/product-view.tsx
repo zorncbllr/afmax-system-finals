@@ -9,6 +9,7 @@ import { ProductDetails } from "../types";
 import { useAuthStore } from "@/features/auth/store";
 import { useNavigate } from "react-router";
 import { useAddToCart } from "@/features/cart/api/mutations";
+import { useCartFormStore } from "@/features/cart/stores/cart-form-store";
 
 export const ProductViewSkeleton = () => {
   return (
@@ -78,6 +79,7 @@ const ProductView = ({ product }: { product: ProductDetails }) => {
   const { isAuthenticated, user } = useAuthStore();
   const { mutate } = useAddToCart();
   const navigate = useNavigate();
+  const { isOpen, setIsOpen } = useCartFormStore();
 
   const addItemToCart = () => {
     if (!isAuthenticated) {
@@ -151,7 +153,7 @@ const ProductView = ({ product }: { product: ProductDetails }) => {
         </div>
 
         <div className="flex gap-4 mt-10">
-          <Button onClick={addItemToCart}>Add Order</Button>
+          <Button onClick={() => setIsOpen(true)}>Add Order</Button>
 
           <Button variant={"secondary"}>Buy Now</Button>
         </div>
