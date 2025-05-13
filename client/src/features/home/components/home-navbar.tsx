@@ -7,7 +7,7 @@ import { useSignOff } from "@/features/auth/api/mutations";
 import { ChevronRightIcon } from "lucide-react";
 
 const HomeNavbar: React.FC = () => {
-  const { isAuthenticated } = useAuthStore();
+  const { isAuthenticated, user } = useAuthStore();
   const { mutate: signOff } = useSignOff();
   const navigate = useNavigate();
 
@@ -86,6 +86,14 @@ const HomeNavbar: React.FC = () => {
           <Link to="#contact" className="text-sm/6 font-semibold text-gray-900">
             Contact
           </Link>
+          {user?.role == "Admin" && (
+            <Link
+              to="/admin/dashboard"
+              className="text-sm/6 font-semibold text-gray-900"
+            >
+              Admin
+            </Link>
+          )}
         </div>
 
         {isAuthenticated ? (
