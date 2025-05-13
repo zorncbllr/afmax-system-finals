@@ -17,7 +17,9 @@ class Kernel
                 break;
 
             default:
-                # code...
+            case "clear":
+                $logs = parseDir(__DIR__) . "/../Logs/logs.txt";
+                unlink($logs);
                 break;
         }
     }
