@@ -20,7 +20,9 @@ class AuthController
     public function refreshSession(Request $request)
     {
         try {
-            $newPayload = $this->authService->refreshSession($request);
+            $refreshToken = $request->cookies->refreshToken ?? null;
+
+            $newPayload = $this->authService->refreshSession($refreshToken);
 
             status(200);
             return json([

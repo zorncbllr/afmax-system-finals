@@ -24,7 +24,9 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       try {
         const res = await refreshToken();
 
-        setAuthenticated(true);
+        console.log(res);
+
+        setAuthenticated(res.accessToken ? true : false);
         setToken(res.accessToken);
         setRole(res.role);
       } catch (_) {

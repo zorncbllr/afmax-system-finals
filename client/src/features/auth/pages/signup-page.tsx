@@ -1,7 +1,5 @@
 import AuthLayout from "@/layouts/auth-layout";
-import { useForm } from "react-hook-form";
-import { SignUpError, SignUpFormData, SignUpFormSchema } from "../types";
-import { zodResolver } from "@hookform/resolvers/zod";
+
 import {
   Form,
   FormControl,
@@ -14,10 +12,22 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { EyeIcon, EyeOffIcon } from "lucide-react";
 import { useSignUpForm } from "../hooks/signup-hook";
+import { useAuthStore } from "../store";
+import { useNavigate } from "react-router";
+import { useLayoutEffect } from "react";
 
 const SignUpPage = () => {
   const { form, showPassword, setShowPassword, submitHandler } =
     useSignUpForm();
+
+  const { isAuthenticated } = useAuthStore();
+  const navigate = useNavigate();
+
+  useLayoutEffect(() => {
+    if (isAuthenticated) {
+      navigate("/");
+    }
+  }, []);
 
   return (
     <AuthLayout isSignIn={false}>

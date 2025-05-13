@@ -1,4 +1,4 @@
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -13,10 +13,20 @@ import {
 } from "@/components/ui/form";
 import { EyeIcon, EyeOffIcon } from "lucide-react";
 import { useSignInForm } from "../hooks/signin-hook";
+import { useAuthStore } from "../store";
+import { useLayoutEffect } from "react";
 
 const SignInPage = () => {
   const { form, showPassword, setShowPassword, submitHandler } =
     useSignInForm();
+  const { isAuthenticated } = useAuthStore();
+  const navigate = useNavigate();
+
+  useLayoutEffect(() => {
+    if (isAuthenticated) {
+      navigate("/");
+    }
+  }, []);
 
   return (
     <AuthLayout isSignIn={true}>

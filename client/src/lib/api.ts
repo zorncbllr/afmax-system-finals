@@ -24,15 +24,15 @@ axiosInstance.interceptors.request.use(
   }
 );
 
-let firstFetch = false;
+let firstFetch = true;
 
 axiosInstance.interceptors.response.use(
   (response) => response,
   async (error) => {
     const response = error.response;
 
-    if (response.status === 401 && !firstFetch) {
-      firstFetch = true;
+    if (response.status === 401 && firstFetch) {
+      firstFetch = false;
 
       try {
         const newResponse = await refreshToken();
@@ -43,13 +43,10 @@ axiosInstance.interceptors.response.use(
         const refetchedResponse = await axiosInstance(error.config);
 
         return Promise.resolve(refetchedResponse);
-      } catch (err: any) {
-        firstFetch = false;
-        console.log(err);
-
-        return Promise.reject(err);
-      }
+      } catch (err: any) {}
     }
+
+    firstFetch = true;
 
     return Promise.reject(error);
   }

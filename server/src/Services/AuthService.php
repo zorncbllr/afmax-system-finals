@@ -84,10 +84,8 @@ class AuthService
         ];
     }
 
-    public function refreshSession(Request $request): array
+    public function refreshSession(string|null $refreshToken): array
     {
-        $refreshToken = $request->cookies->refreshToken ?? null;
-
         if (!$refreshToken) {
             throw new ServiceException("Refresh token missing", 401);
         }
@@ -122,7 +120,7 @@ class AuthService
                 $newRefreshToken,
                 [
                     'expires' => time() + 604800,
-                    'path' => '/api/v1/auth/refresh',
+                    'path' => '/api/v1/',
                     'domain' => $_ENV["JWT_ISSUER"],
                     'secure' => true,
                     'httponly' => true,

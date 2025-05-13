@@ -19,7 +19,6 @@ return function (Router $router) {
         );
 
     $router
-        ->middleware(AuthMiddleware::class)
         ->post(
             "/auth/sign-off",
             [AuthController::class, "signOffUser"]
