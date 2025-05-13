@@ -58,7 +58,7 @@ export default function CartDrawer() {
                               <img
                                 alt="Cart Item"
                                 src={`http://localhost:8000${item.product.image}`}
-                                className="size-full object-cover"
+                                className="size-full object-cover rounded-lg"
                               />
                             </div>
 

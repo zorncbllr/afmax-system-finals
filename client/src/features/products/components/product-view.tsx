@@ -6,6 +6,9 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useAutoResizeTextarea } from "../hooks/autoresize-hook";
 import { FlameIcon } from "lucide-react";
 import { ProductDetails } from "../types";
+import { useAuthStore } from "@/features/auth/store";
+import { useNavigate } from "react-router";
+import { useAddToCart } from "@/features/cart/api/mutations";
 
 export const ProductViewSkeleton = () => {
   return (
@@ -72,6 +75,19 @@ export const ProductViewSkeleton = () => {
 const ProductView = ({ product }: { product: ProductDetails }) => {
   const [mainImage, setMainImage] = useState<string>("");
   const textareaRef = useAutoResizeTextarea("");
+  const { isAuthenticated, user } = useAuthStore();
+  const { mutate } = useAddToCart();
+  const navigate = useNavigate();
+
+  const addItemToCart = () => {
+    if (!isAuthenticated) {
+      navigate("/auth/sign-in");
+    }
+
+    if (user?.role != "User") return;
+
+    mutate({ productId: product.productId, quantity: 1 });
+  };
 
   const formattedPrice = new Intl.NumberFormat("fil-PH", {
     style: "currency",
@@ -135,7 +151,8 @@ const ProductView = ({ product }: { product: ProductDetails }) => {
         </div>
 
         <div className="flex gap-4 mt-10">
-          <Button>Add Order</Button>
+          <Button onClick={addItemToCart}>Add Order</Button>
+
           <Button variant={"secondary"}>Buy Now</Button>
         </div>
 

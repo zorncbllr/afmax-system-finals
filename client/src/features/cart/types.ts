@@ -18,3 +18,8 @@ export interface Cart {
   cartItems: CartItem[];
   totalPrice: number;
 }
+
+export interface CartItemProps {
+  productId: number;
+  quantity: number;
+}
