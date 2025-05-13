@@ -15,5 +15,5 @@ return function (Router $router) {
             AuthMiddleware::class,
             AuthorizationMiddleware::class
         )
-        ->post("featured", [FeaturedController::class, "setFeatured"]);
+        ->post("/featured", [FeaturedController::class, "setFeatured"]);
 };
