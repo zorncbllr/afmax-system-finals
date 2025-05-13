@@ -8,4 +8,6 @@ class CartDTO
 
     /** @var array<CartItemDTO> */
     public array $cartItems;
+
+    public float $totalPrice;
 }

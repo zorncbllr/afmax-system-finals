@@ -17,14 +17,20 @@ class CartDTOFactory
         $cart->cartId = $rows[0]["cartId"];
         $cart->cartItems = [];
 
+        $sum = 0;
+
         foreach ($rows as $row) {
             $cartItem = new CartItemDTO();
             $cartItem->cartItemId = $row["cartItemId"];
             $cartItem->product = $this->productDTOFactory->makeProductDTO($row);
             $cartItem->quantity = $row["quantity"];
 
+            $sum = $sum + ($cartItem->product->price * $cartItem->quantity);
+
             array_push($cart->cartItems, $cartItem);
         }
+
+        $cart->totalPrice = $sum;
 
         return $cart;
     }
