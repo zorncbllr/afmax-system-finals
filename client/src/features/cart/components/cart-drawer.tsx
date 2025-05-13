@@ -8,10 +8,12 @@ import { XIcon } from "lucide-react";
 import { useCartDrawer } from "../store";
 import { Button } from "@/components/ui/button";
 import { useFetchCartItems } from "../api/queries";
+import { useRemoveToCart } from "../api/mutations";
 
 export default function CartDrawer() {
   const { isOpen, setIsOpen } = useCartDrawer();
   const { data: cart } = useFetchCartItems();
+  const { mutate: removeItem } = useRemoveToCart();
 
   return (
     <Dialog open={isOpen} onClose={setIsOpen} className="relative z-10">
@@ -95,6 +97,7 @@ export default function CartDrawer() {
                                 <div className="flex">
                                   <button
                                     type="button"
+                                    onClick={() => removeItem(item.cartItemId)}
                                     className="font-medium text-primary hover:underline"
                                   >
                                     Remove

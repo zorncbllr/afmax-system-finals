@@ -90,4 +90,20 @@ class CartService
             throw new ServiceException("Unable to create cart for user with id = $userId.", 500);
         }
     }
+
+    public function deleteCartItem(int $cartItemId, int $userId)
+    {
+        try {
+            $this->database->beginTransaction();
+
+            $this->cartItemRepository->removeItem($cartItemId);
+
+            $this->database->commit();
+        } catch (PDOException $e) {
+
+            $this->database->rollBack();
+
+            throw new ServiceException("Unable to delete cart item.");
+        }
+    }
 }

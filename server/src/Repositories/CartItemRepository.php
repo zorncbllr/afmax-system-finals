@@ -89,4 +89,13 @@ class CartItemRepository
 
         $stmt->execute(["cartId" => $cartId]);
     }
+
+    public function removeItem(int $cartItemId)
+    {
+        $stmt = $this->database->prepare(
+            "DELETE FROM cartItems WHERE cartItemId = :cartItemId"
+        );
+
+        $stmt->execute(["cartItemId" => $cartItemId]);
+    }
 }

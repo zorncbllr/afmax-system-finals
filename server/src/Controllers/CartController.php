@@ -65,4 +65,38 @@ class CartController
             return json(["message" => $e->getMessage()]);
         }
     }
+
+    public function deleteCartItem(Request $request)
+    {
+        $validator = new Validator();
+
+        $rules = [
+            "userId" => "required|numeric|min:1",
+            "cartItemId" => "required|numeric|min:1",
+        ];
+
+        $validation = $validator->validate([
+            "userId" => $request->authId,
+            "cartItemId" => $request->params->cartItemId,
+        ], $rules);
+
+        if ($validation->fails()) {
+            status(400);
+            return json($validation->errors()->firstOfAll());
+        }
+
+        try {
+            $this->cartService->deleteCartItem(
+                cartItemId: $request->params->cartItemId,
+                userId: $request->authId
+            );
+
+            status(200);
+            return json(["message" => "Item has been removed from cart."]);
+        } catch (ServiceException $e) {
+
+            status(400);
+            return json(["message" => $e->getMessage()]);
+        }
+    }
 }

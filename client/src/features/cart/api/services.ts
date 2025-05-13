@@ -11,3 +11,13 @@ export const addToCart = async (
 ): Promise<SuccessResponse> => {
   return (await axiosInstance.post<SuccessResponse>("/user/cart", data)).data;
 };
+
+export const removeToCart = async ({
+  cartItemId,
+}: {
+  cartItemId: number;
+}): Promise<SuccessResponse> => {
+  return (
+    await axiosInstance.delete<SuccessResponse>(`/user/cart/${cartItemId}`)
+  ).data;
+};
