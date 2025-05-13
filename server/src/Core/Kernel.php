@@ -18,18 +18,38 @@ class Kernel
 
             default:
             case "clear":
-                $logs = parseDir(__DIR__) . "/../Logs/logs.txt";
-                unlink($logs);
+                try {
+                    $logs = parseDir(__DIR__) . "/../Logs/logs.txt";
+                    unlink($logs);
+                } catch (\Throwable $e) {
+                }
                 break;
             case "-g":
-                if ($this->argv[2] === "resource") {
-                    $name = $this->argv[3];
+                $this->handleGenerate();
+                break;
+        }
+    }
 
+    function handleGenerate()
+    {
+        try {
+            $name = $this->argv[3];
+
+            switch ($this->argv[2]) {
+                case 'resource':
                     $this->generateController($name);
                     $this->generateService($name);
                     $this->generateRepository($name);
                     $this->generateModel($name);
-                }
+                    break;
+                case 'repository':
+                    $this->generateRepository($name);
+                    break;
+                case 'model':
+                    $this->generateModel($name);
+                    break;
+            }
+        } catch (\Throwable $e) {
         }
     }
 

@@ -4,6 +4,7 @@ namespace Src\Repositories;
 
 use PDO;
 use Src\Core\Database;
+use Src\Models\Order;
 
 class OrderRepository
 {
@@ -12,13 +13,21 @@ class OrderRepository
         protected Database $database
     ) {}
 
-    public function getAllOrder() 
+    public function getOrderById(int $orderId) {}
+
+    public function createOrder(int $userId): Order
     {
-        $stmt = $this->database->prepare("");
+        $stmt = $this->database->prepare(
+            "INSERT INTO orders (userId)
+            VALUES (:userId)"
+        );
 
-        $stmt->execute();
+        $stmt->execute(["userId" => $userId]);
 
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $order = new Order();
+
+        $order->orderId = $this->database->lastInsertId();
+
+        return $order;
     }
-
 }

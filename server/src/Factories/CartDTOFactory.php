@@ -1,0 +1,30 @@
+<?php
+
+namespace Src\Factories;
+
+use Src\Models\DTOs\CartDTO;
+use Src\Models\DTOs\CartItemDTO;
+use Src\Models\DTOs\ProductDTO;
+
+class CartDTOFactory
+{
+    public function __construct(
+        protected ProductDTOFactory $productDTOFactory
+    ) {}
+
+    public function makeCartDTO(array $rows): CartDTO
+    {
+        $cart = new CartDTO();
+        $cart->cartId = $rows[0]["cartId"];
+        $cart->cartItems = [];
+
+        foreach ($rows as $row) {
+            $cartItem = new CartItemDTO();
+            $cartItem->product = $this->productDTOFactory->makeProductDTO($row);
+
+            array_push($cart->cartItems, $cartItem);
+        }
+
+        return $cart;
+    }
+}
