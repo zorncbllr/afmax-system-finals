@@ -2,6 +2,8 @@ USE afmax_database;
 
 DROP TABLE IF EXISTS productImages;
 DROP TABLE IF EXISTS productCategories;
+DROP TABLE IF EXISTS orderDetails;
+DROP TABLE IF EXISTS orders;
 DROP TABLE IF EXISTS inventories;
 DROP TABLE IF EXISTS address;
 DROP TABLE IF EXISTS units;
@@ -89,4 +91,21 @@ CREATE TABLE address (
     street VARCHAR(180) NOT NULL,
     country VARCHAR(100) NOT NULL,
     FOREIGN KEY (userId) REFERENCES users(userId) ON DELETE CASCADE
+);
+
+CREATE TABLE orders(
+    orderId INT PRIMARY KEY AUTO_INCREMENT,
+    userId INT NOT NULL,
+    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (userId) REFERENCES users(userId) ON DELETE CASCADE
+);
+
+CREATE TABLE orderDetails(
+    orderDetailId INT PRIMARY KEY AUTO_INCREMENT,
+    orderId INT NOT NULL,
+    productId INT NOT NULL,
+    quantity INT NOT NULL,
+    FOREIGN KEY (orderId) REFERENCES orders(orderId) ON DELETE CASCADE,
+    FOREIGN KEY (productId) REFERENCES products(productId) ON DELETE RESTRICT 
 );

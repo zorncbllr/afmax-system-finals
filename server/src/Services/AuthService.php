@@ -65,8 +65,6 @@ class AuthService
             'exp' => time() + 604800,
         ]);
 
-        logger("here");
-
         setcookie(
             'refreshToken',
             $refreshToken,
