@@ -65,12 +65,14 @@ class AuthService
             'exp' => time() + 604800,
         ]);
 
+        logger("here");
+
         setcookie(
             'refreshToken',
             $refreshToken,
             [
                 'expires' => time() + 604800,
-                'path' => '/api/v1/',
+                'path' => '/api/v1/auth/',
                 'domain' => $_ENV["JWT_ISSUER"],
                 'secure' => true,
                 'httponly' => true,
@@ -120,7 +122,7 @@ class AuthService
                 $newRefreshToken,
                 [
                     'expires' => time() + 604800,
-                    'path' => '/api/v1/',
+                    'path' => '/api/v1/auth/',
                     'domain' => $_ENV["JWT_ISSUER"],
                     'secure' => true,
                     'httponly' => true,
@@ -162,7 +164,7 @@ class AuthService
                 $refreshToken,
                 [
                     'expires' => time() - 99999999,
-                    'path' => '/api/v1/',
+                    'path' => '/api/v1/auth/',
                     'domain' => $_ENV["JWT_ISSUER"],
                     'secure' => true,
                     'httponly' => true,

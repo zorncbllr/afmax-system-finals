@@ -2,12 +2,8 @@
 
 use Src\Controllers\CategoryController;
 use Src\Core\Router;
-use Src\Middlewares\LoggerMiddleware;
 
-$router = new Router(
-    base: "/api/v1",
-    middlewares: [LoggerMiddleware::class]
-);
+$router = new Router(base: "/api/v1");
 
 (require("auth.php"))($router);
 (require("products.php"))($router);
