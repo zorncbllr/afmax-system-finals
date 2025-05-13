@@ -70,7 +70,27 @@ class CartService
                 throw new ServiceException("Product does not exist.");
             }
 
-            $this->cartItemRepository->createItem($cart->cartId, $product->productId, $quantity);
+            try {
+                $this
+                    ->cartItemRepository
+                    ->createItem(
+                        $cart->cartId,
+                        $product->productId,
+                        $quantity
+                    );
+            } catch (PDOException $e) {
+
+                $cartItem = $this
+                    ->cartItemRepository
+                    ->getExistingItem($product->productId, $cart->cartId);
+
+                $this
+                    ->cartItemRepository
+                    ->updateItem(
+                        $cartItem->cartItemId,
+                        $cartItem->quantity + $quantity
+                    );
+            }
 
             $this->database->commit();
         } catch (PDOException $e) {

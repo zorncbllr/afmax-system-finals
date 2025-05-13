@@ -26,6 +26,22 @@ class CartItemRepository
         return $stmt->fetchAll(PDO::FETCH_CLASS, CartItem::class);
     }
 
+    public function getExistingItem(int $productId, int $cartId): CartItem|false
+    {
+        $stmt = $this->database->prepare(
+            "SELECT * FROM cartItems 
+            WHERE cartId = :cartId 
+            AND productId = :productId"
+        );
+
+        $stmt->execute([
+            "cartId" => $cartId,
+            "productId" => $productId
+        ]);
+
+        return $stmt->fetchObject(CartItem::class);
+    }
+
     public function getAllJoined(int $cartId): array
     {
         $stmt = $this->database->prepare(
@@ -88,6 +104,20 @@ class CartItemRepository
         );
 
         $stmt->execute(["cartId" => $cartId]);
+    }
+
+    public function updateItem(int $cartItemId, int $quantity)
+    {
+        $stmt = $this->database->prepare(
+            "UPDATE cartItems 
+            SET quantity = :quantity
+            WHERE cartItemId = :cartItemId"
+        );
+
+        $stmt->execute([
+            "cartItemId" => $cartItemId,
+            "quantity" => $quantity
+        ]);
     }
 
     public function removeItem(int $cartItemId)
