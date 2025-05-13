@@ -16,12 +16,13 @@ import { Separator } from "./ui/separator";
 import { useSignOff } from "@/features/auth/api/mutations";
 import { useNavigate } from "react-router";
 import { cn } from "@/lib/utils";
+import { useCartDrawer } from "@/features/cart/store";
 
 const Header = () => {
   const { toggleSidebar } = useSidebar();
   const { isAuthenticated, user } = useAuthStore();
-  const { activeItem } = useSidebar();
   const { mutate: signOff } = useSignOff();
+  const { setIsOpen, isOpen } = useCartDrawer();
   const navigate = useNavigate();
 
   return (
@@ -70,13 +71,9 @@ const Header = () => {
             )}
           >
             {user?.role == "User" && (
-              <button onClick={() => navigate("/user/cart")}>
+              <button onClick={() => setIsOpen(true)}>
                 <ShoppingCartIcon
-                  className={cn(
-                    activeItem?.href == "/user/cart"
-                      ? "text-blue-500"
-                      : "text-gray-500"
-                  )}
+                  className={cn(isOpen ? "text-blue-500" : "text-gray-500")}
                 />
               </button>
             )}
