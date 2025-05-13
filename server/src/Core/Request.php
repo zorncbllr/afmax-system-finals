@@ -17,6 +17,7 @@ class Request
         $this->files = (object) json_decode(json_encode($_FILES), associative: false);
         $this->cookies = (object) json_decode(json_encode($_COOKIE), associative: false);
         $this->headers = (object) json_decode(json_encode(getallheaders() ?? []), associative: false);
+
         $this->method = $_SERVER['REQUEST_METHOD'];
         $this->baseUrl = 'http://' . $_SERVER['HTTP_HOST'];
 

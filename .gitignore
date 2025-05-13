@@ -4,4 +4,6 @@ server/.env
 
 server/public/images
 
+server/src/Logs/
+
 client/node_modules/

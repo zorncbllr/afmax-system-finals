@@ -2,6 +2,7 @@
 
 use Src\Controllers\AuthController;
 use Src\Core\Router;
+use Src\Middlewares\LoggerMiddleware;
 use Src\Middlewares\Validators\UserValidator;
 
 return function (Router $router) {
@@ -11,10 +12,12 @@ return function (Router $router) {
         [AuthController::class, "attemptSignIn"]
     );
 
-    $router->post(
-        "/auth/refresh",
-        [AuthController::class, "refreshSession"]
-    );
+    $router
+        ->middleware(LoggerMiddleware::class)
+        ->post(
+            "/auth/refresh",
+            [AuthController::class, "refreshSession"]
+        );
 
     $router
         ->middleware(UserValidator::class)

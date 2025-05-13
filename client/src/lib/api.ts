@@ -37,7 +37,9 @@ axiosInstance.interceptors.response.use(
         const newResponse = await refreshToken();
 
         localStorage.setItem("token", newResponse.accessToken);
-        axiosInstance(error.config);
+        const refetchedResponse = await axiosInstance(error.config);
+
+        return Promise.resolve(refetchedResponse);
       } catch (err: any) {
         firstFetch = false;
 
