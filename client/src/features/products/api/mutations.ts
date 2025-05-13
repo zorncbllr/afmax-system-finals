@@ -52,6 +52,10 @@ export const useDeleteProduct = () => {
         queryKey: ["products"],
       });
 
+      client.invalidateQueries({
+        queryKey: ["featured"],
+      });
+
       toast.success(data.message, {
         position: "top-right",
       });
