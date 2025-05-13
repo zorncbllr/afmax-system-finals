@@ -19,7 +19,7 @@ export const breadcrumbList: BreadcrumbItem[] = [
 const AdminTransactions = () => {
   const { setActiveItem, sidebarProps } = useSidebar();
   const { setBreadcrumbList, setActivePage } = useBreadcrumb();
-  const { isAuthenticated, role } = useAuthStore();
+  const { isAuthenticated, user } = useAuthStore();
 
   useEffect(() => {
     setActiveItem(sidebarProps?.sections[0].items[4]);
@@ -27,7 +27,7 @@ const AdminTransactions = () => {
     setActivePage(breadcrumbList[1]);
   }, [sidebarProps]);
 
-  if (!isAuthenticated || role !== "Admin") {
+  if (!isAuthenticated || user?.role != "Admin") {
     return <ForbiddenPage />;
   }
 

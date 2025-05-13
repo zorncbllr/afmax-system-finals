@@ -3,7 +3,7 @@ import XTwitterIcon from "@/components/icons/XTwitterIcon";
 import { Button } from "@/components/ui/button";
 import { ChevronLeftIcon } from "lucide-react";
 import { ReactNode } from "react";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import GraphicSection from "../features/auth/components/graphic-section";
 
 interface AuthLayoutProps {
@@ -12,23 +12,23 @@ interface AuthLayoutProps {
 }
 
 const AuthLayout = ({ children, isSignIn }: AuthLayoutProps) => {
+  const navigate = useNavigate();
   return (
     <div className="relative z-1 bg-white">
       <div className="relative flex h-screen w-full flex-col justify-center sm:p-0 lg:flex-row">
         {/* Form Section */}
         <div className="flex w-full flex-1 flex-col lg:w-1/2">
-          <div className="mx-auto w-full max-w-1/2 pt-10">
-            <Link
-              to="/"
-              className="inline-flex items-center text-sm text-gray-500 transition-colors hover:text-gray-700"
+          <div className="mx-auto flex w-1/2 max-w-lg flex-1 flex-col justify-start">
+            <Button
+              onClick={() => navigate("/")}
+              className="w-fit mt-4 text-gray-500"
+              variant={"ghost"}
             >
               <ChevronLeftIcon />
               Back to dashboard
-            </Link>
-          </div>
+            </Button>
 
-          <div className="mx-auto flex w-1/2 max-w-lg flex-1 flex-col justify-center">
-            <div>
+            <div className="flex justify-center flex-col h-full">
               <div className="mb-5 sm:mb-8">
                 <h1 className="text-title-sm sm:text-title-md mb-2 font-semibold text-gray-800">
                   {isSignIn ? "Sign In" : "Sign Up"}

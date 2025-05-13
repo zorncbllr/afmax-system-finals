@@ -211,7 +211,7 @@ const AdminProducts = () => {
   const { setActiveItem, sidebarProps } = useSidebar();
   const { data: products, isSuccess } = useFetchAdminProducts();
   const { setActivePage, setBreadcrumbList } = useBreadcrumb();
-  const { isAuthenticated, role } = useAuthStore();
+  const { isAuthenticated, user } = useAuthStore();
 
   useEffect(() => {
     setActiveItem(sidebarProps?.sections[0].items[1]);
@@ -219,7 +219,7 @@ const AdminProducts = () => {
     setActivePage(breadcrumbList[1]);
   }, [sidebarProps]);
 
-  if (!isAuthenticated || role !== "Admin") {
+  if (!isAuthenticated || user?.role != "Admin") {
     return <ForbiddenPage />;
   }
 

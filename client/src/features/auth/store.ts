@@ -1,25 +1,26 @@
 import { create } from "zustand";
 import { refreshToken } from "./api/services";
+import { User } from "../users/types";
 
 type AuthState = {
   isAuthenticated: boolean;
-  role?: "Admin" | "User";
   token: string | null;
+  user?: User;
 
   setAuthenticated: (auth: boolean) => void;
-  setRole: (role: "Admin" | "User" | undefined) => void;
   setToken: (token: string | null) => void;
+  setUser: (user?: User) => void;
   initAuth: () => void;
 };
 
 export const useAuthStore = create<AuthState>((set, get) => ({
   isAuthenticated: false,
-  role: undefined,
   token: localStorage.getItem("token"),
+  user: undefined,
 
   initAuth: async () => {
     if (localStorage.getItem("token")) {
-      const { setAuthenticated, setToken, setRole } = get();
+      const { setAuthenticated, setToken, setUser } = get();
 
       try {
         const res = await refreshToken();
@@ -28,18 +29,18 @@ export const useAuthStore = create<AuthState>((set, get) => ({
 
         setAuthenticated(res.accessToken ? true : false);
         setToken(res.accessToken);
-        setRole(res.role);
+        setUser(res.user);
       } catch (_) {
         setAuthenticated(false);
         setToken(null);
-        setRole(undefined);
+        setUser(undefined);
       }
     }
   },
 
-  setAuthenticated: (isAuthenticated) => set({ isAuthenticated }),
+  setUser: (user) => set(() => ({ user })),
 
-  setRole: (role) => set({ role }),
+  setAuthenticated: (isAuthenticated) => set({ isAuthenticated }),
 
   setToken: (token) =>
     set(() => {

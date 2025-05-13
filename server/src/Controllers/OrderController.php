@@ -10,7 +10,7 @@ class OrderController
 {
     protected OrderService $orderService;
 
-    public function __construct() 
+    public function __construct()
     {
         $database = App::getDatabase();
 
@@ -21,5 +21,4 @@ class OrderController
     }
 
     public function index() {}
-
 }

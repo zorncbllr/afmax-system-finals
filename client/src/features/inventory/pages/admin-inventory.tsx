@@ -163,7 +163,7 @@ const AdminInventory = () => {
   const { setActiveItem, sidebarProps } = useSidebar();
   const { setBreadcrumbList, setActivePage } = useBreadcrumb();
   const { data: inventoryData, isSuccess } = useFetchInventoryData();
-  const { isAuthenticated, role } = useAuthStore();
+  const { isAuthenticated, user } = useAuthStore();
 
   useEffect(() => {
     setActiveItem(sidebarProps?.sections[0].items[2]);
@@ -171,7 +171,7 @@ const AdminInventory = () => {
     setActivePage(breadcrumbList[1]);
   }, [sidebarProps]);
 
-  if (!isAuthenticated || role !== "Admin") {
+  if (!isAuthenticated || user?.role != "Admin") {
     return <ForbiddenPage />;
   }
 

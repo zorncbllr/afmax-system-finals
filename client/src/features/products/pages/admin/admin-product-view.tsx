@@ -18,7 +18,7 @@ const AdminProductView = () => {
   );
 
   const { setBreadcrumbList, setActivePage } = useBreadcrumb();
-  const { isAuthenticated, role } = useAuthStore();
+  const { isAuthenticated, user } = useAuthStore();
 
   useEffect(() => {
     if (product) {
@@ -32,7 +32,7 @@ const AdminProductView = () => {
     }
   }, [product]);
 
-  if (!isAuthenticated || role !== "Admin") {
+  if (!isAuthenticated || user?.role != "Admin") {
     return <ForbiddenPage />;
   }
 

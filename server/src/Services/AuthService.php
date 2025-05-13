@@ -6,6 +6,7 @@ use PDOException;
 use Src\Core\Database;
 use Src\Core\Exceptions\ServiceException;
 use Src\Core\Request;
+use Src\Factories\UserDTOFactory;
 use Src\Models\User;
 use Src\Repositories\UserRepository;
 use UnexpectedValueException;
@@ -15,6 +16,7 @@ class AuthService
     public function __construct(
         protected Database $database,
         protected UserRepository $userRepository,
+        protected UserDTOFactory $userDTOFactory,
         protected JwtService $jwtService
     ) {}
 
@@ -80,7 +82,7 @@ class AuthService
 
         return [
             "accessToken" => $accessToken,
-            "role" => $user->isAdmin ? "Admin" : "User"
+            "user" => $this->userDTOFactory->makeUserDTO($user)
         ];
     }
 
@@ -130,7 +132,7 @@ class AuthService
 
             return [
                 "accessToken" => $accessToken,
-                "role" => $user->isAdmin ? "Admin" : "User"
+                "user" => $this->userDTOFactory->makeUserDTO($user)
             ];
         } catch (UnexpectedValueException $e) {
 

@@ -4,5 +4,6 @@ namespace Src\Models;
 
 class Order
 {
-    public int $orderId;
+    public int $orderId, $userId;
+    public string $createdAt, $updatedAt;
 }

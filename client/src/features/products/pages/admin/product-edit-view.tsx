@@ -30,10 +30,10 @@ const ProductEditView = () => {
     removeImage,
     submitHandler,
   } = useEditProductForm();
-  const { isAuthenticated, role } = useAuthStore();
+  const { isAuthenticated, user } = useAuthStore();
   const navigate = useNavigate();
 
-  if (!isAuthenticated || role !== "Admin") {
+  if (!isAuthenticated || user?.role != "Admin") {
     return <ForbiddenPage />;
   }
 

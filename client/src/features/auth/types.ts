@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { User } from "../users/types";
 
 export const SignInFormSchema = z.object({
   email: z
@@ -83,5 +84,5 @@ export interface SignInError {
 export interface SuccessSignInResponse {
   message: string;
   accessToken: string;
-  role: "Admin" | "User";
+  user?: User;
 }

@@ -1,22 +1,41 @@
-import React from "react";
-import { Link } from "react-router";
+import React, { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router";
 import Logo from "@/assets/logo.svg";
 import { useAuthStore } from "@/features/auth/store";
 import { Button } from "@/components/ui/button";
 import { useSignOff } from "@/features/auth/api/mutations";
+import { ChevronRightIcon } from "lucide-react";
 
 const HomeNavbar: React.FC = () => {
   const { isAuthenticated } = useAuthStore();
   const { mutate: signOff } = useSignOff();
+  const navigate = useNavigate();
+
+  const [isScrolled, setIsScrolled] = useState<boolean>(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 0);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   return (
-    <header className="absolute inset-x-0 top-0 z-50">
+    <header
+      className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${
+        isScrolled
+          ? "backdrop-blur-md bg-primary-foreground/20 border-b border-primary-foreground/10"
+          : "backdrop-blur-none bg-transparent border-b-transparent"
+      }`}
+    >
       <nav
-        className="flex items-center justify-between p-6 lg:px-8"
+        className="flex items-center justify-between lg:justify-around py-4 px-8"
         aria-label="Global"
       >
-        <div className="flex lg:flex-1 items-center">
-          <Link to="/" className="mb-4 flex gap-4 items-center">
+        <div className="flex lg:flex items-center">
+          <Link to="/" className="flex gap-4 items-center">
             <img width="35" src={Logo} alt="Logo" />
 
             <h1 className="text-2xl font-semibold tracking-tight text-balance text-transparent bg-clip-text bg-gradient-to-r to-emerald-600 from-sky-400">
@@ -69,24 +88,23 @@ const HomeNavbar: React.FC = () => {
           </Link>
         </div>
 
-        <div className="hidden lg:flex lg:flex-1 lg:justify-end">
-          {isAuthenticated ? (
-            <Button
-              onClick={() => signOff()}
-              variant={"ghost"}
-              className="text-sm/6 font-semibold text-gray-900"
-            >
-              Sign out <span aria-hidden="true">&rarr;</span>
-            </Button>
-          ) : (
-            <Link
-              to="/auth/sign-in"
-              className="text-sm/6 font-semibold text-gray-900"
-            >
-              Sign in <span aria-hidden="true">&rarr;</span>
-            </Link>
-          )}
-        </div>
+        {isAuthenticated ? (
+          <Button
+            className="font-semibold hidden lg:flex items-center"
+            onClick={() => signOff()}
+            variant={"ghost"}
+          >
+            Sign out <ChevronRightIcon />
+          </Button>
+        ) : (
+          <Button
+            onClick={() => navigate("/auth/sign-in")}
+            className="font-semibold hidden lg:flex items-center"
+            variant={"ghost"}
+          >
+            Sign in <ChevronRightIcon />
+          </Button>
+        )}
       </nav>
     </header>
   );

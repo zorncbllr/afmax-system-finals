@@ -8,7 +8,7 @@ import { useAuthStore } from "../store";
 
 export const useAttemptSignIn = () => {
   const navigate = useNavigate();
-  const { setAuthenticated, setRole, setToken } = useAuthStore();
+  const { setAuthenticated, setUser, setToken } = useAuthStore();
 
   return useMutation({
     mutationKey: ["sign-in"],
@@ -16,14 +16,14 @@ export const useAttemptSignIn = () => {
 
     onSuccess: (data) => {
       setAuthenticated(true);
-      setRole(data.role);
+      setUser(data.user);
       setToken(data.accessToken);
 
       toast.success(data.message, {
         position: "top-right",
       });
 
-      navigate(data.role === "Admin" ? "/admin/dashboard" : "/products");
+      navigate(data.user?.role === "Admin" ? "/admin/dashboard" : "/products");
     },
 
     onError: (error: AxiosError) => {
@@ -54,7 +54,7 @@ export const useSignUp = () => {
 };
 
 export const useRefreshToken = () => {
-  const { setAuthenticated, setRole, setToken } = useAuthStore();
+  const { setAuthenticated, setUser, setToken } = useAuthStore();
 
   return useMutation({
     mutationKey: ["auth-token"],
@@ -63,13 +63,13 @@ export const useRefreshToken = () => {
     onSuccess: (data) => {
       setToken(data.accessToken);
       setAuthenticated(true);
-      setRole(data.role);
+      setUser(data.user);
     },
   });
 };
 
 export const useSignOff = () => {
-  const { setAuthenticated, setRole, setToken } = useAuthStore();
+  const { setAuthenticated, setUser, setToken } = useAuthStore();
 
   return useMutation({
     mutationKey: ["auth-token"],
@@ -78,7 +78,7 @@ export const useSignOff = () => {
     onSuccess: (data) => {
       setToken(null);
       setAuthenticated(false);
-      setRole(undefined);
+      setUser(undefined);
 
       toast.success(data.message, {
         position: "top-right",
