@@ -20,6 +20,7 @@ class CartDTOFactory
 
         foreach ($rows as $row) {
             $cartItem = new CartItemDTO();
+            $cartItem->cartItemId = $row["cartItemId"];
             $cartItem->product = $this->productDTOFactory->makeProductDTO($row);
 
             array_push($cart->cartItems, $cartItem);

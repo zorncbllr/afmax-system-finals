@@ -9,6 +9,8 @@ use Src\Factories\CartDTOFactory;
 use Src\Models\DTOs\CartDTO;
 use Src\Repositories\CartItemRepository;
 use Src\Repositories\CartRepository;
+use Src\Repositories\ProductRepository;
+use Src\Repositories\UserRepository;
 
 class CartService
 {
@@ -17,10 +19,39 @@ class CartService
         protected Database $database,
         protected CartRepository $cartRepository,
         protected CartItemRepository $cartItemRepository,
+        protected ProductRepository $productRepository,
+        protected UserRepository $userRepository,
         protected CartDTOFactory $cartDTOFactory
     ) {}
 
-    // public function getAllCartItems(): CartDTO {}
+    public function getUserCart(int $userId): CartDTO
+    {
+        $user = $this->userRepository->getUserById($userId);
+
+        if (!$user) {
+            throw new ServiceException("User does not exists.");
+        }
+
+        $cart = $this->cartRepository->findByUserId($user->userId);
+
+        if (!$cart) {
+            $cart = $this->cartRepository->createCart($user->userId);
+        }
+
+        $items = $this->cartItemRepository->getAllJoined($cart->cartId);
+
+        if (empty($items)) {
+            $cartDTO = new CartDTO();
+            $cartDTO->cartId = $cart->cartId;
+            $cartDTO->cartItems = [];
+
+            return $cartDTO;
+        }
+
+        $cartDTO = $this->cartDTOFactory->makeCartDTO($items);
+
+        return $cartDTO;
+    }
 
     public function addToCart(int $productId, int $userId)
     {
@@ -33,7 +64,13 @@ class CartService
                 $cart = $this->cartRepository->createCart($userId);
             }
 
-            $this->cartItemRepository->createItem($cart->cartId, $productId);
+            $product = $this->productRepository->getProductById($productId);
+
+            if (!$product) {
+                throw new ServiceException("Product does not exist.");
+            }
+
+            $this->cartItemRepository->createItem($cart->cartId, $product->productId);
 
             $this->database->commit();
         } catch (PDOException $e) {

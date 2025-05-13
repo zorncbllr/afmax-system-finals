@@ -1,60 +1,77 @@
 USE afmax_database;
-
--- Insert Medical Brands
+-- Seed brands
 INSERT INTO brands (brandName) VALUES
-('Johnson & Johnson'),
-('Pfizer'),
-('Bayer'),
-('Medtronic'),
-('Roche Diagnostics');
+('MediGlove'),
+('HealthPro'),
+('SafeCare');
 
--- Insert Medical Categories
-INSERT INTO categories (categoryName) VALUES
-('Pharmaceuticals'),
-('Medical Equipment'),
-('First Aid'),
-('Surgical Supplies'),
-('Diagnostic Tools');
-
--- Insert Medical Products
+-- Seed products
 INSERT INTO products (productName, description, price, brandId, isFeatured) VALUES
-('Ibuprofen Tablets 200mg', 'NSAID pain reliever, 100 tablets', 8.99, 1, true),
-('Digital Thermometer', 'Instant oral/axillary reading', 14.99, 4, true),
-('Disposable Nitrile Gloves', 'Powder-free, large size (100 count)', 12.50, 1, false),
-('Portable Oxygen Concentrator', 'Lightweight 5L oxygen therapy', 1499.99, 4, true),
-('COVID-19 Rapid Test Kit', '15-minute antigen test (25 pack)', 89.99, 5, false);
+('Latex Gloves', 'High-quality disposable latex gloves', 12.99, 1, true),
+('Nitrile Gloves', 'Powder-free nitrile gloves', 15.50, 2, false),
+('Vinyl Gloves', 'Durable and affordable vinyl gloves', 10.75, 3, false);
 
--- Link Products to Categories
-INSERT INTO productCategories (categoryId, productId) VALUES
-(1, 1),  -- Ibuprofen -> Pharmaceuticals
-(3, 1),  -- Ibuprofen -> First Aid
-(2, 2),  -- Thermometer -> Medical Equipment
-(3, 2),  -- Thermometer -> First Aid
-(3, 3),  -- Gloves -> First Aid
-(4, 3),  -- Gloves -> Surgical Supplies
-(2, 4),  -- Oxygen Concentrator -> Medical Equipment
-(5, 5);  -- Test Kit -> Diagnostic Tools
-
--- Insert Product Images
+-- Seed product images
 INSERT INTO productImages (productId, imagePath) VALUES
-(1, 'images/ibuprofen.jpg'),
-(2, 'images/thermometer.jpg'),
-(3, 'images/gloves.jpg'),
-(4, 'images/oxygen-concentrator.jpg'),
-(5, 'images/covid-test.jpg');
+(1, 'images/products/latex-gloves.jpg'),
+(2, 'images/products/nitrile-gloves.jpg'),
+(3, 'images/products/vinyl-gloves.jpg');
 
--- Insert Medical Units
+-- Seed categories
+INSERT INTO categories (categoryName) VALUES
+('Gloves'),
+('Disposable Supplies'),
+('Medical Equipment');
+
+-- Seed product categories
+INSERT INTO productCategories (categoryId, productId) VALUES
+(1, 1),
+(1, 2),
+(1, 3),
+(2, 1),
+(2, 2),
+(2, 3);
+
+-- Seed units
 INSERT INTO units (unitName, abbreviation) VALUES
-('Tablets', 'tabs'),
-('Milliliters', 'ml'),
-('Boxes', 'bx'),
-('Pairs', 'pr'),
-('Units', 'unt');
+('Box', 'bx'),
+('Piece', 'pc'),
+('Pack', 'pk');
 
--- Insert Inventory Data
-INSERT INTO inventories (inventoryId, unitId, productId, quantity, expiration) VALUES
-(1, 1, 1, 1000, '2025-12-31'),  -- Ibuprofen tablets
-(2, 5, 2, 150, NULL),           -- Thermometers
-(3, 3, 3, 500, '2026-06-30'),    -- Gloves boxes
-(4, 5, 4, 25, NULL),             -- Oxygen concentrators
-(5, 3, 5, 80, '2024-09-30');     -- Test kits
+-- Seed inventories
+INSERT INTO inventories (unitId, productId, quantity, expiration) VALUES
+(1, 1, 100, '2026-12-31'),
+(1, 2, 80, '2026-06-30'),
+(1, 3, 120, NULL);
+
+-- Seed users
+INSERT INTO users (userPhoto, fullName, email, phoneNumber, isAdmin, password, company) VALUES
+(NULL, 'John Doe', 'john@example.com', '09123456789', true, 'hashedpassword1', 'Afmax Medical'),
+(NULL, 'Jane Smith', 'jane@example.com', '09987654321', false, 'hashedpassword2', 'SafeMed Supplies');
+
+-- Seed address
+INSERT INTO address (userId, zipCode, barangay, city, street, country) VALUES
+(1, 1000, 'Barangay 1', 'Manila', '123 Rizal St.', 'Philippines'),
+(2, 1100, 'Barangay 2', 'Quezon City', '456 Luna Ave.', 'Philippines');
+
+-- Seed carts
+INSERT INTO carts (userId) VALUES
+(1),
+(2);
+
+-- Seed cart items
+INSERT INTO cartItems (cartId, productId) VALUES
+(1, 1),
+(1, 2),
+(2, 3);
+
+-- Seed orders
+INSERT INTO orders (cartId) VALUES
+(1),
+(2);
+
+-- Seed order details
+INSERT INTO orderDetails (orderId, productId, quantity) VALUES
+(1, 1, 2),
+(1, 2, 1),
+(2, 3, 5);

@@ -67,7 +67,7 @@ class ProductRepository
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    public function getProductById(int $productId): Product
+    public function getProductById(int $productId): Product|false
     {
         $stmt = $this->database->prepare(
             "SELECT * FROM products WHERE productId = :productId"

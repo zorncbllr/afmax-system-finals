@@ -36,7 +36,7 @@ class ProductValidator extends Middleware
 
         if ($validation->fails() && !key_exists("images", $validation->errors()->firstOfAll())) {
             status(400);
-            return json($validation->errors()->firstOfAll());
+            return json($validation->errors()->all());
         }
 
         return $next();

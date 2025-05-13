@@ -26,7 +26,7 @@ class CartRepository
     public function findByUserId(int $userId): Cart|false
     {
         $stmt = $this->database->prepare(
-            "SELECT * FROM carts WHERE userId = userId"
+            "SELECT * FROM carts WHERE userId = :userId"
         );
 
         $stmt->execute(["userId" => $userId]);
