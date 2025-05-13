@@ -21,10 +21,10 @@ const UserProducts = () => {
   const { setActiveItem, sidebarProps } = useSidebar();
   const { data: products } = useFetchProducts();
   const { setBreadcrumbList, setActivePage } = useBreadcrumb();
-  const { isAuthenticated } = useAuthStore();
+  const { isAuthenticated, user } = useAuthStore();
 
   useEffect(() => {
-    if (isAuthenticated) {
+    if (isAuthenticated && user?.role == "User") {
       setActiveItem(sidebarProps?.sections[0].items[1]);
     } else {
       setActiveItem(sidebarProps?.sections[0].items[0]);
