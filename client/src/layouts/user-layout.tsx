@@ -2,11 +2,36 @@ import SideBar from "@/features/sidebar/sidebar";
 import React, { useLayoutEffect } from "react";
 import { LayoutRouteProps } from "react-router";
 
-import { ShoppingBagIcon } from "lucide-react";
+import { ShoppingBagIcon, ShoppingCartIcon } from "lucide-react";
 import { SideBarProps } from "@/features/sidebar/types";
 import { useSidebar } from "@/features/sidebar/store";
 import Header from "@/components/header";
 import AppBreadcrumb from "@/features/breadcrumbs/app-breadcrumb";
+import { useAuthStore } from "@/features/auth/store";
+
+const authenticatedSidebarProps: SideBarProps = {
+  heading: "AFMAX",
+  headingHref: "/",
+  sections: [
+    {
+      section: "Menu",
+      items: [
+        {
+          title: "Cart Items",
+          icon: ShoppingCartIcon,
+          href: "/user/cart",
+          children: [],
+        },
+        {
+          title: "Products",
+          icon: ShoppingBagIcon,
+          href: "/products",
+          children: [],
+        },
+      ],
+    },
+  ],
+};
 
 const sidebarProps: SideBarProps = {
   heading: "AFMAX",
@@ -28,10 +53,15 @@ const sidebarProps: SideBarProps = {
 
 const UserLayout: React.FC<LayoutRouteProps> = ({ children }) => {
   const { setSidebarProps } = useSidebar();
+  const { isAuthenticated } = useAuthStore();
 
   useLayoutEffect(() => {
-    setSidebarProps(sidebarProps);
-  }, []);
+    if (!isAuthenticated) {
+      setSidebarProps(sidebarProps);
+    } else {
+      setSidebarProps(authenticatedSidebarProps);
+    }
+  }, [isAuthenticated]);
 
   return (
     <div className="w-full h-screen flex overflow-hidden">

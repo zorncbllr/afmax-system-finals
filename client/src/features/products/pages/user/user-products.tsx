@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { useFetchProducts } from "@/features/products/api/queries";
 import ProductCard from "@/features/products/components/product-card";
 import { BreadcrumbItem, useBreadcrumb } from "@/features/breadcrumbs/store";
+import { useAuthStore } from "@/features/auth/store";
 
 const breadcrumbList: BreadcrumbItem[] = [
   {
@@ -20,9 +21,15 @@ const UserProducts = () => {
   const { setActiveItem, sidebarProps } = useSidebar();
   const { data: products } = useFetchProducts();
   const { setBreadcrumbList, setActivePage } = useBreadcrumb();
+  const { isAuthenticated } = useAuthStore();
 
   useEffect(() => {
-    setActiveItem(sidebarProps?.sections[0].items[0]);
+    if (isAuthenticated) {
+      setActiveItem(sidebarProps?.sections[0].items[1]);
+    } else {
+      setActiveItem(sidebarProps?.sections[0].items[0]);
+    }
+
     setBreadcrumbList(breadcrumbList);
     setActivePage(breadcrumbList[1]);
   }, [sidebarProps]);

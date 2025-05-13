@@ -60,10 +60,10 @@ INSERT INTO carts (userId) VALUES
 (2);
 
 -- Seed cart items
-INSERT INTO cartItems (cartId, productId) VALUES
-(1, 1),
-(1, 2),
-(2, 3);
+INSERT INTO cartItems (cartId, productId, quantity) VALUES
+(1, 1, 2),
+(1, 2, 1),
+(2, 3, 5);
 
 -- Seed orders
 INSERT INTO orders (cartId) VALUES

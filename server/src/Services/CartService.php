@@ -53,7 +53,7 @@ class CartService
         return $cartDTO;
     }
 
-    public function addToCart(int $productId, int $userId)
+    public function addToCart(int $productId, int $userId, int $quantity)
     {
         try {
             $this->database->beginTransaction();
@@ -70,7 +70,7 @@ class CartService
                 throw new ServiceException("Product does not exist.");
             }
 
-            $this->cartItemRepository->createItem($cart->cartId, $product->productId);
+            $this->cartItemRepository->createItem($cart->cartId, $product->productId, $quantity);
 
             $this->database->commit();
         } catch (PDOException $e) {

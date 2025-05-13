@@ -1,6 +1,7 @@
 import PageNotFound from "@/components/page-not-found";
 import SignInPage from "@/features/auth/pages/signin-page";
 import SignUpPage from "@/features/auth/pages/signup-page";
+import UserCartPage from "@/features/cart/pages/user-cart";
 import Dashboard from "@/features/dashboard/dashboard";
 import Home from "@/features/home/home";
 import AdminInventory from "@/features/inventory/pages/admin-inventory";
@@ -39,6 +40,11 @@ export const routes: Route[] = [
   {
     path: "/products/:productId",
     element: UserProductView,
+  },
+  {
+    path: "/user/cart",
+    element: UserCartPage,
+    protected: true,
   },
   {
     path: "/admin/products",

@@ -20,6 +20,7 @@ import { cn } from "@/lib/utils";
 const Header = () => {
   const { toggleSidebar } = useSidebar();
   const { isAuthenticated, user } = useAuthStore();
+  const { activeItem } = useSidebar();
   const { mutate: signOff } = useSignOff();
   const navigate = useNavigate();
 
@@ -69,8 +70,14 @@ const Header = () => {
             )}
           >
             {user?.role == "User" && (
-              <button>
-                <ShoppingCartIcon className="text-gray-500" />
+              <button onClick={() => navigate("/user/cart")}>
+                <ShoppingCartIcon
+                  className={cn(
+                    activeItem?.href == "/user/cart"
+                      ? "text-blue-500"
+                      : "text-gray-500"
+                  )}
+                />
               </button>
             )}
 

@@ -59,22 +59,24 @@ class CartItemRepository
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function createItem(int $cartId, int $productId): CartItem
+    public function createItem(int $cartId, int $productId, int $quantity): CartItem
     {
         $stmt = $this->database->prepare(
-            "INSERT INTO cartItems (cartId, productId)
-            VALUES (:cartId, :productId)"
+            "INSERT INTO cartItems (cartId, productId, quantity)
+            VALUES (:cartId, :productId, :quantity)"
         );
 
         $stmt->execute([
             "cartId" => $cartId,
-            "productId" => $productId
+            "productId" => $productId,
+            "quantity" => $quantity
         ]);
 
         $cartItem = new CartItem();
         $cartItem->cartItemId = $this->database->lastInsertId();
         $cartItem->cartId = $cartId;
         $cartItem->productId = $productId;
+
 
         return $cartItem;
     }

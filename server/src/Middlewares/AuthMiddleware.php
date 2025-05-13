@@ -47,8 +47,8 @@ class AuthMiddleware extends Middleware
             return $next();
         } catch (UnexpectedValueException $e) {
 
-            return json($e->getMessage());
-            $this->throwUnauthorized();
+            status(401);
+            return json(["message" => $e->getMessage()]);
         }
     }
 

@@ -4,7 +4,6 @@ namespace Src\Factories;
 
 use Src\Models\DTOs\CartDTO;
 use Src\Models\DTOs\CartItemDTO;
-use Src\Models\DTOs\ProductDTO;
 
 class CartDTOFactory
 {
@@ -22,6 +21,7 @@ class CartDTOFactory
             $cartItem = new CartItemDTO();
             $cartItem->cartItemId = $row["cartItemId"];
             $cartItem->product = $this->productDTOFactory->makeProductDTO($row);
+            $cartItem->quantity = $row["quantity"];
 
             array_push($cart->cartItems, $cartItem);
         }

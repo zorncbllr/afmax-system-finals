@@ -32,7 +32,7 @@ class UserValidator extends Middleware
 
         if ($validation->fails()) {
             status(400);
-            return json($validation->errors()->all());
+            return json($validation->errors()->firstOfAll());
         }
 
         return $next();
