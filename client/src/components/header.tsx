@@ -15,6 +15,7 @@ import { Button } from "./ui/button";
 import { Separator } from "./ui/separator";
 import { useSignOff } from "@/features/auth/api/mutations";
 import { useNavigate } from "react-router";
+import { cn } from "@/lib/utils";
 
 const Header = () => {
   const { toggleSidebar } = useSidebar();
@@ -61,10 +62,17 @@ const Header = () => {
         </div>
 
         {isAuthenticated ? (
-          <div className="flex gap-8 py-2 px-4 border rounded-lg">
-            <button>
-              <ShoppingCartIcon className="text-gray-500" />
-            </button>
+          <div
+            className={cn(
+              "flex gap-8 py-2 px-4 rounded-lg",
+              user?.role == "Admin" ? "" : "border"
+            )}
+          >
+            {user?.role == "User" && (
+              <button>
+                <ShoppingCartIcon className="text-gray-500" />
+              </button>
+            )}
 
             <Popover>
               <PopoverTrigger>
@@ -108,7 +116,10 @@ const Header = () => {
                   <Separator />
 
                   <Button
-                    onClick={() => signOff()}
+                    onClick={() => {
+                      signOff();
+                      navigate("/");
+                    }}
                     className="font-semibold text-gray-500 -my-2 text-sm"
                     variant={"ghost"}
                   >
