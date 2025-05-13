@@ -1,13 +1,13 @@
 import { BreadcrumbItem, useBreadcrumb } from "@/features/breadcrumbs/store";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
-import { useFetchProductById } from "../api/queries";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { ProductEditFormSchema } from "../types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { breadcrumbList } from "../pages/admin/admin-products";
 import { useUpdateProduct } from "../api/mutations";
+import { useFetchProductById } from "../api/queries";
 
 export const useEditProductForm = () => {
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
@@ -55,8 +55,6 @@ export const useEditProductForm = () => {
         );
       }
     }
-
-    console.log(formData.getAll("images[]"));
 
     mutate({ product: formData, productId: product!.productId });
   };

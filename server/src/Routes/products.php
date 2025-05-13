@@ -24,7 +24,7 @@ return function (Router $router) {
             AuthorizationMiddleware::class,
             ProductValidator::class
         )
-        ->post("/products", [ProductController::class, 'createProduct']);
+        ->post("/admin/products", [ProductController::class, 'createProduct']);
 
     $router
         ->middleware(
@@ -32,12 +32,12 @@ return function (Router $router) {
             AuthorizationMiddleware::class,
             ProductValidator::class
         )
-        ->post("/products/update/{productId}", [ProductController::class, 'updateProduct']);
+        ->post("/admin/products/update/{productId}", [ProductController::class, 'updateProduct']);
 
     $router
         ->middleware(
             AuthMiddleware::class,
             AuthorizationMiddleware::class
         )
-        ->delete("/products/{productId}", [ProductController::class, 'deleteProduct']);
+        ->delete("/admin/products/{productId}", [ProductController::class, 'deleteProduct']);
 };

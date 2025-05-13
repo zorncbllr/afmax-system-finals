@@ -4,6 +4,7 @@ import { createProduct, deleteProduct, updateProduct } from "./services";
 import { queryClient } from "@/main";
 import toast from "react-hot-toast";
 import { ProductUpdateProps } from "../types";
+import { AxiosError } from "axios";
 
 export const useCreateProduct = () => {
   const client = queryClient;
@@ -29,7 +30,7 @@ export const useCreateProduct = () => {
       });
     },
 
-    onError: (error) => {
+    onError: (error: AxiosError) => {
       console.log(error);
 
       toast.error("Product creation failed.", {

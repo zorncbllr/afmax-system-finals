@@ -1,18 +1,7 @@
-import { Navigate, Route, Routes } from "react-router";
-import Home from "./features/home/home";
-import UserProducts from "./features/products/pages/user/user-products";
-import Dashboard from "./features/dashboard/dashboard";
-import AdminProducts from "./features/products/pages/admin/admin-products";
-import AdminUsers from "./features/users/admin-users";
-import AdminTransactions from "./features/transactions/admin-transactions";
+import { Route, Routes } from "react-router";
 import { Toaster } from "react-hot-toast";
-import UserProductView from "./features/products/pages/user/user-product-view";
-import AdminProductView from "./features/products/pages/admin/admin-product-view";
-import PageNotFound from "./components/page-not-found";
-import AdminInventory from "./features/inventory/pages/admin-inventory";
-import ProductEditView from "./features/products/pages/admin/product-edit-view";
-import SignInPage from "./features/auth/pages/signin-page";
-import SignUpPage from "./features/auth/pages/signup-page";
+import { routes } from "./routes/routes";
+import ProtectedRoute from "./components/protected-route";
 
 function App() {
   return (
@@ -20,34 +9,20 @@ function App() {
       <Toaster />
 
       <Routes>
-        <Route path="/" element={<Home />} />
-
-        <Route path="/auth/sign-in" element={<SignInPage />} />
-        <Route path="/auth/sign-up" element={<SignUpPage />} />
-
-        <Route path="/products" element={<UserProducts />} />
-
-        <Route path="/products/:productId" element={<UserProductView />} />
-        <Route
-          path="/admin/products/edit/:productId"
-          element={<ProductEditView />}
-        />
-
-        <Route
-          path="/admin"
-          element={<Navigate to={"/admin/dashboard"} replace />}
-        />
-        <Route path="/admin/dashboard" element={<Dashboard />} />
-        <Route path="/admin/products" element={<AdminProducts />} />
-        <Route
-          path="/admin/products/:productId"
-          element={<AdminProductView />}
-        />
-        <Route path="/admin/users" element={<AdminUsers />} />
-        <Route path="/admin/inventory" element={<AdminInventory />} />
-        <Route path="/admin/transactions" element={<AdminTransactions />} />
-
-        <Route path="*" element={<PageNotFound />} />
+        {routes.map((route) => (
+          <Route
+            path={route.path}
+            element={
+              route.protected ? (
+                <ProtectedRoute>
+                  <route.element />
+                </ProtectedRoute>
+              ) : (
+                <route.element />
+              )
+            }
+          />
+        ))}
       </Routes>
     </>
   );

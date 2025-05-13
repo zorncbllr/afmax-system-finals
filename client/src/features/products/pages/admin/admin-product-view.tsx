@@ -3,26 +3,22 @@ import AdminLayout from "../../../../layouts/admin-layout";
 import ProductView, {
   ProductViewSkeleton,
 } from "@/features/products/components/product-view";
-import { useFetchProductById } from "@/features/products/api/queries";
-import PageNotFound from "@/components/page-not-found";
 
 import { breadcrumbList } from "./admin-products";
 import { useEffect } from "react";
 import { BreadcrumbItem, useBreadcrumb } from "@/features/breadcrumbs/store";
+import ForbiddenPage from "@/components/forbidden-page";
+import { useAuthStore } from "@/features/auth/store";
+import { useFetchProductById } from "../../api/queries";
 
 const AdminProductView = () => {
   const { productId } = useParams();
-  const {
-    data: product,
-    isError,
-    isLoading,
-    isFetching,
-  } = useFetchProductById(parseInt(productId ?? "-1"));
-  const { setBreadcrumbList, setActivePage } = useBreadcrumb();
+  const { data: product, isLoading } = useFetchProductById(
+    parseInt(productId ?? "-1")
+  );
 
-  if (isError) {
-    return <PageNotFound />;
-  }
+  const { setBreadcrumbList, setActivePage } = useBreadcrumb();
+  const { isAuthenticated, role } = useAuthStore();
 
   useEffect(() => {
     if (product) {
@@ -36,9 +32,13 @@ const AdminProductView = () => {
     }
   }, [product]);
 
+  if (!isAuthenticated || role !== "Admin") {
+    return <ForbiddenPage />;
+  }
+
   return (
     <AdminLayout>
-      {isLoading || isFetching ? (
+      {isLoading ? (
         <ProductViewSkeleton />
       ) : (
         product && <ProductView key={productId} product={product} />

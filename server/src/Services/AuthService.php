@@ -41,7 +41,7 @@ class AuthService
         }
     }
 
-    public function attemptSignIn(string $email, string $password): string
+    public function attemptSignIn(string $email, string $password): array
     {
         $user = $this->userRepository->getUserByEmail($email);
 
@@ -78,10 +78,13 @@ class AuthService
             ]
         );
 
-        return $accessToken;
+        return [
+            "accessToken" => $accessToken,
+            "role" => $user->isAdmin ? "Admin" : "User"
+        ];
     }
 
-    public function refreshSession(Request $request): string
+    public function refreshSession(Request $request): array
     {
         $refreshToken = $request->cookies->refreshToken;
 
@@ -121,7 +124,16 @@ class AuthService
                 ]
             );
 
-            return $accessToken;
+            $user = $this->userRepository->getUserById($payload["sub"]);
+
+            if (!$user) {
+                throw new ServiceException("Subject user does not exists", 404);
+            }
+
+            return [
+                "accessToken" => $accessToken,
+                "role" => $user->isAdmin ? "Admin" : "User"
+            ];
         } catch (UnexpectedValueException $e) {
 
             throw new ServiceException('Invalid token segments', 401);

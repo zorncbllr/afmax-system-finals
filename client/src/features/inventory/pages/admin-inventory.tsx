@@ -10,7 +10,6 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { StatusBadge } from "@/features/inventory/components/status-badge";
 import { useInventoryStore } from "../store";
-import InventoryForm from "../components/inventory-form";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -21,6 +20,8 @@ import { MoreHorizontal, PencilIcon, Trash2 } from "lucide-react";
 import { useDeleteInventory } from "../api/mutations";
 import CreateInventoryForm from "../components/inventory-creation-form";
 import EditInventoryForm from "../components/inventory-edit-form";
+import ForbiddenPage from "@/components/forbidden-page";
+import { useAuthStore } from "@/features/auth/store";
 
 const columns: ColumnDef<Inventory>[] = [
   {
@@ -162,12 +163,17 @@ const AdminInventory = () => {
   const { setActiveItem, sidebarProps } = useSidebar();
   const { setBreadcrumbList, setActivePage } = useBreadcrumb();
   const { data: inventoryData, isFetched } = useFetchInventoryData();
+  const { isAuthenticated, role } = useAuthStore();
 
   useEffect(() => {
     setActiveItem(sidebarProps?.sections[0].items[2]);
     setBreadcrumbList(breadcrumbList);
     setActivePage(breadcrumbList[1]);
   }, [sidebarProps]);
+
+  if (!isAuthenticated || role !== "Admin") {
+    return <ForbiddenPage />;
+  }
 
   return (
     <AdminLayout>

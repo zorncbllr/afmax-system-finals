@@ -32,6 +32,8 @@ import { BreadcrumbItem, useBreadcrumb } from "@/features/breadcrumbs/store";
 import { useProductFormStore } from "../../store";
 import { useSetFeatured } from "@/features/featured-products/mutations";
 import { useDeleteProduct } from "../../api/mutations";
+import ForbiddenPage from "@/components/forbidden-page";
+import { useAuthStore } from "@/features/auth/store";
 
 export const columns: ColumnDef<ProductTableDTO>[] = [
   // Checkbox column
@@ -207,8 +209,9 @@ export const breadcrumbList: BreadcrumbItem[] = [
 
 const AdminProducts = () => {
   const { setActiveItem, sidebarProps } = useSidebar();
-  const { data, isFetched } = useFetchAdminProducts();
+  const { data: products, isSuccess } = useFetchAdminProducts();
   const { setActivePage, setBreadcrumbList } = useBreadcrumb();
+  const { isAuthenticated, role } = useAuthStore();
 
   useEffect(() => {
     setActiveItem(sidebarProps?.sections[0].items[1]);
@@ -216,19 +219,24 @@ const AdminProducts = () => {
     setActivePage(breadcrumbList[1]);
   }, [sidebarProps]);
 
+  if (!isAuthenticated || role !== "Admin") {
+    return <ForbiddenPage />;
+  }
+
   return (
     <AdminLayout>
       <h1>Products</h1>
-      {isFetched && (
-        <DataTable
-          actions={[<AddButton />]}
-          columnFilter="productName"
-          columns={columns}
-          data={data!}
-        />
+      {isSuccess && (
+        <>
+          <DataTable
+            actions={[<AddButton />]}
+            columnFilter="productName"
+            columns={columns}
+            data={products!}
+          />
+          <ProductForm />
+        </>
       )}
-
-      <ProductForm />
     </AdminLayout>
   );
 };

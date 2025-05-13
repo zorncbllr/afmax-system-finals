@@ -15,6 +15,8 @@ import { Input } from "@headlessui/react";
 import { useAutoResizeTextarea } from "../../hooks/autoresize-hook";
 import { useEditProductForm } from "../../hooks/product-edit-hook";
 import { useNavigate } from "react-router";
+import ForbiddenPage from "@/components/forbidden-page";
+import { useAuthStore } from "@/features/auth/store";
 
 const ProductEditView = () => {
   const {
@@ -28,8 +30,12 @@ const ProductEditView = () => {
     removeImage,
     submitHandler,
   } = useEditProductForm();
-
+  const { isAuthenticated, role } = useAuthStore();
   const navigate = useNavigate();
+
+  if (!isAuthenticated || role !== "Admin") {
+    return <ForbiddenPage />;
+  }
 
   return (
     <AdminLayout>

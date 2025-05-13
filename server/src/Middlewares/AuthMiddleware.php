@@ -29,7 +29,7 @@ class AuthMiddleware extends Middleware
         try {
             $payload = $this->jwtService->verify($token);
 
-            $request->authUser = $payload["sub"];
+            $request->authId = $payload["sub"];
 
             return $next();
         } catch (UnexpectedValueException $e) {

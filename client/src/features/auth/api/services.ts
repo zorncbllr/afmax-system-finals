@@ -20,3 +20,8 @@ export const signUp = async (
   return (await axiosInstance.post<SuccessResponse>("/auth/sign-up", data))
     .data;
 };
+
+export const refreshToken = async (): Promise<SuccessSignInResponse> => {
+  return (await axiosInstance.post<SuccessSignInResponse>("/auth/refresh"))
+    .data;
+};

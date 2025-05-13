@@ -1,26 +1,29 @@
-import { queryClient } from "@/main";
 import { useMutation } from "@tanstack/react-query";
-import { attemptSignIn, signUp } from "./services";
+import { attemptSignIn, refreshToken, signUp } from "./services";
 import { SignInFormData, SignUpFormData } from "../types";
 import { useNavigate } from "react-router";
 import toast from "react-hot-toast";
-import { Axios, AxiosError } from "axios";
+import { AxiosError } from "axios";
+import { useAuthStore } from "../store";
 
 export const useAttemptSignIn = () => {
-  const client = queryClient;
   const navigate = useNavigate();
+  const { setAuthenticated, setRole, setToken } = useAuthStore();
 
   return useMutation({
     mutationKey: ["sign-in"],
     mutationFn: async (data: SignInFormData) => attemptSignIn(data),
 
     onSuccess: (data) => {
-      console.log(data.accessToken);
+      setAuthenticated(true);
+      setRole(data.role);
+      setToken(data.accessToken);
+
       toast.success(data.message, {
         position: "top-right",
       });
 
-      navigate("/products");
+      navigate(data.role === "Admin" ? "/admin/dashboard" : "/products");
     },
 
     onError: (error: AxiosError) => {
@@ -30,7 +33,6 @@ export const useAttemptSignIn = () => {
 };
 
 export const useSignUp = () => {
-  const client = queryClient;
   const navigate = useNavigate();
 
   return useMutation({
@@ -47,6 +49,21 @@ export const useSignUp = () => {
 
     onError: (error: AxiosError) => {
       console.log(error);
+    },
+  });
+};
+
+export const useRefreshToken = () => {
+  const { setAuthenticated, setRole, setToken } = useAuthStore();
+
+  return useMutation({
+    mutationKey: ["auth-token"],
+    mutationFn: async () => refreshToken(),
+
+    onSuccess: (data) => {
+      setToken(data.accessToken);
+      setAuthenticated(true);
+      setRole(data.role);
     },
   });
 };

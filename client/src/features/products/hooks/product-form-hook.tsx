@@ -63,8 +63,6 @@ const useProductForm = () => {
       formData.append("images[]", image, image.name);
     }
 
-    console.log(formData.getAll("images[]"));
-
     for (const category of values.categories) {
       formData.append("categories[]", category);
     }

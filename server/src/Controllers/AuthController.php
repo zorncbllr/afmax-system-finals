@@ -5,7 +5,6 @@ namespace Src\Controllers;
 use Rakit\Validation\Validator;
 use Src\Core\Exceptions\ServiceException;
 use Src\Core\Request;
-use Src\Models\User;
 use Src\Providers\AuthServiceProvider;
 use Src\Services\AuthService;
 
@@ -21,12 +20,12 @@ class AuthController
     public function refreshSession(Request $request)
     {
         try {
-            $newAccessToken = $this->authService->refreshSession($request);
+            $newPayload = $this->authService->refreshSession($request);
 
             status(200);
             return json([
                 "message" => "Token successfully refresh.",
-                "accessToken" => $newAccessToken
+                ...$newPayload
             ]);
         } catch (ServiceException $e) {
 
@@ -55,7 +54,7 @@ class AuthController
         }
 
         try {
-            $accessToken = $this->authService->attemptSignIn(
+            $payload = $this->authService->attemptSignIn(
                 email: $request->body->email,
                 password: $request->body->password
             );
@@ -63,7 +62,7 @@ class AuthController
             status(200);
             return json([
                 "message" => "User successfully signed in.",
-                "accessToken" => $accessToken
+                ...$payload
             ]);
         } catch (ServiceException $e) {
 

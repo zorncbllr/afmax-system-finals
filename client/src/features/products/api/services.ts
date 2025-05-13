@@ -25,7 +25,7 @@ export const createProduct = async (
   data: FormData
 ): Promise<SuccessResponse> => {
   return (
-    await axiosInstance.post("/products", data, {
+    await axiosInstance.post("/admin/products", data, {
       headers: {
         "Content-Type": "multipart/form-data",
       },
@@ -36,7 +36,7 @@ export const createProduct = async (
 export const deleteProduct = async (
   productId: number
 ): Promise<SuccessResponse> => {
-  return (await axiosInstance.delete(`/products/${productId}`)).data;
+  return (await axiosInstance.delete(`/admin/products/${productId}`)).data;
 };
 
 export const updateProduct = async ({
@@ -48,7 +48,7 @@ export const updateProduct = async ({
 }): Promise<SuccessResponse> => {
   return (
     await axiosInstance.post<SuccessResponse>(
-      `/products/update/${productId}`,
+      `/admin/products/update/${productId}`,
       product,
       {
         headers: {

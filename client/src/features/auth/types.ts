@@ -83,4 +83,5 @@ export interface SignInError {
 export interface SuccessSignInResponse {
   message: string;
   accessToken: string;
+  role: "Admin" | "User";
 }
