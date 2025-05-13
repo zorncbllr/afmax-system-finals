@@ -28,6 +28,7 @@ class Kernel
                     $this->generateController($name);
                     $this->generateService($name);
                     $this->generateRepository($name);
+                    $this->generateModel($name);
                 }
         }
     }
@@ -103,6 +104,7 @@ class {$capital}Service
 
 namespace Src\Repositories;
 
+use PDO;
 use Src\Core\Database;
 
 class {$capital}Repository
@@ -112,8 +114,32 @@ class {$capital}Repository
         protected Database \$database
     ) {}
 
-    public function index() {}
+    public function getAll{$capital}() 
+    {
+        \$stmt = \$this->database->prepare(\"\");
 
+        \$stmt->execute();
+
+        return \$stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+}");
+    }
+
+    function generateModel(string $name)
+    {
+        $capital = ucfirst($name);
+        $camel = lcfirst($name);
+
+        $path = parseDir(__DIR__) . "/../Models/{$capital}.php";
+
+        file_put_contents($path, "<?php
+
+namespace Src\Models;
+
+class {$capital}
+{
+    public int \${$camel}Id;
 }");
     }
 }
