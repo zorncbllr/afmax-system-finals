@@ -13,7 +13,6 @@ return function (Router $router) {
     );
 
     $router
-        ->middleware(LoggerMiddleware::class)
         ->post(
             "/auth/refresh",
             [AuthController::class, "refreshSession"]

@@ -162,7 +162,7 @@ const AddItemButton = () => {
 const AdminInventory = () => {
   const { setActiveItem, sidebarProps } = useSidebar();
   const { setBreadcrumbList, setActivePage } = useBreadcrumb();
-  const { data: inventoryData, isFetched } = useFetchInventoryData();
+  const { data: inventoryData, isSuccess } = useFetchInventoryData();
   const { isAuthenticated, role } = useAuthStore();
 
   useEffect(() => {
@@ -178,7 +178,7 @@ const AdminInventory = () => {
   return (
     <AdminLayout>
       <h1>Admin Inventory</h1>
-      {isFetched && (
+      {isSuccess && (
         <DataTable
           columnFilter="product"
           columns={columns}

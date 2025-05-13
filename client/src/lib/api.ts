@@ -6,6 +6,7 @@ export const axiosInstance = axios.create({
   headers: {
     "Content-Type": "application/json",
   },
+  withCredentials: true,
 });
 
 axiosInstance.interceptors.request.use(
@@ -36,12 +37,15 @@ axiosInstance.interceptors.response.use(
       try {
         const newResponse = await refreshToken();
 
+        console.log(newResponse);
+
         localStorage.setItem("token", newResponse.accessToken);
         const refetchedResponse = await axiosInstance(error.config);
 
         return Promise.resolve(refetchedResponse);
       } catch (err: any) {
         firstFetch = false;
+        console.log(err);
 
         return Promise.reject(err);
       }

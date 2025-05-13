@@ -62,7 +62,7 @@ class AuthService
         $refreshToken = $this->jwtService->generate([
             'sub' => $user->userId,
             'type' => 'refresh',
-            'exp' => time() + 60 * 60 * 24 * 7,
+            'exp' => time() + 604800,
         ]);
 
         setcookie(
@@ -70,7 +70,7 @@ class AuthService
             $refreshToken,
             [
                 'expires' => time() + 604800,
-                'path' => '/auth/refresh',
+                'path' => '/api/v1/',
                 'domain' => $_ENV["JWT_ISSUER"],
                 'secure' => true,
                 'httponly' => true,
@@ -102,7 +102,7 @@ class AuthService
             $accessToken = $this->jwtService->generate([
                 'sub'  => $payload['sub'],
                 'type' => 'access',
-                'exp'  => time() + 3600,
+                'exp'  => time() + 900,
             ]);
 
             $newRefreshToken = $this->jwtService->generate([
@@ -116,7 +116,7 @@ class AuthService
                 $newRefreshToken,
                 [
                     'expires' => time() + 604800,
-                    'path' => '/auth/refresh',
+                    'path' => '/api/v1/auth/refresh',
                     'domain' => $_ENV["JWT_ISSUER"],
                     'secure' => true,
                     'httponly' => true,
