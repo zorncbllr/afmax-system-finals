@@ -2,7 +2,7 @@
 
 use Src\Controllers\AuthController;
 use Src\Core\Router;
-use Src\Middlewares\LoggerMiddleware;
+use Src\Middlewares\AuthMiddleware;
 use Src\Middlewares\Validators\UserValidator;
 
 return function (Router $router) {
@@ -16,6 +16,13 @@ return function (Router $router) {
         ->post(
             "/auth/refresh",
             [AuthController::class, "refreshSession"]
+        );
+
+    $router
+        ->middleware(AuthMiddleware::class)
+        ->post(
+            "/auth/sign-off",
+            [AuthController::class, "signOffUser"]
         );
 
     $router

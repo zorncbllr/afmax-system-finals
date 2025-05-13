@@ -18,7 +18,7 @@ class AuthorizationMiddleware extends Middleware
 
     public function runnable(Request $request, callable $next)
     {
-        $userId = $request->authId;
+        $userId = $request->authId ?? null;
 
         if (!$userId) $this->throwForbidden();
 

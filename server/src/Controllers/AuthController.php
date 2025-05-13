@@ -99,4 +99,25 @@ class AuthController
             return json(["message" => "Unable to sign up user."]);
         }
     }
+
+    public function signOffUser(Request $request)
+    {
+        try {
+            $refreshToken = $request->cookies->refreshToken ?? null;
+
+            $this->authService->revokeSession($refreshToken);
+
+            status(200);
+            return json(["message" => "User signed off successfully."]);
+        } catch (ServiceException $e) {
+
+            if ($e->getCode() == 404) {
+                status(404);
+                return json(["message" => $e->getMessage()]);
+            }
+
+            status(401);
+            return json(["message" => $e->getMessage()]);
+        }
+    }
 }

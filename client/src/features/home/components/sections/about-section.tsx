@@ -2,7 +2,7 @@ import SectionHeader from "../section-header";
 
 export default function AboutSection() {
   return (
-    <section>
+    <section id="#about-section">
       <SectionHeader
         section="About"
         heading="Ordering Process"

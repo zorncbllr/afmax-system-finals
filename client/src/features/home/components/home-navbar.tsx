@@ -1,8 +1,14 @@
 import React from "react";
 import { Link } from "react-router";
 import Logo from "@/assets/logo.svg";
+import { useAuthStore } from "@/features/auth/store";
+import { Button } from "@/components/ui/button";
+import { useSignOff } from "@/features/auth/api/mutations";
 
 const HomeNavbar: React.FC = () => {
+  const { isAuthenticated } = useAuthStore();
+  const { mutate: signOff } = useSignOff();
+
   return (
     <header className="absolute inset-x-0 top-0 z-50">
       <nav
@@ -49,30 +55,37 @@ const HomeNavbar: React.FC = () => {
           >
             Products
           </Link>
-          <Link
-            to="/supplies"
-            className="text-sm/6 font-semibold text-gray-900"
-          >
-            Supplies
+          <Link to="#about" className="text-sm/6 font-semibold text-gray-900">
+            About
           </Link>
           <Link
-            to="/marketplace"
+            to="#testimonials"
             className="text-sm/6 font-semibold text-gray-900"
           >
-            Services
+            Testimonials
           </Link>
-          <Link to="/contact" className="text-sm/6 font-semibold text-gray-900">
+          <Link to="#contact" className="text-sm/6 font-semibold text-gray-900">
             Contact
           </Link>
         </div>
 
         <div className="hidden lg:flex lg:flex-1 lg:justify-end">
-          <Link
-            to="/auth/sign-in"
-            className="text-sm/6 font-semibold text-gray-900"
-          >
-            Log in <span aria-hidden="true">&rarr;</span>
-          </Link>
+          {isAuthenticated ? (
+            <Button
+              onClick={() => signOff()}
+              variant={"ghost"}
+              className="text-sm/6 font-semibold text-gray-900"
+            >
+              Sign out <span aria-hidden="true">&rarr;</span>
+            </Button>
+          ) : (
+            <Link
+              to="/auth/sign-in"
+              className="text-sm/6 font-semibold text-gray-900"
+            >
+              Sign in <span aria-hidden="true">&rarr;</span>
+            </Link>
+          )}
         </div>
       </nav>
     </header>

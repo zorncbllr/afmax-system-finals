@@ -25,3 +25,7 @@ export const refreshToken = async (): Promise<SuccessSignInResponse> => {
   return (await axiosInstance.post<SuccessSignInResponse>("/auth/refresh"))
     .data;
 };
+
+export const signOff = async (): Promise<SuccessResponse> => {
+  return (await axiosInstance.post<SuccessResponse>("/auth/sign-off")).data;
+};

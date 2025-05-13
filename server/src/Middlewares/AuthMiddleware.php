@@ -18,7 +18,7 @@ class AuthMiddleware extends Middleware
 
     public function runnable(Request $request, callable $next)
     {
-        $authorizationHeader = $request->headers->Authorization;
+        $authorizationHeader = $request->headers->Authorization ?? null;
 
         if (!$authorizationHeader) $this->throwUnauthorized();
 

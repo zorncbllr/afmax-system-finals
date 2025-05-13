@@ -86,7 +86,7 @@ class AuthService
 
     public function refreshSession(Request $request): array
     {
-        $refreshToken = $request->cookies->refreshToken;
+        $refreshToken = $request->cookies->refreshToken ?? null;
 
         if (!$refreshToken) {
             throw new ServiceException("Refresh token missing", 401);
@@ -97,6 +97,12 @@ class AuthService
 
             if ($payload['type'] !== 'refresh') {
                 throw new ServiceException('Invalid token type', 401);
+            }
+
+            $user = $this->userRepository->getUserById($payload["sub"]);
+
+            if (!$user) {
+                throw new ServiceException("Subject user does not exists", 404);
             }
 
             $accessToken = $this->jwtService->generate([
@@ -124,16 +130,47 @@ class AuthService
                 ]
             );
 
+            return [
+                "accessToken" => $accessToken,
+                "role" => $user->isAdmin ? "Admin" : "User"
+            ];
+        } catch (UnexpectedValueException $e) {
+
+            throw new ServiceException('Invalid token segments', 401);
+        }
+    }
+
+    public function revokeSession(string|null $refreshToken)
+    {
+        if (!$refreshToken) {
+            throw new ServiceException("Unauthorized action. User not authenticated.", 401);
+        }
+
+        try {
+            $payload = $this->jwtService->verify($refreshToken);
+
+            if ($payload['type'] !== 'refresh') {
+                throw new ServiceException('Invalid token type', 401);
+            }
+
             $user = $this->userRepository->getUserById($payload["sub"]);
 
             if (!$user) {
                 throw new ServiceException("Subject user does not exists", 404);
             }
 
-            return [
-                "accessToken" => $accessToken,
-                "role" => $user->isAdmin ? "Admin" : "User"
-            ];
+            setcookie(
+                'refreshToken',
+                $refreshToken,
+                [
+                    'expires' => time() - 99999999,
+                    'path' => '/api/v1/',
+                    'domain' => $_ENV["JWT_ISSUER"],
+                    'secure' => true,
+                    'httponly' => true,
+                    'samesite' => 'Strict'
+                ]
+            );
         } catch (UnexpectedValueException $e) {
 
             throw new ServiceException('Invalid token segments', 401);

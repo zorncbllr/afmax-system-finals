@@ -1,5 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
-import { attemptSignIn, refreshToken, signUp } from "./services";
+import { attemptSignIn, refreshToken, signOff, signUp } from "./services";
 import { SignInFormData, SignUpFormData } from "../types";
 import { useNavigate } from "react-router";
 import toast from "react-hot-toast";
@@ -64,6 +64,25 @@ export const useRefreshToken = () => {
       setToken(data.accessToken);
       setAuthenticated(true);
       setRole(data.role);
+    },
+  });
+};
+
+export const useSignOff = () => {
+  const { setAuthenticated, setRole, setToken } = useAuthStore();
+
+  return useMutation({
+    mutationKey: ["auth-token"],
+    mutationFn: async () => signOff(),
+
+    onSuccess: (data) => {
+      setToken(null);
+      setAuthenticated(false);
+      setRole(undefined);
+
+      toast.success(data.message, {
+        position: "top-right",
+      });
     },
   });
 };
