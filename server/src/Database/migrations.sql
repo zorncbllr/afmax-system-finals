@@ -138,7 +138,7 @@ CREATE TABLE transactions(
     description VARCHAR(100) NOT NULL,
     status ENUM('unpaid', 'paid', 'failed') DEFAULT 'unpaid',
     remarks VARCHAR(100) NOT NULL,
-    referenceNumber VARCHAR(50) NOT NULL,
+    referenceNumber VARCHAR(50),
     createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (orderId) REFERENCES orders(orderId)

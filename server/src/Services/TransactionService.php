@@ -3,7 +3,6 @@
 namespace Src\Services;
 
 use GuzzleHttp\Client;
-use GuzzleHttp\Exception\TransferException;
 use PDOException;
 use Src\Core\Database;
 use Src\Core\Exceptions\ServiceException;
@@ -57,8 +56,6 @@ class TransactionService
 
         $responseBody = json_decode($response->getBody(), false);
 
-        file_put_contents("logs.txt", json_encode($responseBody));
-
         if ($responseBody->errors) {
 
             throw new TransactionException(
@@ -84,7 +81,7 @@ class TransactionService
             $this->transactionRepository->createTransaction($transaction);
         } catch (PDOException $e) {
 
-            $this->transactionRepository->updateTransaction($transaction);
+            throw new ServiceException($e->getMessage());
         }
 
         return $transaction;

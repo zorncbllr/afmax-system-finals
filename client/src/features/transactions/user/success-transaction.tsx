@@ -7,6 +7,7 @@ const SuccessTransaction = () => {
   const { transactionId } = useTransactionStore();
 
   useEffect(() => {
+    console.log(transactionId);
     if (transactionId) {
       mutate(transactionId);
     }

@@ -28,7 +28,7 @@ export const usePlaceOrder = () => {
 
       setTransactionId(data.transactionId);
 
-      open(data.checkOutLink, "__self");
+      window.location.href = data.checkOutLink;
     },
 
     onError: (error: AxiosError<{ message: string }>) => {
