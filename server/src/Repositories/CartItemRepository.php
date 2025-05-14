@@ -14,7 +14,7 @@ class CartItemRepository
     ) {}
 
     /** @return array<CartItem> */
-    public function getAllCartItem(int $cartId): array
+    public function getAllCartItems(int $cartId): array
     {
         $stmt = $this->database->prepare(
             "SELECT * FROM cartItems 

@@ -9,12 +9,14 @@ import { useCartDrawer } from "../stores/cart-drawer-store";
 import { Button } from "@/components/ui/button";
 import { useFetchCartItems } from "../api/queries";
 import { useRemoveToCart, useUpdateCartItem } from "../api/mutations";
+import { usePlaceOrder } from "@/features/orders/api/mutations";
 
 export default function CartDrawer() {
   const { isOpen, setIsOpen } = useCartDrawer();
   const { data: cart } = useFetchCartItems();
   const { mutate: removeItem } = useRemoveToCart();
   const { mutate: updateItem } = useUpdateCartItem();
+  const { mutate: placeOrder } = usePlaceOrder();
 
   return (
     <Dialog open={isOpen} onClose={setIsOpen} className="relative z-10">
@@ -153,7 +155,9 @@ export default function CartDrawer() {
                   <p className="mt-0.5 text-sm text-gray-500">
                     Shipping and taxes calculated at checkout.
                   </p>
-                  <Button className="w-full my-6">Proceed to Check Out</Button>
+                  <Button onClick={() => placeOrder()} className="w-full my-6">
+                    Proceed to Check Out
+                  </Button>
                   <div className="mt-6 flex justify-center text-center text-sm text-gray-500">
                     <p>
                       or{" "}

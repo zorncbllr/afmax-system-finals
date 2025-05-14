@@ -8,6 +8,7 @@ import {
   UsersIcon,
   BadgeDollarSignIcon,
   ArchiveIcon,
+  ShoppingCartIcon,
 } from "lucide-react";
 import { SideBarProps } from "@/features/sidebar/types";
 import { useSidebar } from "@/features/sidebar/store";
@@ -37,6 +38,12 @@ const sidebarProps: SideBarProps = {
           title: "Inventory",
           icon: ArchiveIcon,
           href: "/admin/inventory",
+          children: [],
+        },
+        {
+          title: "Orders",
+          icon: ShoppingCartIcon,
+          href: "/admin/orders",
           children: [],
         },
         {

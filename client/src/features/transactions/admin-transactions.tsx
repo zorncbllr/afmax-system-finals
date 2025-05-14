@@ -22,7 +22,7 @@ const AdminTransactions = () => {
   const { isAuthenticated, user } = useAuthStore();
 
   useEffect(() => {
-    setActiveItem(sidebarProps?.sections[0].items[4]);
+    setActiveItem(sidebarProps?.sections[0].items[5]);
     setBreadcrumbList(breadcrumbList);
     setActivePage(breadcrumbList[1]);
   }, [sidebarProps]);

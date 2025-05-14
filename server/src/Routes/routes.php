@@ -10,6 +10,7 @@ $router = new Router(base: "/api/v1");
 (require("inventory.php"))($router);
 (require("featured.php"))($router);
 (require("cart.php"))($router);
+(require("orders.php"))($router);
 
 $router->resource("categories", CategoryController::class);
 

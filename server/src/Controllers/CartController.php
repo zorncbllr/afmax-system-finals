@@ -3,16 +3,11 @@
 namespace Src\Controllers;
 
 use Rakit\Validation\Validator;
-use Src\Core\App;
 use Src\Core\Exceptions\ServiceException;
 use Src\Core\Request;
-use Src\Factories\CartDTOFactory;
-use Src\Factories\ProductDTOFactory;
-use Src\Repositories\CartItemRepository;
+use Src\Providers\CartServiceProvider;
 use Src\Services\CartService;
-use Src\Repositories\CartRepository;
-use Src\Repositories\ProductRepository;
-use Src\Repositories\UserRepository;
+
 
 class CartController
 {
@@ -20,16 +15,7 @@ class CartController
 
     public function __construct()
     {
-        $database = App::getDatabase();
-
-        $this->cartService = new CartService(
-            database: $database,
-            cartItemRepository: new CartItemRepository($database),
-            cartRepository: new CartRepository($database),
-            userRepository: new UserRepository($database),
-            productRepository: new ProductRepository($database),
-            cartDTOFactory: new CartDTOFactory(new ProductDTOFactory())
-        );
+        $this->cartService = CartServiceProvider::makeCartService();
     }
 
     public function getUserCart(Request $request)

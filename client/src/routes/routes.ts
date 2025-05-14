@@ -4,6 +4,7 @@ import SignUpPage from "@/features/auth/pages/signup-page";
 import Dashboard from "@/features/dashboard/dashboard";
 import Home from "@/features/home/home";
 import AdminInventory from "@/features/inventory/pages/admin-inventory";
+import AdminOrders from "@/features/orders/pages/admin/admin-orders";
 import AdminProductView from "@/features/products/pages/admin/admin-product-view";
 import AdminProducts from "@/features/products/pages/admin/admin-products";
 import ProductEditView from "@/features/products/pages/admin/product-edit-view";
@@ -63,6 +64,11 @@ export const routes: Route[] = [
   {
     path: "/admin/inventory",
     element: AdminInventory,
+    protected: true,
+  },
+  {
+    path: "/admin/orders",
+    element: AdminOrders,
     protected: true,
   },
   {

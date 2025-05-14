@@ -2,9 +2,10 @@
 
 namespace Src\Controllers;
 
-use Src\Core\App;
+use PDOException;
+use Src\Core\Request;
+use Src\Providers\OrderServiceProvider;
 use Src\Services\OrderService;
-use Src\Repositories\OrderRepository;
 
 class OrderController
 {
@@ -12,13 +13,35 @@ class OrderController
 
     public function __construct()
     {
-        $database = App::getDatabase();
-
-        $this->orderService = new OrderService(
-            database: $database,
-            orderRepository: new OrderRepository($database)
-        );
+        $this->orderService = OrderServiceProvider::makeOrderService();
     }
 
-    public function index() {}
+    public function getAllOrders()
+    {
+        $orders = $this->orderService->getAllOrders();
+
+        status(200);
+        return json($orders);
+    }
+
+    public function placeOrder(Request $request)
+    {
+        $userId = $request->authId ?? null;
+
+        if (!$userId) {
+            status(401);
+            return json(["message" => "Cannot place order. User unauthenticated"]);
+        }
+
+        try {
+            $this->orderService->placeOrder($userId);
+
+            status(200);
+            return json(["message" => "User order has been placed. Preparing for checkout."]);
+        } catch (PDOException $e) {
+
+            status(400);
+            return json(["message" => $e->getMessage()]);
+        }
+    }
 }
