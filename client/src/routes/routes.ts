@@ -10,7 +10,9 @@ import AdminProducts from "@/features/products/pages/admin/admin-products";
 import ProductEditView from "@/features/products/pages/admin/product-edit-view";
 import UserProductView from "@/features/products/pages/user/user-product-view";
 import UserProducts from "@/features/products/pages/user/user-products";
-import AdminTransactions from "@/features/transactions/admin-transactions";
+import AdminTransactions from "@/features/transactions/admin/admin-transactions";
+import FailedTransaction from "@/features/transactions/user/failed-transaction";
+import SuccessTransaction from "@/features/transactions/user/success-transaction";
 import AdminUsers from "@/features/users/admin-users";
 import React from "react";
 
@@ -40,6 +42,14 @@ export const routes: Route[] = [
   {
     path: "/products/:productId",
     element: UserProductView,
+  },
+  {
+    path: "/transactions/success",
+    element: SuccessTransaction,
+  },
+  {
+    path: "/transactions/failed",
+    element: FailedTransaction,
   },
   {
     path: "/admin/products",

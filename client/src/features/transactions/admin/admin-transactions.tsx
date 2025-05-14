@@ -1,8 +1,8 @@
 import { useSidebar } from "@/features/sidebar/store";
-import AdminLayout from "../../layouts/admin-layout";
+import AdminLayout from "../../../layouts/admin-layout";
 import { useEffect } from "react";
 import { BreadcrumbItem, useBreadcrumb } from "@/features/breadcrumbs/store";
-import { useAuthStore } from "../auth/store";
+import { useAuthStore } from "../../auth/store";
 import ForbiddenPage from "@/components/forbidden-page";
 
 export const breadcrumbList: BreadcrumbItem[] = [

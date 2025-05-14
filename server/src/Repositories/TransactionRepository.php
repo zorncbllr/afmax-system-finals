@@ -22,6 +22,28 @@ class TransactionRepository
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    public function getTransactionById(string $transactionId): Transaction|false
+    {
+        $stmt = $this->database->prepare(
+            "SELECT * FROM transactions WHERE transactionId = :transactionId"
+        );
+
+        $stmt->execute(["transactionId" => $transactionId]);
+
+        return $stmt->fetchObject(Transaction::class);
+    }
+
+    public function getTransactionWithPaymentIntentID(string $paymentIntentId): Transaction|false
+    {
+        $stmt = $this->database->prepare(
+            "SELECT * FROM transactions WHERE transactionId = :transactionId"
+        );
+
+        $stmt->execute(["transactionId" => $paymentIntentId]);
+
+        return $stmt->fetchObject(Transaction::class);
+    }
+
     public function updateStatus(string $status, string $transactionId)
     {
         $stmt = $this->database->prepare(
@@ -40,7 +62,7 @@ class TransactionRepository
         $stmt = $this->database->prepare(
             "INSERT INTO transactions (
                 transactionId,
-                userId,
+                orderId,
                 checkOutUrl,
                 amount,
                 description,
@@ -49,7 +71,7 @@ class TransactionRepository
                 referenceNumber
             ) VALUES (
                 :transactionId,
-                :userId,
+                :orderId,
                 :checkOutUrl,
                 :amount,
                 :description,
@@ -61,7 +83,36 @@ class TransactionRepository
 
         $stmt->execute([
             "transactionId" => $transaction->transactionId,
-            "userId" => $transaction->userId,
+            "orderId" => $transaction->orderId,
+            "checkOutUrl" => $transaction->checkOutUrl,
+            "amount" => $transaction->amount,
+            "description" => $transaction->description,
+            "status" => $transaction->status,
+            "remarks" => $transaction->remarks,
+            "referenceNumber" => $transaction->referenceNumber
+        ]);
+
+        return $transaction;
+    }
+
+
+    public function updateTransaction(Transaction $transaction)
+    {
+        $stmt = $this->database->prepare(
+            "UPDATE transactions SET  
+                orderId = :orderId,
+                checkOutUrl = :checkOutUrl,
+                amount = :amount,
+                description = :description,
+                status = :status,
+                remarks = :remarks,
+                referenceNumber = :referenceNumber
+                WHERE transactionId = :transactionId"
+        );
+
+        $stmt->execute([
+            "transactionId" => $transaction->transactionId,
+            "orderId" => $transaction->orderId,
             "checkOutUrl" => $transaction->checkOutUrl,
             "amount" => $transaction->amount,
             "description" => $transaction->description,

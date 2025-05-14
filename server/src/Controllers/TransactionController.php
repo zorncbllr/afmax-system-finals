@@ -2,10 +2,10 @@
 
 namespace Src\Controllers;
 
-use GuzzleHttp\Client;
-use Src\Core\App;
+use Src\Core\Exceptions\ServiceException;
+use Src\Core\Request;
+use Src\Providers\TransactionServiceProvider;
 use Src\Services\TransactionService;
-use Src\Repositories\TransactionRepository;
 
 class TransactionController
 {
@@ -13,14 +13,48 @@ class TransactionController
 
     public function __construct()
     {
-        $database = App::getDatabase();
-
-        $this->transactionService = new TransactionService(
-            database: $database,
-            transactionRepository: new TransactionRepository($database),
-            client: new Client()
-        );
+        $this->transactionService = TransactionServiceProvider::makeTransactionService();
     }
 
-    public function index() {}
+    public function retrieveSuccessTransaction(Request $request)
+    {
+        try {
+            $transactionId = $request->body->transactionId;
+
+            if (!$transactionId) {
+                status(400);
+                return json(["message" => "TransactionId is required to verify transaction."]);
+            }
+
+            $this->transactionService->handleSuccessPayment($transactionId);
+
+            status(200);
+            return json(["message" => "Payment Transaction status has been updated."]);
+        } catch (ServiceException $e) {
+
+            status(400);
+            return json(["message" => $e->getMessage()]);
+        }
+    }
+
+    public function retrieveFailedTransaction(Request $request)
+    {
+        try {
+            $transactionId = $request->body->transactionId;
+
+            if (!$transactionId) {
+                status(400);
+                return json(["message" => "TransactionId is required to verify transaction."]);
+            }
+
+            $error = $this->transactionService->handleFailedPayment($transactionId);
+
+            status(200);
+            return json(["message" => $error["message"]]);
+        } catch (ServiceException $e) {
+
+            status(400);
+            return json(["message" => $e->getMessage()]);
+        }
+    }
 }

@@ -13,6 +13,18 @@ class OrderDetailRepository
         protected Database $database
     ) {}
 
+    /** @return array<OrderDetail> */
+    public function getOrderDetails(int $orderId): array
+    {
+        $stmt = $this->database->prepare(
+            "SELECT * FROM orderDetails WHERE orderId = :orderId"
+        );
+
+        $stmt->execute(["orderId" => $orderId]);
+
+        return $stmt->fetchAll(PDO::FETCH_CLASS, OrderDetail::class);
+    }
+
     public function addProductOrder(OrderDetail $orderDetail)
     {
         $stmt = $this->database->prepare(
@@ -27,5 +39,14 @@ class OrderDetailRepository
         ]);
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function clearOrderDetails(int $orderId)
+    {
+        $stmt = $this->database->prepare(
+            "DELETE FROM orderDetails WHERE orderId = :orderId"
+        );
+
+        $stmt->execute(["orderId" => $orderId]);
     }
 }

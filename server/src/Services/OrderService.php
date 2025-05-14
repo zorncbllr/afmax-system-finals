@@ -6,8 +6,10 @@ use GuzzleHttp\Client;
 use PDOException;
 use Src\Core\Database;
 use Src\Core\Exceptions\ServiceException;
+use Src\Core\Exceptions\TransactionException;
 use Src\Models\DTOs\OrderDTO;
 use Src\Models\OrderDetail;
+use Src\Models\Transaction;
 use Src\Repositories\CartItemRepository;
 use Src\Repositories\CartRepository;
 use Src\Repositories\OrderDetailRepository;
@@ -36,9 +38,10 @@ class OrderService
         return $orders;
     }
 
-    public function placeOrder(int $userId): string
+    public function placeOrder(int $userId): Transaction
     {
         try {
+            $this->database->beginTransaction();
 
             $user = $this->userRepository->getUserById($userId);
 
@@ -71,19 +74,28 @@ class OrderService
 
             $this->cartItemRepository->clearItems($cart->cartId);
 
-            $orderDTO = $this->orderRepository->getOrderById($order->orderId);
+            $orderDTO = $this->orderRepository->getOrderDTOById($order->orderId);
 
             $transaction = $this->transactionService->createTransaction(
                 remarks: "",
                 description: "Partial payment for " . $orderDTO->orderList,
                 amount: $orderDTO->totalAmount / 2,
-                userId: $user->userId
+                orderId: $order->orderId
             );
 
-            return $transaction->checkOutUrl;
+            $this->database->commit();
+
+            return $transaction;
         } catch (PDOException $e) {
 
+            $this->database->rollBack();
+
             throw new ServiceException("Unable to place user order.");
+        } catch (TransactionException $e) {
+
+            $this->database->rollBack();
+
+            throw new ServiceException($e->getMessage(), $e->getCode());
         }
     }
 }

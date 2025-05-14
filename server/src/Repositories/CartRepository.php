@@ -22,6 +22,16 @@ class CartRepository
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    public function getCartById(int $cartId): Cart|false
+    {
+        $stmt = $this->database->prepare(
+            "SELECT * FROM carts WHERE cartId = :cartId"
+        );
+
+        $stmt->execute(["cartId" => $cartId]);
+
+        return $stmt->fetchObject(Cart::class);
+    }
 
     public function findByUserId(int $userId): Cart|false
     {

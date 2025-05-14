@@ -41,7 +41,18 @@ class OrderRepository
         return $stmt->fetchAll(PDO::FETCH_CLASS, OrderDTO::class);
     }
 
-    public function getOrderById(int $orderId): OrderDTO|false
+    public function getOrderById(int $orderId): Order|false
+    {
+        $stmt = $this->database->prepare(
+            "SELECT * FROM orders WHERE orderId = :orderId"
+        );
+
+        $stmt->execute(["orderId" => $orderId]);
+
+        return $stmt->fetchObject(Order::class);
+    }
+
+    public function getOrderDTOById(int $orderId): OrderDTO|false
     {
         $stmt = $this->database->prepare(
             "SELECT 
@@ -83,5 +94,14 @@ class OrderRepository
         $order->orderId = $this->database->lastInsertId();
 
         return $order;
+    }
+
+    public function deleteOrder(int $orderId)
+    {
+        $stmt = $this->database->prepare(
+            "DELETE FROM orders WHERE orderId = :orderId"
+        );
+
+        $stmt->execute(["orderId" => $orderId]);
     }
 }

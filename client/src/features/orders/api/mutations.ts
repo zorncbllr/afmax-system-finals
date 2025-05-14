@@ -3,9 +3,11 @@ import { placeOrder } from "./services";
 import { queryClient } from "@/main";
 import toast from "react-hot-toast";
 import { AxiosError } from "axios";
+import { useTransactionStore } from "@/features/transactions/store";
 
 export const usePlaceOrder = () => {
   const client = queryClient;
+  const { setTransactionId } = useTransactionStore();
 
   return useMutation({
     mutationKey: ["orders"],
@@ -24,7 +26,8 @@ export const usePlaceOrder = () => {
         position: "top-right",
       });
 
-      console.log(data.checkOutLink);
+      setTransactionId(data.transactionId);
+
       open(data.checkOutLink, "__self");
     },
 

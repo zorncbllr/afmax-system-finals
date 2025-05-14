@@ -3,6 +3,7 @@
 namespace Src\Controllers;
 
 use PDOException;
+use Src\Core\Exceptions\ServiceException;
 use Src\Core\Request;
 use Src\Providers\OrderServiceProvider;
 use Src\Services\OrderService;
@@ -34,11 +35,15 @@ class OrderController
         }
 
         try {
-            $checkOutLink = $this->orderService->placeOrder($userId);
+            $transaction = $this->orderService->placeOrder($userId);
 
             status(200);
-            return json(["checkOutLink" => $checkOutLink, "message" => "User order has been placed."]);
-        } catch (PDOException $e) {
+            return json([
+                "checkOutLink" => $transaction->checkOutUrl,
+                "transactionId" => $transaction->transactionId,
+                "message" => "User order has been placed."
+            ]);
+        } catch (ServiceException $e) {
 
             status(400);
             return json(["message" => $e->getMessage()]);

@@ -93,7 +93,6 @@ class CartItemRepository
         $cartItem->cartId = $cartId;
         $cartItem->productId = $productId;
 
-
         return $cartItem;
     }
 

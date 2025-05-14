@@ -131,17 +131,17 @@ CREATE TABLE orderDetails(
 );
 
 CREATE TABLE transactions(
-    transactionId VARCHAR(120) NOT NULL,
-    userId INT NOT NULL,
+    transactionId VARCHAR(120) PRIMARY KEY NOT NULL,
+    orderId INT NOT NULL,
     checkOutUrl VARCHAR(255) NOT NULL,
     amount DECIMAL(10, 2) NOT NULL,
     description VARCHAR(100) NOT NULL,
-    status ENUM('unpaid', 'paid') DEFAULT 'unpaid',
+    status ENUM('unpaid', 'paid', 'failed') DEFAULT 'unpaid',
     remarks VARCHAR(100) NOT NULL,
     referenceNumber VARCHAR(50) NOT NULL,
     createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (userId) REFERENCES users(userId)
+    FOREIGN KEY (orderId) REFERENCES orders(orderId)
 );
 
 
