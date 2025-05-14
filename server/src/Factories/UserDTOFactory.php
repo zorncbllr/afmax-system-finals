@@ -21,4 +21,17 @@ class UserDTOFactory
 
         return $userDTO;
     }
+
+    /**  @param array<User> $users */
+    /** @return array<UserDTO> */
+    public function makeUserDTOList(array $users): array
+    {
+        $userDTOs = [];
+
+        foreach ($users as $user) {
+            array_push($userDTOs, $this->makeUserDTO($user));
+        }
+
+        return $userDTOs;
+    }
 }

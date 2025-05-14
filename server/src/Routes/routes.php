@@ -11,6 +11,7 @@ $router = new Router(base: "/api/v1");
 (require("featured.php"))($router);
 (require("cart.php"))($router);
 (require("orders.php"))($router);
+(require("users.php"))($router);
 
 $router->resource("categories", CategoryController::class);
 

@@ -14,5 +14,13 @@ class UserController
         $this->userService = UserServiceProvider::makeUserService();
     }
 
+    public function getAllUsers()
+    {
+        $users = $this->userService->getAllUsers();
+
+        status(200);
+        return json($users);
+    }
+
     public function createUser() {}
 }

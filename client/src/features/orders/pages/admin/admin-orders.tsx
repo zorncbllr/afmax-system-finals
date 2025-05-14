@@ -142,12 +142,12 @@ const AdminOrders = () => {
 
   return (
     <AdminLayout>
-      <h1>Products</h1>
+      <h1>Orders</h1>
       {isSuccess && (
         <>
           <DataTable
             actions={[<AddOrderButton />]}
-            columnFilter="productName"
+            columnFilter="user"
             columns={columns}
             data={orders!}
           />

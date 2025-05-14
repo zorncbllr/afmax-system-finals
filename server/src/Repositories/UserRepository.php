@@ -2,12 +2,24 @@
 
 namespace Src\Repositories;
 
+use PDO;
 use Src\Core\Database;
 use Src\Models\User;
 
 class UserRepository
 {
     public function __construct(protected Database $database) {}
+
+    public function getAllUsers()
+    {
+        $stmt = $this->database->prepare(
+            "SELECT * FROM users WHERE isAdmin = 0"
+        );
+
+        $stmt->execute();
+
+        return $stmt->fetchAll(PDO::FETCH_CLASS, User::class);
+    }
 
     public function getUserById(int $userId): User|bool
     {
