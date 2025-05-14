@@ -16,10 +16,10 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { MoreHorizontal } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
 import { User } from "./types";
 import { useFetchUsers } from "./api/queries";
 import { DataTable } from "@/components/data-table";
+import { CategoryBadge } from "../categories/components/category-badge";
 
 const columns: ColumnDef<User>[] = [
   // Selection Checkbox
@@ -82,18 +82,17 @@ const columns: ColumnDef<User>[] = [
   {
     accessorKey: "role",
     header: "Role",
-    cell: ({ row }) => (
-      <Badge
-        variant="outline"
-        className={
-          row.getValue("role") === "Admin"
-            ? "border-red-200 text-red-600"
-            : "border-blue-200 text-blue-600"
-        }
-      >
-        {row.getValue("role")}
-      </Badge>
-    ),
+    cell: ({ row }) => {
+      const user = row.original;
+
+      return (
+        <CategoryBadge
+          key={user.userId}
+          category={user.role}
+          className="text-xs"
+        />
+      );
+    },
   },
   // Actions
   {
