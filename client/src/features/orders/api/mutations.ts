@@ -23,6 +23,9 @@ export const usePlaceOrder = () => {
       toast.success(data.message, {
         position: "top-right",
       });
+
+      console.log(data.checkOutLink);
+      open(data.checkOutLink, "__self");
     },
 
     onError: (error: AxiosError<{ message: string }>) => {

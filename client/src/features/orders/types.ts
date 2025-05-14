@@ -5,3 +5,8 @@ export interface Order {
   email: string;
   totalAmount: number;
 }
+
+export interface PlaceOrderResponse {
+  checkOutLink: string;
+  message: string;
+}

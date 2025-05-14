@@ -41,7 +41,32 @@ class OrderRepository
         return $stmt->fetchAll(PDO::FETCH_CLASS, OrderDTO::class);
     }
 
-    public function getOrderById(int $orderId) {}
+    public function getOrderById(int $orderId): OrderDTO|false
+    {
+        $stmt = $this->database->prepare(
+            "SELECT 
+                u.`fullName` AS user,
+                u.`email`,
+                o.`orderId`,
+                GROUP_CONCAT(
+                    CONCAT(od.quantity, 'x ', p.`productName`) 
+                    ORDER BY p.`productName` 
+                    SEPARATOR ', '
+                ) AS orderList,
+                SUM(od.quantity * p.price) AS totalAmount
+            FROM `orderDetails` od 
+            JOIN products p ON p.`productId` = od.`productId`
+            JOIN orders o ON od.`orderId` = o.`orderId`
+            JOIN carts c ON c.`cartId` = o.`cartId`
+            JOIN users u ON u.`userId` = c.`userId`
+            WHERE o.`orderId` = :orderId 
+            GROUP BY u.`userId`, o.`orderId`"
+        );
+
+        $stmt->execute(["orderId" => $orderId]);
+
+        return $stmt->fetchObject(OrderDTO::class);
+    }
 
     public function createOrder(int $cartId): Order
     {

@@ -1,9 +1,8 @@
-import { SuccessResponse } from "@/features/inventory/types";
 import { axiosInstance } from "@/lib/api";
-import { Order } from "../types";
+import { Order, PlaceOrderResponse } from "../types";
 
-export const placeOrder = async (): Promise<SuccessResponse> => {
-  return (await axiosInstance.post<SuccessResponse>("/orders")).data;
+export const placeOrder = async (): Promise<PlaceOrderResponse> => {
+  return (await axiosInstance.post<PlaceOrderResponse>("/orders")).data;
 };
 
 export const getAllOrders = async (): Promise<Order[]> => {

@@ -34,10 +34,10 @@ class OrderController
         }
 
         try {
-            $this->orderService->placeOrder($userId);
+            $checkOutLink = $this->orderService->placeOrder($userId);
 
             status(200);
-            return json(["message" => "User order has been placed. Preparing for checkout."]);
+            return json(["checkOutLink" => $checkOutLink, "message" => "User order has been placed."]);
         } catch (PDOException $e) {
 
             status(400);
