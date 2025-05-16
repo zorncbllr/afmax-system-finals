@@ -13,11 +13,11 @@ class UserValidator extends Middleware
         $validator = new Validator();
 
         $data = [
-            'fullName' => $request->body->fullName,
-            'phoneNumber' => $request->body->phoneNumber,
-            'email' => $request->body->email,
-            'password' => $request->body->password,
-            'passwordConfirmation' => $request->body->passwordConfirmation,
+            'fullName' => $request->body->fullName ?? null,
+            'phoneNumber' => $request->body->phoneNumber ?? null,
+            'email' => $request->body->email ?? null,
+            'password' => $request->body->password ?? null,
+            'passwordConfirmation' => $request->body->passwordConfirmation ?? null,
         ];
 
         $rules = [

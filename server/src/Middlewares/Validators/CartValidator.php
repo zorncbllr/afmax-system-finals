@@ -20,9 +20,9 @@ class CartValidator extends Middleware
         ];
 
         $validation = $validator->validate([
-            "userId" => $request->authId,
-            "productId" => $request->body->productId,
-            "quantity" => $request->body->quantity
+            "userId" => $request->authId ?? null,
+            "productId" => $request->body->productId ?? null,
+            "quantity" => $request->body->quantity ?? null
         ], $rules);
 
         if ($validation->fails()) {

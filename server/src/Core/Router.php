@@ -34,15 +34,7 @@ class Router implements HTTPMethodInterface
 
     function __destruct()
     {
-        $this->request->uri = $_SERVER['PATH_INFO'] ?? "/";
-
-        if ($_SERVER["PATH_INFO"]) {
-            $end = strlen($this->request->uri) - 1;
-
-            if ($this->request->uri[$end] == "/") {
-                $this->request->uri = substr($this->request->uri, 0, $end);
-            }
-        }
+        $this->request->uri = parse_url($_SERVER["REQUEST_URI"], PHP_URL_PATH);
 
         $requestRoute = $this->request->uri . ":" . $_SERVER['REQUEST_METHOD'];
 

@@ -13,12 +13,12 @@ class ProductValidator extends Middleware
         $validator = new Validator();
 
         $data = [
-            'productName' => $request->productName,
-            'brand' => $request->brand,
-            'description' => $request->description,
-            'price' => $request->price,
-            'categories' => $request->categories,
-            'images' => $request->files->images->name,
+            'productName' => $request->productName ?? null,
+            'brand' => $request->brand ?? null,
+            'description' => $request->description ?? null,
+            'price' => $request->price ?? null,
+            'categories' => $request->categories ?? null,
+            'images' => $request->files->images->name ?? null,
         ];
 
         $rules = [

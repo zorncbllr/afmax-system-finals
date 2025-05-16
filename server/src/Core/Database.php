@@ -27,6 +27,8 @@ class Database extends PDO
             );
         } catch (PDOException $e) {
 
+            echo $e->getMessage();
+
             status(500);
             die("Database Exception: Database server might be down or might be due to incorrect configurations.");
         }
