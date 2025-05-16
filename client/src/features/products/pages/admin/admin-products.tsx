@@ -34,6 +34,7 @@ import { useSetFeatured } from "@/features/featured-products/mutations";
 import { useDeleteProduct } from "../../api/mutations";
 import ForbiddenPage from "@/components/forbidden-page";
 import { useAuthStore } from "@/features/auth/store";
+import { SERVER_BASEURL } from "@/lib/api";
 
 export const columns: ColumnDef<ProductTableDTO>[] = [
   // Checkbox column
@@ -118,7 +119,7 @@ export const columns: ColumnDef<ProductTableDTO>[] = [
     header: "Image",
     cell: ({ row }) => (
       <img
-        src={"http://localhost:8000" + row.getValue("image")}
+        src={SERVER_BASEURL + row.getValue("image")}
         alt="Product"
         className="h-10 w-10 object-cover rounded-md"
       />

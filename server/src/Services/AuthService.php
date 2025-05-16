@@ -28,7 +28,7 @@ class AuthService
             $user->fullName = $request->body->fullName;
             $user->email = $request->body->email;
             $user->phoneNumber = $request->body->phoneNumber;
-            $user->company = $request->body->company;
+            $user->company = $request->body->company ?? null;
             $user->password = password_hash($request->body->password, PASSWORD_DEFAULT);
             $user->isAdmin = false;
 

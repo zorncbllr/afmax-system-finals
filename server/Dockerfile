@@ -13,3 +13,5 @@ RUN composer install --prefer-dist --no-dev --no-scripts --no-progress --no-inte
 COPY ./server .
 
 RUN composer dump-autoload --optimize
+
+RUN chown -R www-data:www-data /var/www/html/public/images

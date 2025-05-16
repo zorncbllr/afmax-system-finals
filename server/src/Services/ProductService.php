@@ -331,7 +331,8 @@ class ProductService
         if (!is_dir($uploadDir)) mkdir($uploadDir);
 
         for ($i = 0; $i < sizeof($images->name); $i++) {
-            $hashedImageName = uniqid(more_entropy: true) . "." . end(explode(".", $images->name[$i]));
+            $nameTokens = explode(".", $images->name[$i]);
+            $hashedImageName = uniqid(more_entropy: true) . "." . end($nameTokens);
             $uploadPath = $uploadDir . "/" . $hashedImageName;
 
             if (move_uploaded_file($images->tmp_name[$i], $uploadPath)) {

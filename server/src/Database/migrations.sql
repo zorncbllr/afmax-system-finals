@@ -77,7 +77,7 @@ CREATE TABLE users (
   userPhoto VARCHAR(255),
   fullName VARCHAR(80) NOT NULL,
   email VARCHAR(50) UNIQUE NOT NULL,
-  phoneNumber CHAR(11) UNIQUE NOT NULL,
+  phoneNumber CHAR(11) NOT NULL,
   isAdmin BOOLEAN DEFAULT FALSE,
   password VARCHAR(255) NOT NULL,
   company VARCHAR(80),

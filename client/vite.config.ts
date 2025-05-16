@@ -14,12 +14,4 @@ export default defineConfig({
   optimizeDeps: {
     include: ["react-hot-toast"],
   },
-  server: {
-    // Allow requests from ngrok
-    allowedHosts: [
-      "676f-103-225-136-37.ngrok-free.app", // Your current ngrok host
-      // Optional: Add a wildcard to allow all ngrok subdomains
-      ".ngrok-free.app",
-    ],
-  },
 });

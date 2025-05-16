@@ -15,6 +15,7 @@ export const useCreateProduct = () => {
     mutationFn: async (data: FormData) => createProduct(data),
 
     onSuccess: (data) => {
+      console.log(data);
       client.invalidateQueries({
         queryKey: ["products"],
       });
