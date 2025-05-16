@@ -10,6 +10,7 @@ import { useAuthStore } from "@/features/auth/store";
 import { useNavigate } from "react-router";
 import { useAddToCart } from "@/features/cart/api/mutations";
 import { useCartFormStore } from "@/features/cart/stores/cart-form-store";
+import { SERVER_BASEURL } from "@/lib/api";
 
 export const ProductViewSkeleton = () => {
   return (
@@ -109,7 +110,7 @@ const ProductView = ({ product }: { product: ProductDetails }) => {
         <div className="flex lg:flex-col gap-4">
           {product.images.map((image) => (
             <img
-              src={"http://localhost:8000" + image}
+              src={SERVER_BASEURL + image}
               alt="Product Image"
               onClick={() => setMainImage(image)}
               className={cn(
@@ -123,7 +124,7 @@ const ProductView = ({ product }: { product: ProductDetails }) => {
         </div>
 
         <img
-          src={"http://localhost:8000" + mainImage}
+          src={SERVER_BASEURL + mainImage}
           alt="Product Image"
           className="w-[25rem] h-[25rem] lg:w-[30rem] lg:h-[30rem] lg:min-w-[30rem] object-cover rounded-r-lg shadow-sm"
         />

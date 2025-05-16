@@ -8,6 +8,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { breadcrumbList } from "../pages/admin/admin-products";
 import { useUpdateProduct } from "../api/mutations";
 import { useFetchProductById } from "../api/queries";
+import { SERVER_BASEURL } from "@/lib/api";
 
 export const useEditProductForm = () => {
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
@@ -49,10 +50,7 @@ export const useEditProductForm = () => {
 
     for (const img of imagePreviews) {
       if (!img.match(/blob/)) {
-        formData.append(
-          "existingImages[]",
-          img.replace("http://localhost:8000", "")
-        );
+        formData.append("existingImages[]", img.replace(SERVER_BASEURL, ""));
       }
     }
 
@@ -121,9 +119,7 @@ export const useEditProductForm = () => {
       setBreadcrumbList([...breadcrumbList, activePage]);
       setActivePage(activePage);
 
-      setImagePreviews(
-        product.images.map((img) => `http://localhost:8000${img}`)
-      );
+      setImagePreviews(product.images.map((img) => SERVER_BASEURL + img));
 
       form.setValue("productName", product.productName);
       form.setValue("brand", product.brand);

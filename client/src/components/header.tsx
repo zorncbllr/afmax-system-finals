@@ -17,6 +17,7 @@ import { useSignOff } from "@/features/auth/api/mutations";
 import { useNavigate } from "react-router";
 import { cn } from "@/lib/utils";
 import { useCartDrawer } from "@/features/cart/stores/cart-drawer-store";
+import { SERVER_BASEURL } from "@/lib/api";
 
 const Header = () => {
   const { toggleSidebar } = useSidebar();
@@ -83,7 +84,7 @@ const Header = () => {
                 {user?.profile ? (
                   <img
                     className="w-8 h-8 bg-cover rounded-full cursor-pointer font-semibold"
-                    src={`http://localhost:8000${user.profile}`}
+                    src={SERVER_BASEURL + user.profile}
                   />
                 ) : (
                   <div className="w-8 h-8 bg-cover rounded-full bg-primary-foreground cursor-pointer"></div>
@@ -95,7 +96,7 @@ const Header = () => {
                     {user?.profile ? (
                       <img
                         className="w-10 h-10 bg-cover rounded-full cursor-pointer"
-                        src={`http://localhost:8000${user.profile}`}
+                        src={SERVER_BASEURL + user.profile}
                       />
                     ) : (
                       <div className="w-10 h-10 bg-cover rounded-full bg-primary-foreground cursor-pointer"></div>

@@ -4,10 +4,12 @@ import { queryClient } from "@/main";
 import toast from "react-hot-toast";
 import { AxiosError } from "axios";
 import { useTransactionStore } from "@/features/transactions/store";
+import { useVerifySuccess } from "@/features/transactions/api/mutations";
 
 export const usePlaceOrder = () => {
   const client = queryClient;
   const { setTransactionId } = useTransactionStore();
+  const { mutate } = useVerifySuccess();
 
   return useMutation({
     mutationKey: ["orders"],
@@ -28,7 +30,11 @@ export const usePlaceOrder = () => {
 
       setTransactionId(data.transactionId);
 
-      window.location.href = data.checkOutLink;
+      open(data.checkOutLink);
+
+      setTimeout(() => {
+        mutate(data.transactionId);
+      }, 10000);
     },
 
     onError: (error: AxiosError<{ message: string }>) => {

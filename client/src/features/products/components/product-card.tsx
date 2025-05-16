@@ -1,3 +1,4 @@
+import { SERVER_BASEURL } from "@/lib/api";
 import { FlameIcon, HeartIcon } from "lucide-react";
 import React from "react";
 import { useNavigate } from "react-router";
@@ -39,7 +40,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
       )}
 
       <img
-        src={"http://localhost:8000" + image}
+        src={SERVER_BASEURL + image}
         alt={productName}
         className="h-44 lg:h-48 w-full object-cover"
       />

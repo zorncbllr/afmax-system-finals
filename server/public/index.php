@@ -1,5 +1,6 @@
 <?php
 
+
 use Dotenv\Dotenv;
 use Src\Core\App;
 use Src\Core\Database;

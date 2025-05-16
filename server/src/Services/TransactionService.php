@@ -38,8 +38,8 @@ class TransactionService
                     'description' => $description,
                     'amount' => $amount * 100,
                     'redirect' => [
-                        'success' => 'http://localhost:5173/transactions/success',
-                        'failed' => 'http://localhost:5173/transactions/failed'
+                        'success' => 'https://9db6-103-200-32-5.ngrok-free.app/transactions/success',
+                        'failed' => 'https://9db6-103-200-32-5.ngrok-free.app/transactions/failed'
                     ]
                 ]
             ]
@@ -111,7 +111,6 @@ class TransactionService
             $this->database->rollBack();
         }
     }
-
 
     public function handleFailedPayment(string $transactionId): array
     {

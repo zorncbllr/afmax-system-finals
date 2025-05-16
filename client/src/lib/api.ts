@@ -1,8 +1,10 @@
 import { refreshToken } from "@/features/auth/api/services";
 import axios from "axios";
 
+export const SERVER_BASEURL = "http://localhost:8000";
+
 export const axiosInstance = axios.create({
-  baseURL: "http://localhost:8000/api/v1",
+  baseURL: `${SERVER_BASEURL}/api/v1`,
   headers: {
     "Content-Type": "application/json",
   },

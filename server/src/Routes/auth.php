@@ -12,12 +12,10 @@ return function (Router $router) {
         [AuthController::class, "attemptSignIn"]
     );
 
-    $router
-        ->middleware(LoggerMiddleware::class)
-        ->post(
-            "/auth/refresh",
-            [AuthController::class, "refreshSession"]
-        );
+    $router->post(
+        "/auth/refresh",
+        [AuthController::class, "refreshSession"]
+    );
 
     $router
         ->post(
