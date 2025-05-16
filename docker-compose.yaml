@@ -12,7 +12,8 @@ services:
     build:
       dockerfile: ./server/Dockerfile
     volumes:
-      - ./server:/server
+      - /var/www/html/vendor
+      - ./server:/var/www/html
     env_file:
       - ./server/.env
 
