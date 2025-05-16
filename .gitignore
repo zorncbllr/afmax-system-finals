@@ -1,6 +1,7 @@
 server/vendor/
 
 server/.env
+.env
 
 ngrok.yml
 

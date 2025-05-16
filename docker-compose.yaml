@@ -13,6 +13,24 @@ services:
       dockerfile: ./server/Dockerfile
     volumes:
       - ./server:/server
+    env_file:
+      - ./server/.env
 
   # mysql
+  database:
+    image: mysql:lts
+    volumes:
+      - mysqldata:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+
   # redis
+
+volumes:
+  mysqldata:
