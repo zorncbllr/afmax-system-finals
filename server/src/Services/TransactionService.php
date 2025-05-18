@@ -7,6 +7,7 @@ use PDOException;
 use Src\Core\Database;
 use Src\Core\Exceptions\ServiceException;
 use Src\Core\Exceptions\TransactionException;
+use Src\Models\DTOs\TransactionDTO;
 use Src\Models\Invoice;
 use Src\Models\Transaction;
 use Src\Repositories\CartItemRepository;
@@ -35,6 +36,12 @@ class TransactionService
         protected CartItemRepository $cartItemRepository,
         protected Client $client
     ) {}
+
+    /** @return array<TransactionDTO> */
+    public function getAllTransactions(): array
+    {
+        return $this->transactionRepository->getAllTransactions();
+    }
 
     public function createLink(string $remarks, string $description, float $amount): array
     {
@@ -115,7 +122,7 @@ class TransactionService
 
             $payment = $this->paymentRepository
                 ->createPayment(
-                    $attributes->amount,
+                    $attributes->amount / 100,
                     $paymentMethod->paymentMethodId
                 );
 

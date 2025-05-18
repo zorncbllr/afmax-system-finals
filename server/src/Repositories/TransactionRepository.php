@@ -4,6 +4,7 @@ namespace Src\Repositories;
 
 use PDO;
 use Src\Core\Database;
+use Src\Models\DTOs\TransactionDTO;
 use Src\Models\Transaction;
 
 class TransactionRepository
@@ -13,13 +14,30 @@ class TransactionRepository
         protected Database $database
     ) {}
 
-    public function getAllTransaction()
+    /** @return array<TransactionDTO> */
+    public function getAllTransactions(): array
     {
-        $stmt = $this->database->prepare("");
+        $stmt = $this->database->prepare(
+            "SELECT 
+                t.`transactionId`,  
+                `fullName` as user, 
+                email, 
+                amount, 
+                methodName as payment,
+                description,
+                t.`createdAt` as date
+            FROM transactions t
+            JOIN orders o ON t.`orderId` = o.`orderId`
+            JOIN carts c ON c.`cartId` = o.`cartId`
+            JOIN users u ON u.`userId` = c.`userId`
+            JOIN payments p ON p.`paymentId` = t.`paymentId`
+            JOIN invoices i ON i.`orderId` = o.`orderId`
+            JOIN `paymentMethods` pm ON pm.`paymentMethodId` = p.`paymentMethodId`"
+        );
 
         $stmt->execute();
 
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $stmt->fetchAll(PDO::FETCH_CLASS, TransactionDTO::class);
     }
 
     public function getTransactionById(string $transactionId): Transaction|false

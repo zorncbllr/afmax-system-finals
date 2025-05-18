@@ -1,5 +1,9 @@
 import { axiosInstance } from "@/lib/api";
-import { TransactionResponse } from "../types";
+import { Transaction, TransactionResponse } from "../types";
+
+export const getTransactions = async (): Promise<Transaction[]> => {
+  return (await axiosInstance.get<Transaction[]>("/transactions")).data;
+};
 
 export const handleSuccessTransaction = async (data: {
   transactionId: string;

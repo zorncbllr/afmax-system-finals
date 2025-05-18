@@ -5,6 +5,61 @@ import { BreadcrumbItem, useBreadcrumb } from "@/features/breadcrumbs/store";
 import { useAuthStore } from "../../auth/store";
 import ForbiddenPage from "@/components/forbidden-page";
 
+import { ColumnDef } from "@tanstack/react-table";
+import { Transaction } from "../types";
+import { useFetchTransactions } from "../api/queries";
+import { DataTable } from "@/components/data-table";
+
+export const columns: ColumnDef<Transaction>[] = [
+  {
+    accessorKey: "transactionId",
+    header: "Transaction ID",
+  },
+  {
+    accessorKey: "user",
+    header: "User",
+  },
+  {
+    accessorKey: "email",
+    header: "Email",
+  },
+  {
+    accessorKey: "amount",
+    header: "Amount",
+    cell: ({ row }) => {
+      const amount = parseFloat(row.getValue("amount"));
+      const formatted = new Intl.NumberFormat("en-PH", {
+        style: "currency",
+        currency: "PHP",
+      }).format(amount);
+
+      return <div className="font-medium">{formatted}</div>;
+    },
+  },
+  {
+    accessorKey: "payment",
+    header: "Payment Method",
+  },
+  {
+    accessorKey: "description",
+    header: "Description",
+  },
+  {
+    accessorKey: "date",
+    header: "Date",
+    cell: ({ row }) => {
+      const date = new Date(row.getValue("date"));
+      const formattedDate = date.toLocaleDateString("en-PH", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      });
+
+      return <div>{formattedDate}</div>;
+    },
+  },
+];
+
 export const breadcrumbList: BreadcrumbItem[] = [
   {
     href: "/admin/dashboard",
@@ -20,6 +75,7 @@ const AdminTransactions = () => {
   const { setActiveItem, sidebarProps } = useSidebar();
   const { setBreadcrumbList, setActivePage } = useBreadcrumb();
   const { isAuthenticated, user } = useAuthStore();
+  const { data: transactions, isSuccess } = useFetchTransactions();
 
   useEffect(() => {
     setActiveItem(sidebarProps?.sections[0].items[5]);
@@ -33,7 +89,17 @@ const AdminTransactions = () => {
 
   return (
     <AdminLayout>
-      <h1>AdminTransactions</h1>
+      <h1>Orders</h1>
+      {isSuccess && (
+        <>
+          <DataTable
+            actions={[<></>]}
+            columnFilter="user"
+            columns={columns}
+            data={transactions!}
+          />
+        </>
+      )}
     </AdminLayout>
   );
 };

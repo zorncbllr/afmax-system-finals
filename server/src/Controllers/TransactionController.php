@@ -16,6 +16,14 @@ class TransactionController
         $this->transactionService = TransactionServiceProvider::makeTransactionService();
     }
 
+    public function getAllTransactions()
+    {
+        $transactions = $this->transactionService->getAllTransactions();
+
+        status(200);
+        return json($transactions);
+    }
+
     public function retrieveSuccessTransaction(Request $request)
     {
         try {
@@ -25,7 +33,7 @@ class TransactionController
             $this->transactionService->handleSuccessPayment($transactionId, $orderId);
 
             status(200);
-            return json(["message" => "Payment Transaction status has been updated."]);
+            return json(["message" => "Payment Transaction has been recorded."]);
         } catch (ServiceException $e) {
 
             status(400);
