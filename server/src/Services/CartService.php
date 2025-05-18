@@ -10,6 +10,7 @@ use Src\Models\DTOs\CartDTO;
 use Src\Repositories\CartItemRepository;
 use Src\Repositories\CartRepository;
 use Src\Repositories\ProductRepository;
+use Src\Repositories\UnitRepository;
 use Src\Repositories\UserRepository;
 
 class CartService
@@ -21,7 +22,8 @@ class CartService
         protected CartItemRepository $cartItemRepository,
         protected ProductRepository $productRepository,
         protected UserRepository $userRepository,
-        protected CartDTOFactory $cartDTOFactory
+        protected CartDTOFactory $cartDTOFactory,
+        protected UnitRepository $unitRepository
     ) {}
 
     public function getUserCart(int $userId): CartDTO
@@ -53,7 +55,7 @@ class CartService
         return $cartDTO;
     }
 
-    public function addToCart(int $productId, int $userId, int $quantity)
+    public function addToCart(int $productId, int $userId, int $quantity, string $unit)
     {
         try {
             $this->database->beginTransaction();
@@ -70,13 +72,16 @@ class CartService
                 throw new ServiceException("Product does not exist.");
             }
 
+            $unit = $this->unitRepository->getUnitByName($unit);
+
             try {
                 $this
                     ->cartItemRepository
                     ->createItem(
                         $cart->cartId,
                         $product->productId,
-                        $quantity
+                        $quantity,
+                        $unit->unitId
                     );
             } catch (PDOException $e) {
 

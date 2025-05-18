@@ -39,9 +39,10 @@ class CartController
         $userId = $request->authId;
         $productId = $request->body->productId;
         $quantity = $request->body->quantity;
+        $unit = $request->body->unit;
 
         try {
-            $this->cartService->addToCart($productId, $userId, $quantity);
+            $this->cartService->addToCart($productId, $userId, $quantity, $unit);
 
             status(200);
             return json(["message" => "Item has been added to cart."]);

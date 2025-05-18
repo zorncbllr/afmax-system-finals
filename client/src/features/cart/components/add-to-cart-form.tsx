@@ -2,7 +2,15 @@ import Modal from "@/components/modal";
 import ModalLayout from "@/layouts/modal-layout";
 import { useCartFormStore } from "../stores/cart-form-store";
 import { MinusIcon, PlusIcon, TicketPlusIcon } from "lucide-react";
-
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { ProductDetails } from "@/features/products/types";
 import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
@@ -15,6 +23,7 @@ import { SERVER_BASEURL } from "@/lib/api";
 const AddToCartForm = ({ product }: { product: ProductDetails }) => {
   const { isOpen, setIsOpen } = useCartFormStore();
   const [quantity, setQuantity] = useState<number>(1);
+  const [unit, setUnit] = useState<string>(product.units[0]);
   const [totalPrice, setTotalPrice] = useState<number>(product.price);
   const { mutate } = useAddToCart();
   const { isAuthenticated, user } = useAuthStore();
@@ -30,7 +39,7 @@ const AddToCartForm = ({ product }: { product: ProductDetails }) => {
 
   const addToCart = () => {
     if (isAuthenticated && user?.role === "User") {
-      mutate({ productId: product.productId, quantity });
+      mutate({ productId: product.productId, quantity, unit });
     }
 
     if (user?.role === "Admin") {
@@ -73,7 +82,7 @@ const AddToCartForm = ({ product }: { product: ProductDetails }) => {
               />
             </div>
 
-            <div className="ml-4 mt-8 flex flex-1 flex-col">
+            <div className="ml-4 mt-8 gap-4 flex flex-1 flex-col">
               <div>
                 <div className="flex justify-between font-semibold text-lg text-gray-700">
                   <h3>
@@ -103,6 +112,26 @@ const AddToCartForm = ({ product }: { product: ProductDetails }) => {
                     <MinusIcon />
                   </Button>
                 </div>
+              </div>
+
+              <div className="flex flex-1 items-center justify-between text-sm">
+                <p className="text-gray-500 font-semibold">{unit} Unit</p>
+
+                <Select onValueChange={(value) => setUnit(value)}>
+                  <SelectTrigger className="w-fit">
+                    <SelectValue placeholder="Select a unit" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      <SelectLabel>Units</SelectLabel>
+                      {product.units.map((unit) => (
+                        <SelectItem key={unit} value={unit}>
+                          {unit}
+                        </SelectItem>
+                      ))}
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
               </div>
             </div>
           </div>

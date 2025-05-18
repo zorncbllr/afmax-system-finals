@@ -29,6 +29,7 @@ export interface ProductDetails {
   updatedAt: string;
   images: string[];
   categories: string[];
+  units: string[];
   isFeatured: boolean;
 }
 

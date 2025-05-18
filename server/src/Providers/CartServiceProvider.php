@@ -8,6 +8,7 @@ use Src\Factories\ProductDTOFactory;
 use Src\Repositories\CartItemRepository;
 use Src\Repositories\CartRepository;
 use Src\Repositories\ProductRepository;
+use Src\Repositories\UnitRepository;
 use Src\Repositories\UserRepository;
 use Src\Services\CartService;
 
@@ -23,6 +24,7 @@ class CartServiceProvider
             cartRepository: new CartRepository($database),
             userRepository: new UserRepository($database),
             productRepository: new ProductRepository($database),
+            unitRepository: new UnitRepository($database),
             cartDTOFactory: new CartDTOFactory(new ProductDTOFactory())
         );
     }

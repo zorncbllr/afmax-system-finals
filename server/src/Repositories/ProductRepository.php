@@ -61,8 +61,8 @@ class ProductRepository
             LEFT JOIN categories c ON pc.categoryId = c.categoryId
             LEFT JOIN inventories i ON i.productId = p.productId
             LEFT JOIN units u ON u.unitId = i.unitId
-            WHERE p.productId = :productId
-            GROUP BY p.productId;"
+            WHERE p.productId = :productId 
+            GROUP BY p.productId"
         );
 
         $stmt->execute(["productId" => $productId]);

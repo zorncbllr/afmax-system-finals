@@ -4,5 +4,5 @@ namespace Src\Models;
 
 class OrderDetail
 {
-    public int $orderDetailId, $orderId, $productId, $quantity;
+    public int $orderDetailId, $orderId, $productId, $quantity, $unitId;
 }

@@ -24,6 +24,7 @@ class CartDTOFactory
             $cartItem->cartItemId = $row["cartItemId"];
             $cartItem->product = $this->productDTOFactory->makeProductDTO($row);
             $cartItem->quantity = $row["quantity"];
+            $cartItem->unit = $row["unit"];
 
             $sum = $sum + ($cartItem->product->price * $cartItem->quantity);
 

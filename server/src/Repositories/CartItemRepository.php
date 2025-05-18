@@ -45,7 +45,19 @@ class CartItemRepository
     public function getAllJoined(int $cartId): array
     {
         $stmt = $this->database->prepare(
-            "SELECT * FROM `cartItems` ci
+            "SELECT 
+                ci.cartItemId,
+                ci.quantity,
+                ci.cartId,
+                p.productId,
+                p.productName,
+                p.brand,
+                p.price,
+                p.isFeatured,
+                p.image,
+                p.categories,
+                unitName as unit
+            FROM `cartItems` ci
             JOIN (
                 SELECT 
                     p.productId,
@@ -67,6 +79,7 @@ class CartItemRepository
                 LEFT JOIN categories c ON pc.categoryId = c.categoryId
                 GROUP BY p.`productId`
             ) p ON p.`productId` =  ci.`productId`
+            LEFT JOIN units u ON u.`unitId` = ci.`unitId`
             WHERE ci.`cartId` = :cartId"
         );
 
@@ -75,14 +88,15 @@ class CartItemRepository
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function createItem(int $cartId, int $productId, int $quantity): CartItem
+    public function createItem(int $cartId, int $productId, int $quantity, int $unitId): CartItem
     {
         $stmt = $this->database->prepare(
-            "INSERT INTO cartItems (cartId, productId, quantity)
-            VALUES (:cartId, :productId, :quantity)"
+            "INSERT INTO cartItems (cartId, productId, quantity, unitId)
+            VALUES (:cartId, :productId, :quantity, :unitId)"
         );
 
         $stmt->execute([
+            "unitId" => $unitId,
             "cartId" => $cartId,
             "productId" => $productId,
             "quantity" => $quantity
@@ -91,6 +105,7 @@ class CartItemRepository
         $cartItem = new CartItem();
         $cartItem->cartItemId = $this->database->lastInsertId();
         $cartItem->cartId = $cartId;
+        $cartItem->unitId = $unitId;
         $cartItem->productId = $productId;
 
         return $cartItem;

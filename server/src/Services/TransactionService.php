@@ -153,7 +153,12 @@ class TransactionService
             foreach ($orderDetails as $detail) {
 
                 $this->cartItemRepository
-                    ->createItem($cart->cartId, $detail->productId, $detail->quantity);
+                    ->createItem(
+                        $cart->cartId,
+                        $detail->productId,
+                        $detail->quantity,
+                        $detail->unitId
+                    );
             }
 
             $this->orderDetailRepository->clearOrderDetails($order->orderId);

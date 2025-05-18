@@ -16,13 +16,15 @@ class CartValidator extends Middleware
         $rules = [
             "userId" => "required|numeric|min:1",
             "productId" => "required|numeric|min:1",
-            "quantity" => "required|numeric|min:1"
+            "quantity" => "required|numeric|min:1",
+            "unit" => "required",
         ];
 
         $validation = $validator->validate([
             "userId" => $request->authId ?? null,
             "productId" => $request->body->productId ?? null,
-            "quantity" => $request->body->quantity ?? null
+            "quantity" => $request->body->quantity ?? null,
+            "unit" => $request->body->unit ?? null
         ], $rules);
 
         if ($validation->fails()) {

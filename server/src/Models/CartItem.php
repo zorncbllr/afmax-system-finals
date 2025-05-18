@@ -4,5 +4,5 @@ namespace Src\Models;
 
 class CartItem
 {
-    public int $cartItemId, $cartId, $productId, $quantity;
+    public int $cartItemId, $cartId, $productId, $quantity, $unitId;
 }

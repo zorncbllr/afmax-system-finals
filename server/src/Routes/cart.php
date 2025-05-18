@@ -15,9 +15,8 @@ return function (Router $router) {
         ->middleware(AuthMiddleware::class, CartValidator::class)
         ->post("/user/cart", [CartController::class, "addItemToCart"]);
 
-
     $router
-        ->middleware(AuthMiddleware::class, CartValidator::class)
+        ->middleware(AuthMiddleware::class)
         ->patch("/user/cart", [CartController::class, "updateCartItem"]);
 
     $router

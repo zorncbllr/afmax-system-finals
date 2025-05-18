@@ -14,7 +14,7 @@ import { SERVER_BASEURL } from "@/lib/api";
 
 export const ProductViewSkeleton = () => {
   return (
-    <div className="w-full flex gap-40 justify-center mt-12">
+    <div className="w-full flex gap-40 justify-around mt-12">
       <div className="flex w-fit gap-4">
         <div className="flex flex-col gap-4">
           <Skeleton className="w-[9rem] h-[9rem] object-cover shadow-sm" />
@@ -78,20 +78,6 @@ const ProductView = ({ product }: { product: ProductDetails }) => {
   const [mainImage, setMainImage] = useState<string>("");
   const { setIsOpen } = useCartFormStore();
   const textareaRef = useAutoResizeTextarea("");
-
-  // const { isAuthenticated, user } = useAuthStore();
-  // const { mutate } = useAddToCart();
-  // const navigate = useNavigate();
-
-  // const addItemToCart = () => {
-  //   if (!isAuthenticated) {
-  //     navigate("/auth/sign-in");
-  //   }
-
-  //   if (user?.role != "User") return;
-
-  //   mutate({ productId: product.productId, quantity: 1 });
-  // };
 
   const formattedPrice = new Intl.NumberFormat("fil-PH", {
     style: "currency",
@@ -159,6 +145,19 @@ const ProductView = ({ product }: { product: ProductDetails }) => {
 
           <Button variant={"secondary"}>Buy Now</Button>
         </div>
+
+        {product.units.length > 0 && (
+          <>
+            <h1 className="text-lg font-semibold text-gray-500 block mt-8">
+              Units:
+            </h1>
+            <div className="flex gap-2 items-center">
+              {product.units.map((unit) => (
+                <CategoryBadge category={unit} />
+              ))}
+            </div>
+          </>
+        )}
 
         <div className="flex flex-col w-full gap-4 mt-4">
           <h1 className="text-lg font-semibold text-gray-500">

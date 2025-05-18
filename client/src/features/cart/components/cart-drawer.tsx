@@ -89,9 +89,14 @@ export default function CartDrawer() {
                                     )}
                                   </p>
                                 </div>
-                                <p className="mt-1 text-sm text-gray-500">
-                                  {item.product.brand}
-                                </p>
+                                <div className="flex justify-between">
+                                  <p className="mt-1 text-sm text-gray-500">
+                                    {item.product.brand}
+                                  </p>
+                                  <p className="mt-1 text-sm text-gray-500">
+                                    {item.unit}
+                                  </p>
+                                </div>
                               </div>
                               <div className="flex flex-1 items-center justify-between text-sm">
                                 <p className="text-gray-500">
@@ -104,6 +109,7 @@ export default function CartDrawer() {
                                       updateItem({
                                         productId: item.product.productId,
                                         quantity: item.quantity + 1,
+                                        unit: item.unit,
                                       })
                                     }
                                     variant={"ghost"}
@@ -115,6 +121,7 @@ export default function CartDrawer() {
                                       updateItem({
                                         productId: item.product.productId,
                                         quantity: item.quantity - 1,
+                                        unit: item.unit,
                                       })
                                     }
                                     variant={"ghost"}

@@ -109,9 +109,11 @@ CREATE TABLE cartItems(
     cartItemId INT PRIMARY KEY AUTO_INCREMENT,
     cartId INT NOT NULL,
     productId INT NOT NULL,
+    unitId INT NOT NULL,
     quantity INT NOT NULL,
     UNIQUE KEY uniqueCartItem (cartId, productId),
     FOREIGN KEY(cartId) REFERENCES carts(cartId) ON DELETE CASCADE,
+    FOREIGN KEY (unitId) REFERENCES units(unitId) ON DELETE CASCADE,
     FOREIGN KEY(productId) REFERENCES products(productId) ON DELETE CASCADE
 );
 
@@ -127,11 +129,13 @@ CREATE TABLE orders(
 CREATE TABLE orderDetails(
     orderDetailId INT PRIMARY KEY AUTO_INCREMENT,
     orderId INT NOT NULL,
+    unitId INT NOT NULL,
     productId INT NOT NULL,
     quantity INT NOT NULL,
     createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (orderId) REFERENCES orders(orderId) ON DELETE CASCADE,
+    FOREIGN KEY (unitId) REFERENCES units(unitId) ON DELETE CASCADE,
     FOREIGN KEY (productId) REFERENCES products(productId) ON DELETE RESTRICT 
 );
 

@@ -55,7 +55,7 @@ class ProductService
         return $products;
     }
 
-    /** @return Product */
+    /** @return ProductDetailsDTO */
     public function getProductDetails(int $productId): ProductDetailsDTO
     {
         $row = $this->productRepository->getProductDetails($productId);

@@ -28,11 +28,12 @@ class OrderDetailRepository
     public function addProductOrder(OrderDetail $orderDetail)
     {
         $stmt = $this->database->prepare(
-            "INSERT INTO orderDetails (orderId, productId, quantity)
-            VALUES (:orderId, :productId, :quantity)"
+            "INSERT INTO orderDetails (orderId, productId, quantity, unitId)
+            VALUES (:orderId, :productId, :quantity, :unitId)"
         );
 
         $stmt->execute([
+            "unitId" => $orderDetail->unitId,
             "orderId" => $orderDetail->orderId,
             "productId" => $orderDetail->productId,
             "quantity" => $orderDetail->quantity
