@@ -4,6 +4,7 @@ use Src\Controllers\InventoryController;
 use Src\Core\Router;
 use Src\Middlewares\AuthMiddleware;
 use Src\Middlewares\AuthorizationMiddleware;
+use Src\Middlewares\Validators\InventoryValidator;
 
 return function (Router $router) {
 
@@ -13,16 +14,28 @@ return function (Router $router) {
             AuthMiddleware::class,
             AuthorizationMiddleware::class
         )
-        ->get([InventoryController::class, "getInventoryData"])
-        ->post([InventoryController::class, "createNewInventory"]);
+        ->get([InventoryController::class, "getInventoryData"]);
+
+    $router
+        ->middleware(
+            AuthMiddleware::class,
+            AuthorizationMiddleware::class,
+            InventoryValidator::class
+        )->post("/inventory", [InventoryController::class, "createNewInventory"]);
 
     $router
         ->route("/inventory/{inventoryId}")
         ->middleware(
             AuthMiddleware::class,
-            AuthorizationMiddleware::class
+            AuthorizationMiddleware::class,
+            InventoryValidator::class
         )
         ->get([InventoryController::class, "getInventoryDataById"])
-        ->delete([InventoryController::class, 'deleteInventory'])
         ->patch([InventoryController::class, 'updateInventory']);
+
+    $router
+        ->middleware(
+            AuthMiddleware::class,
+            AuthorizationMiddleware::class,
+        )->delete("/inventory/{inventoryId}", [InventoryController::class, 'deleteInventory']);
 };

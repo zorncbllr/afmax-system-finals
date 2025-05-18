@@ -46,8 +46,8 @@ class AuthController
         ];
 
         $validation = $validator->validate([
-            "email" => $request->body->email,
-            "password" => $request->body->password
+            "email" => $request->body->email ?? null,
+            "password" => $request->body->password ?? null
         ], $rules);
 
         if ($validation->fails()) {

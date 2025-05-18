@@ -131,7 +131,7 @@ class InventoryService
 
             $inventory->expiration = null;
 
-            if ($request->body->expiration) {
+            if (isset($request->body->expiration)) {
 
                 $inventory->expiration = (new DateTime($request->body->expiration))->format('Y-m-d');
             }
