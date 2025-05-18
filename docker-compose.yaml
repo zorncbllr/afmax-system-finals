@@ -23,6 +23,8 @@ services:
   # mysql
   database:
     image: mysql:lts
+    ports:
+      - "3306:3306"
     volumes:
       - mysqldata:/var/lib/mysql
     restart: unless-stopped
