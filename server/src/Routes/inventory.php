@@ -9,12 +9,15 @@ use Src\Middlewares\Validators\InventoryValidator;
 return function (Router $router) {
 
     $router
-        ->route("/inventory")
         ->middleware(
             AuthMiddleware::class,
             AuthorizationMiddleware::class
         )
-        ->get([InventoryController::class, "getInventoryData"]);
+        ->get("/inventory", [InventoryController::class, "getInventoryData"]);
+
+    $router
+        ->middleware(AuthMiddleware::class, AuthorizationMiddleware::class)
+        ->get("/inventory/{inventoryId}", [InventoryController::class, "getInventoryDataById"]);
 
     $router
         ->middleware(
@@ -24,14 +27,12 @@ return function (Router $router) {
         )->post("/inventory", [InventoryController::class, "createNewInventory"]);
 
     $router
-        ->route("/inventory/{inventoryId}")
         ->middleware(
             AuthMiddleware::class,
             AuthorizationMiddleware::class,
             InventoryValidator::class
         )
-        ->get([InventoryController::class, "getInventoryDataById"])
-        ->patch([InventoryController::class, 'updateInventory']);
+        ->patch("/inventory/{inventoryId}", [InventoryController::class, 'updateInventory']);
 
     $router
         ->middleware(
