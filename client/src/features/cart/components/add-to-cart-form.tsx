@@ -10,6 +10,7 @@ import { useAddToCart } from "../api/mutations";
 import { useAuthStore } from "@/features/auth/store";
 import { useNavigate } from "react-router";
 import toast from "react-hot-toast";
+import { SERVER_BASEURL } from "@/lib/api";
 
 const AddToCartForm = ({ product }: { product: ProductDetails }) => {
   const { isOpen, setIsOpen } = useCartFormStore();
@@ -67,7 +68,7 @@ const AddToCartForm = ({ product }: { product: ProductDetails }) => {
             <div className="size-60 shrink-0 overflow-hidden rounded-md border border-gray-200">
               <img
                 alt="Cart Item"
-                src={`http://localhost:8000${product.images[0]}`}
+                src={SERVER_BASEURL + product.images[0]}
                 className="size-full object-cover rounded-lg"
               />
             </div>

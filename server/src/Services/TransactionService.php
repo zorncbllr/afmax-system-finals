@@ -56,7 +56,7 @@ class TransactionService
 
         $responseBody = json_decode($response->getBody(), false);
 
-        if ($responseBody->errors) {
+        if (isset($responseBody->errors)) {
 
             throw new TransactionException(
                 $responseBody->errors[0]->detail,
@@ -74,7 +74,7 @@ class TransactionService
         $transaction->status = $attributes->status;
         $transaction->amount = $attributes->amount;
         $transaction->checkOutUrl = $attributes->checkout_url;
-        $transaction->referenceNumber = $attributes->referenceNumber;
+        $transaction->referenceNumber = $attributes->referenceNumber ?? null;
         $transaction->orderId = $orderId;
 
         try {
