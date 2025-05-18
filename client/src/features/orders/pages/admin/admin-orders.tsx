@@ -70,12 +70,12 @@ export const columns: ColumnDef<Order>[] = [
     header: "Total Amount",
     cell: ({ row }) => {
       const amount = parseFloat(row.getValue("totalAmount"));
-      const formatted = new Intl.NumberFormat("en-US", {
+      return new Intl.NumberFormat("fil-PH", {
         style: "currency",
-        currency: "USD",
+        currency: "PHP",
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 2,
       }).format(amount);
-
-      return <div className="font-medium">{formatted}</div>;
     },
   },
   {
