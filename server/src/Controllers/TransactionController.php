@@ -19,14 +19,10 @@ class TransactionController
     public function retrieveSuccessTransaction(Request $request)
     {
         try {
-            $transactionId = $request->body->transactionId ?? null;
+            $transactionId = $request->body->transactionId;
+            $orderId = $request->body->orderId;
 
-            if (!$transactionId) {
-                status(400);
-                return json(["message" => "TransactionId is required to verify transaction."]);
-            }
-
-            $this->transactionService->handleSuccessPayment($transactionId);
+            $this->transactionService->handleSuccessPayment($transactionId, $orderId);
 
             status(200);
             return json(["message" => "Payment Transaction status has been updated."]);
@@ -40,17 +36,12 @@ class TransactionController
     public function retrieveFailedTransaction(Request $request)
     {
         try {
-            $transactionId = $request->body->transactionId ?? null;
+            $orderId = $request->body->orderId;
 
-            if (!$transactionId) {
-                status(400);
-                return json(["message" => "TransactionId is required to verify transaction."]);
-            }
-
-            $error = $this->transactionService->handleFailedPayment($transactionId);
+            $error = $this->transactionService->handleFailedPayment($orderId);
 
             status(200);
-            return json(["message" => $error["message"]]);
+            return json(["message" => $error]);
         } catch (ServiceException $e) {
 
             status(400);

@@ -61,6 +61,8 @@ class InventoryRepository
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
+    public function getInventoryByProductId(int $productId) {}
+
     public function createInventory(int $productId): Inventory
     {
         $stmt = $this->database->prepare(
@@ -94,6 +96,21 @@ class InventoryRepository
             "unitId" => $inventory->unitId,
             "quantity" => $inventory->quantity,
             "expiration" => $inventory->expiration
+        ]);
+    }
+
+
+    public function updateQuantity(int $inventoryId, int $quantity)
+    {
+        $stmt = $this->database->prepare(
+            "UPDATE inventories
+            SET quantity = :quantity
+            WHERE inventoryId = :inventoryId"
+        );
+
+        $stmt->execute([
+            "inventoryId" => $inventoryId,
+            "quantity" => $quantity,
         ]);
     }
 

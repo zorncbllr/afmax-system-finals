@@ -27,6 +27,11 @@ class Kernel
             case "-g":
                 $this->handleGenerate();
                 break;
+            case "enable":
+                if ($this->argv[2] == "images") {
+                    shell_exec("mkdir ./public/images && sudo chown -R \$USER:82 ./public/images && sudo chmod -R 775 ./public/images");
+                }
+                break;
         }
     }
 

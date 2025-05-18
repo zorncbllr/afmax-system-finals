@@ -2,16 +2,17 @@
 
 namespace Src\Services;
 
-use GuzzleHttp\Client;
 use PDOException;
 use Src\Core\Database;
 use Src\Core\Exceptions\ServiceException;
 use Src\Core\Exceptions\TransactionException;
 use Src\Models\DTOs\OrderDTO;
+use Src\Models\Invoice;
 use Src\Models\OrderDetail;
 use Src\Models\Transaction;
 use Src\Repositories\CartItemRepository;
 use Src\Repositories\CartRepository;
+use Src\Repositories\InvoiceRepository;
 use Src\Repositories\OrderDetailRepository;
 use Src\Repositories\OrderRepository;
 use Src\Repositories\UserRepository;
@@ -25,6 +26,7 @@ class OrderService
         protected OrderDetailRepository $orderDetailRepository,
         protected UserRepository $userRepository,
         protected CartRepository $cartRepository,
+        protected InvoiceRepository $invoiceRepository,
         protected CartItemRepository $cartItemRepository,
         protected TransactionService $transactionService
     ) {}
@@ -38,7 +40,7 @@ class OrderService
         return $orders;
     }
 
-    public function placeOrder(int $userId): Transaction
+    public function placeOrder(int $userId, bool $isDeposit): array
     {
         try {
             $this->database->beginTransaction();
@@ -61,7 +63,7 @@ class OrderService
                 throw new ServiceException("No cart items to checkout.");
             }
 
-            $order = $this->orderRepository->createOrder($cart->cartId);
+            $order = $this->orderRepository->createOrder($cart->cartId, 0);
 
             foreach ($cartItems as $item) {
                 $orderDetail = new OrderDetail();
@@ -76,16 +78,19 @@ class OrderService
 
             $orderDTO = $this->orderRepository->getOrderDTOById($order->orderId);
 
-            $transaction = $this->transactionService->createTransaction(
-                remarks: "",
-                description: "Partial payment for " . $orderDTO->orderList,
-                amount: $orderDTO->totalAmount / 2,
-                orderId: $order->orderId
+            $order->amountDue = $isDeposit ?  $orderDTO->totalAmount / 2 : $orderDTO->totalAmount;
+
+            $this->orderRepository->updateOrder($order->orderId, $order->amountDue);
+
+            $transactionLink = $this->transactionService->createLink(
+                remarks: "Carier will be daily overland.",
+                description: "Partial payment for " +  $orderDTO->orderList,
+                amount: $order->amountDue,
             );
 
             $this->database->commit();
 
-            return $transaction;
+            return $transactionLink;
         } catch (PDOException $e) {
 
             $this->database->rollBack();
@@ -95,7 +100,7 @@ class OrderService
 
             $this->database->rollBack();
 
-            throw new ServiceException($e->getMessage(), $e->getCode());
+            throw new TransactionException($e->getMessage(), $e->getCode());
         }
     }
 }

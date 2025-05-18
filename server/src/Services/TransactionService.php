@@ -7,11 +7,16 @@ use PDOException;
 use Src\Core\Database;
 use Src\Core\Exceptions\ServiceException;
 use Src\Core\Exceptions\TransactionException;
+use Src\Models\Invoice;
 use Src\Models\Transaction;
 use Src\Repositories\CartItemRepository;
 use Src\Repositories\CartRepository;
+use Src\Repositories\InventoryRepository;
+use Src\Repositories\InvoiceRepository;
 use Src\Repositories\OrderDetailRepository;
 use Src\Repositories\OrderRepository;
+use Src\Repositories\PaymentMethodRepository;
+use Src\Repositories\PaymentRepository;
 use Src\Repositories\TransactionRepository;
 
 class TransactionService
@@ -21,16 +26,18 @@ class TransactionService
         protected Database $database,
         protected TransactionRepository $transactionRepository,
         protected OrderRepository $orderRepository,
+        protected PaymentRepository $paymentRepository,
+        protected PaymentMethodRepository $paymentMethodRepository,
         protected OrderDetailRepository $orderDetailRepository,
         protected CartRepository $cartRepository,
+        protected InvoiceRepository $invoiceRepository,
+        protected InventoryRepository $inventoryRepository,
         protected CartItemRepository $cartItemRepository,
         protected Client $client
     ) {}
 
-    public function createTransaction(string $remarks, string $description, float $amount, int $orderId): Transaction
+    public function createLink(string $remarks, string $description, float $amount): array
     {
-        $amount = $amount / 2 < 100 ? 100 : $amount;
-
         $payload = [
             'data' => [
                 'attributes' => [
@@ -64,30 +71,13 @@ class TransactionService
             );
         }
 
-        $attributes = $responseBody->data->attributes;
-
-        $transaction = new Transaction();
-
-        $transaction->transactionId = $responseBody->data->id;
-        $transaction->remarks = $attributes->remarks;
-        $transaction->description = $attributes->description;
-        $transaction->status = $attributes->status;
-        $transaction->amount = $attributes->amount;
-        $transaction->checkOutUrl = $attributes->checkout_url;
-        $transaction->referenceNumber = $attributes->referenceNumber ?? null;
-        $transaction->orderId = $orderId;
-
-        try {
-            $this->transactionRepository->createTransaction($transaction);
-        } catch (PDOException $e) {
-
-            throw new ServiceException($e->getMessage());
-        }
-
-        return $transaction;
+        return [
+            "transactionId" => $responseBody->data->id,
+            "checkoutLink" => $$responseBody->data->attributes->checkout_url
+        ];
     }
 
-    public function handleSuccessPayment(string $transactionId)
+    public function handleSuccessPayment(string $transactionId, int $orderId)
     {
         try {
             $this->database->beginTransaction();
@@ -103,41 +93,62 @@ class TransactionService
             $paymentData = json_decode($response->getBody(), false);
             $attributes = $paymentData->data->attributes;
 
-            $this->transactionRepository->updateStatus($attributes->status, $transactionId);
+            try {
+                $paymentMethod = $this->paymentMethodRepository
+                    ->createPaymentMethod($attributes->source->type);
+            } catch (PDOException $_) {
 
-            $this->database->commit();
+                $paymentMethod = $this->paymentMethodRepository
+                    ->getMethodByName($attributes->source->type);
+            }
+
+            $payment = $this->paymentRepository
+                ->createPayment(
+                    $attributes->amount,
+                    $paymentMethod->paymentMethodId
+                );
+
+            $transaction = $this->transactionRepository
+                ->createTransaction($payment->paymentId);
+
+            $invoice = $this->invoiceRepository
+                ->createInvoice(
+                    orderId: $orderId,
+                    transactionId: $transaction->transactionId,
+                    description: $attributes->description,
+                    remarks: $attributes->remarks
+                );
+
+            $order = $this->orderRepository->getOrderById($orderId);
+
+            $this->orderRepository->updateOrder(
+                orderId: $order->orderId,
+                amountDue: $order->amountDue - $payment->amount
+            );
+
+            $orderDetails = $this->orderDetailRepository->getOrderDetails($order->orderId);
+
+            foreach ($orderDetails as $orderDetail) {
+            }
+
+            // TODO: INTEGRATE SYMPHONY MAILER & PDF GENERATOR
+
+            $this->$this->database->commit();
         } catch (PDOException $e) {
 
             $this->database->rollBack();
         }
     }
 
-    public function handleFailedPayment(string $transactionId): array
+    public function handleFailedPayment(int $orderId): string
     {
         try {
             $this->database->beginTransaction();
 
-            $response = $this->client->request('GET', 'https://api.paymongo.com/v1/links/' . $transactionId, [
-                'headers' => [
-                    'Accept' => 'application/json',
-                    'Authorization' => 'Basic ' . base64_encode($_ENV["PAYMONGO_SECRET"] . ":"),
-                    'Content-Type' => 'application/json',
-                ],
-            ]);
-
-            $paymentData = json_decode($response->getBody(), false);
-
-            $error = $paymentData->data->attributes->last_payment_error;
-
-            $transaction = $this->transactionRepository->getTransactionById($transactionId);
-
-            $this->transactionRepository->updateStatus("failed", $transaction->transactionId);
-
-            $order = $this->orderRepository->getOrderById($transaction->orderId);
+            $order = $this->orderRepository->getOrderById($orderId);
             $cart = $this->cartRepository->getCartById($order->cartId);
 
             $orderDetails = $this->orderDetailRepository->getOrderDetails($order->orderId);
-
 
             foreach ($orderDetails as $detail) {
 
@@ -151,7 +162,7 @@ class TransactionService
 
             $this->database->commit();
 
-            return ["code" => $error->code, "message" => $error->detail];
+            return "Unable to place user order.";
         } catch (PDOException $e) {
 
             $this->database->rollBack();

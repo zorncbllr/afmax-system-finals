@@ -1,5 +1,8 @@
 USE afmax_database;
 
+DROP TABLE IF EXISTS invoices;
+DROP TABLE IF EXISTS payments;
+DROP TABLE IF EXISTS paymentMethods;
 DROP TABLE IF EXISTS transactions;
 DROP TABLE IF EXISTS productImages;
 DROP TABLE IF EXISTS productCategories;
@@ -116,6 +119,8 @@ CREATE TABLE cartItems(
 CREATE TABLE orders(
     orderId INT PRIMARY KEY AUTO_INCREMENT,
     cartId INT NOT NULL,
+    amountDue DECIMAL(10, 2) NOT NULL,
+    status ENUM('Resolved', 'Pending', 'Canceled') DEFAULT 'Pending',
     FOREIGN KEY (cartId) REFERENCES carts(cartId) 
 );
 
@@ -133,24 +138,29 @@ CREATE TABLE orderDetails(
 CREATE TABLE transactions(
     transactionId VARCHAR(120) PRIMARY KEY NOT NULL,
     orderId INT NOT NULL,
-    checkOutUrl VARCHAR(255) NOT NULL,
-    amount DECIMAL(10, 2) NOT NULL,
-    description VARCHAR(100) NOT NULL,
-    status ENUM('unpaid', 'paid', 'failed') DEFAULT 'unpaid',
-    remarks VARCHAR(100) NOT NULL,
-    referenceNumber VARCHAR(50),
     createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (orderId) REFERENCES orders(orderId)
 );
 
+CREATE TABLE paymentMethods(
+    paymentMethodId INT PRIMARY KEY AUTO_INCREMENT,
+    methodName VARCHAR(50) UNIQUE NOT NULL
+);
 
--- CREATE TABLE Invoices(
---     invoiceId INT PRIMARY KEY AUTO_INCREMENT,
---     orderId INT NOT NULL,
---     transactionId INT NOT NULL,
---     status ENUM('Pending', 'Resolved') DEFAULT 'Pending',
---     balance DECIMAL(10, 2) NOT NULL, 
---     totalDue DECIMAL(10, 2) NOT NULL,
---     createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
--- );
+CREATE TABLE payments (
+    paymentId INT PRIMARY KEY AUTO_INCREMENT,
+    paymentMethodId INT NOT NULL,
+    amount DECIMAL(10,2) NOT NULL,
+    FOREIGN KEY (paymentMethodId) REFERENCES paymentMethods(paymentMethodId)
+);
+
+
+CREATE TABLE invoices(
+    invoiceId INT PRIMARY KEY AUTO_INCREMENT,
+    orderId INT NOT NULL,
+    transactionId INT NOT NULL,
+    description VARCHAR(255) NOT NULL,
+    remarks VARCHAR(100) NOT NULL,
+    issuedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);

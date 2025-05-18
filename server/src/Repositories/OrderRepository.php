@@ -79,21 +79,36 @@ class OrderRepository
         return $stmt->fetchObject(OrderDTO::class);
     }
 
-    public function createOrder(int $cartId): Order
+    public function createOrder(int $cartId, float $amountDue): Order
     {
         $stmt = $this->database->prepare(
-            "INSERT INTO orders (cartId)
-            VALUES (:cartId)"
+            "INSERT INTO orders (cartId, amountDue)
+            VALUES (:cartId, :amountDue)"
         );
 
-        $stmt->execute(["cartId" => $cartId]);
+        $stmt->execute([
+            "cartId" => $cartId,
+            "amountDue" => $amountDue
+        ]);
 
         $order = new Order();
-
+        $order->amountDue = $amountDue;
         $order->cartId = $cartId;
         $order->orderId = $this->database->lastInsertId();
 
         return $order;
+    }
+
+    public function updateOrder(int $orderId, float $amountDue)
+    {
+        $stmt = $this->database->prepare(
+            "UPDATE orders SET amountdue = :amountDue WHERE orderId = :orderId"
+        );
+
+        $stmt->execute([
+            "orderId" => $orderId,
+            "amountDue" => $amountDue
+        ]);
     }
 
     public function deleteOrder(int $orderId)

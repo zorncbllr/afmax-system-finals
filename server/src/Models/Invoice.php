@@ -4,5 +4,6 @@ namespace Src\Models;
 
 class Invoice
 {
-    public int $invoiceId;
+    public int $invoiceId, $orderId, $transactionId;
+    public string $description, $remarks;
 }

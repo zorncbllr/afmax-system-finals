@@ -6,6 +6,7 @@ use GuzzleHttp\Client;
 use Src\Core\App;
 use Src\Repositories\CartItemRepository;
 use Src\Repositories\CartRepository;
+use Src\Repositories\InvoiceRepository;
 use Src\Repositories\OrderDetailRepository;
 use Src\Repositories\OrderRepository;
 use Src\Repositories\TransactionRepository;
@@ -25,7 +26,8 @@ class OrderServiceProvider
             orderDetailRepository: new OrderDetailRepository($database),
             userRepository: new UserRepository($database),
             cartRepository: new CartRepository($database),
-            cartItemRepository: new CartItemRepository(($database)),
+            cartItemRepository: new CartItemRepository($database),
+            invoiceRepository: new InvoiceRepository($database),
             transactionService: TransactionServiceProvider::makeTransactionService()
         );
     }

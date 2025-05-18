@@ -3,6 +3,7 @@
 namespace Src\Controllers;
 
 use Src\Core\Exceptions\ServiceException;
+use Src\Core\Exceptions\TransactionException;
 use Src\Core\Request;
 use Src\Providers\OrderServiceProvider;
 use Src\Services\OrderService;
@@ -27,6 +28,7 @@ class OrderController
     public function placeOrder(Request $request)
     {
         $userId = $request->authId ?? null;
+        $isDeposit = $request->isDeposit ?? true;
 
         if (!$userId) {
             status(401);
@@ -34,18 +36,22 @@ class OrderController
         }
 
         try {
-            $transaction = $this->orderService->placeOrder($userId);
+            $checkout = $this->orderService->placeOrder($userId, $isDeposit);
 
             status(200);
             return json([
-                "checkOutLink" => $transaction->checkOutUrl,
-                "transactionId" => $transaction->transactionId,
+                "checkoutLink" => $checkout["checkoutLink"],
+                "transactionId" => $checkout["transactionId"],
                 "message" => "User order has been placed."
             ]);
         } catch (ServiceException $e) {
 
             status(400);
             return json(["message" => $e->getMessage()]);
+        } catch (TransactionException $e) {
+
+            status(400);
+            return json(["amount" => $e->getMessage()]);
         }
     }
 }

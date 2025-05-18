@@ -33,93 +33,19 @@ class TransactionRepository
         return $stmt->fetchObject(Transaction::class);
     }
 
-    public function getTransactionWithPaymentIntentID(string $paymentIntentId): Transaction|false
+    public function createTransaction(int $paymentId): Transaction
     {
         $stmt = $this->database->prepare(
-            "SELECT * FROM transactions WHERE transactionId = :transactionId"
-        );
-
-        $stmt->execute(["transactionId" => $paymentIntentId]);
-
-        return $stmt->fetchObject(Transaction::class);
-    }
-
-    public function updateStatus(string $status, string $transactionId)
-    {
-        $stmt = $this->database->prepare(
-            "UPDATE transactions SET status = :status 
-            WHERE transactionId = :transactionId"
+            "INSERT INTO transactions (paymentId) VALUES (:paymentId)"
         );
 
         $stmt->execute([
-            'transactionId' => $transactionId,
-            "status" => $status
-        ]);
-    }
-
-    public function createTransaction(Transaction $transaction)
-    {
-        $stmt = $this->database->prepare(
-            "INSERT INTO transactions (
-                transactionId,
-                orderId,
-                checkOutUrl,
-                amount,
-                description,
-                status,
-                remarks,
-                referenceNumber
-            ) VALUES (
-                :transactionId,
-                :orderId,
-                :checkOutUrl,
-                :amount,
-                :description,
-                :status,
-                :remarks,
-                :referenceNumber
-            )"
-        );
-
-        $stmt->execute([
-            "transactionId" => $transaction->transactionId,
-            "orderId" => $transaction->orderId,
-            "checkOutUrl" => $transaction->checkOutUrl,
-            "amount" => $transaction->amount,
-            "description" => $transaction->description,
-            "status" => $transaction->status,
-            "remarks" => $transaction->remarks,
-            "referenceNumber" => $transaction->referenceNumber
+            "transactionId" => $paymentId,
         ]);
 
-        return $transaction;
-    }
-
-
-    public function updateTransaction(Transaction $transaction)
-    {
-        $stmt = $this->database->prepare(
-            "UPDATE transactions SET  
-                orderId = :orderId,
-                checkOutUrl = :checkOutUrl,
-                amount = :amount,
-                description = :description,
-                status = :status,
-                remarks = :remarks,
-                referenceNumber = :referenceNumber
-                WHERE transactionId = :transactionId"
-        );
-
-        $stmt->execute([
-            "transactionId" => $transaction->transactionId,
-            "orderId" => $transaction->orderId,
-            "checkOutUrl" => $transaction->checkOutUrl,
-            "amount" => $transaction->amount,
-            "description" => $transaction->description,
-            "status" => $transaction->status,
-            "remarks" => $transaction->remarks,
-            "referenceNumber" => $transaction->referenceNumber
-        ]);
+        $transaction = new Transaction();
+        $transaction->paymentId = $paymentId;
+        $transaction->transactionId = $this->database->lastInsertId();
 
         return $transaction;
     }
