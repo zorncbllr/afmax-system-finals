@@ -70,6 +70,7 @@ class OrderService
                 $orderDetail->quantity = $item->quantity;
                 $orderDetail->orderId = $order->orderId;
                 $orderDetail->productId = $item->productId;
+                $orderDetail->unitId = $item->unitId;
 
                 $this->orderDetailRepository->addProductOrder($orderDetail);
             }
@@ -84,7 +85,7 @@ class OrderService
 
             $transactionLink = $this->transactionService->createLink(
                 remarks: "Carier will be daily overland.",
-                description: "Partial payment for " +  $orderDTO->orderList,
+                description: "Partial payment for " .  $orderDTO->orderList,
                 amount: $order->amountDue,
             );
 

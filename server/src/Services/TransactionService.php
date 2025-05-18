@@ -73,7 +73,7 @@ class TransactionService
 
         return [
             "transactionId" => $responseBody->data->id,
-            "checkoutLink" => $$responseBody->data->attributes->checkout_url
+            "checkoutLink" => $responseBody->data->attributes->checkout_url
         ];
     }
 
