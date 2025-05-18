@@ -33,8 +33,9 @@ export const usePlaceOrder = () => {
       open(data.checkoutLink);
 
       setTimeout(() => {
+        console.log(data.transactionId);
         mutate(data.transactionId);
-      }, 10000);
+      }, 30000);
     },
 
     onError: (error: AxiosError<{ message: string }>) => {

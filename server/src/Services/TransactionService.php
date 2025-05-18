@@ -109,7 +109,7 @@ class TransactionService
                 );
 
             $transaction = $this->transactionRepository
-                ->createTransaction($payment->paymentId);
+                ->createTransaction($payment->paymentId, $orderId);
 
             $invoice = $this->invoiceRepository
                 ->createInvoice(

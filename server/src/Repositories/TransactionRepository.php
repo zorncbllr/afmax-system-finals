@@ -33,17 +33,19 @@ class TransactionRepository
         return $stmt->fetchObject(Transaction::class);
     }
 
-    public function createTransaction(int $paymentId): Transaction
+    public function createTransaction(int $paymentId, int $orderId): Transaction
     {
         $stmt = $this->database->prepare(
-            "INSERT INTO transactions (paymentId) VALUES (:paymentId)"
+            "INSERT INTO transactions (paymentId, orderId) VALUES (:paymentId, :orderId)"
         );
 
         $stmt->execute([
+            "orderId" => $orderId,
             "transactionId" => $paymentId,
         ]);
 
         $transaction = new Transaction();
+        $transaction->orderId = $orderId;
         $transaction->paymentId = $paymentId;
         $transaction->transactionId = $this->database->lastInsertId();
 

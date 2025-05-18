@@ -39,8 +39,6 @@ axiosInstance.interceptors.response.use(
       try {
         const newResponse = await refreshToken();
 
-        console.log(newResponse);
-
         localStorage.setItem("token", newResponse.accessToken);
         const refetchedResponse = await axiosInstance(error.config);
 
