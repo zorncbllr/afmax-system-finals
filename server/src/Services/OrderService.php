@@ -91,7 +91,10 @@ class OrderService
 
             $this->database->commit();
 
-            return $transactionLink;
+            return [
+                "orderId" => $order->orderId,
+                ...$transactionLink
+            ];
         } catch (PDOException $e) {
 
             $this->database->rollBack();

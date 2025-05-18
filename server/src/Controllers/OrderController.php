@@ -42,6 +42,7 @@ class OrderController
             return json([
                 "checkoutLink" => $checkout["checkoutLink"],
                 "transactionId" => $checkout["transactionId"],
+                "orderId" => $checkout["orderId"],
                 "message" => "User order has been placed."
             ]);
         } catch (ServiceException $e) {

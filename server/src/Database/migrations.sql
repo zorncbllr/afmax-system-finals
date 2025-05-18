@@ -123,6 +123,8 @@ CREATE TABLE orders(
     cartId INT NOT NULL,
     amountDue DECIMAL(10, 2) NOT NULL,
     status ENUM('Resolved', 'Pending', 'Canceled') DEFAULT 'Pending',
+    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (cartId) REFERENCES carts(cartId) 
 );
 
@@ -132,8 +134,6 @@ CREATE TABLE orderDetails(
     unitId INT NOT NULL,
     productId INT NOT NULL,
     quantity INT NOT NULL,
-    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (orderId) REFERENCES orders(orderId) ON DELETE CASCADE,
     FOREIGN KEY (unitId) REFERENCES units(unitId) ON DELETE CASCADE,
     FOREIGN KEY (productId) REFERENCES products(productId) ON DELETE RESTRICT 
@@ -142,8 +142,10 @@ CREATE TABLE orderDetails(
 CREATE TABLE transactions(
     transactionId VARCHAR(120) PRIMARY KEY NOT NULL,
     orderId INT NOT NULL,
+    paymentId VARCHAR(100) NOT NULL,
     createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (orderId) REFERENCES orders(orderId),
     FOREIGN KEY (orderId) REFERENCES orders(orderId)
 );
 
@@ -163,8 +165,10 @@ CREATE TABLE payments (
 CREATE TABLE invoices(
     invoiceId INT PRIMARY KEY AUTO_INCREMENT,
     orderId INT NOT NULL,
-    transactionId INT NOT NULL,
+    transactionId VARCHAR(100) NOT NULL,
     description VARCHAR(255) NOT NULL,
     remarks VARCHAR(100) NOT NULL,
+    FOREIGN KEY (orderId) REFERENCES orders(orderId), 
+    FOREIGN KEY (transactionId) REFERENCES transactions(transactionId), 
     issuedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

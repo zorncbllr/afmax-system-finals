@@ -4,16 +4,18 @@ import { queryClient } from "@/main";
 import toast from "react-hot-toast";
 import { AxiosError } from "axios";
 import { TransactionResponse } from "../types";
+import { error } from "console";
 
 export const useVerifySuccess = () => {
   const client = queryClient;
 
   return useMutation({
     mutationKey: ["transactions", "success"],
-    mutationFn: async (transactionId: string) =>
-      handleSuccessTransaction({ transactionId }),
+    mutationFn: async (params: { transactionId: string; orderId: number }) =>
+      handleSuccessTransaction(params),
 
     onSuccess: (data) => {
+      console.log(data);
       client.invalidateQueries({
         queryKey: ["transactions"],
       });
@@ -32,6 +34,7 @@ export const useVerifySuccess = () => {
     },
 
     onError: (error: AxiosError<TransactionResponse>) => {
+      console.log(error);
       client.invalidateQueries({
         queryKey: ["transactions"],
       });
@@ -56,8 +59,8 @@ export const useVerifyFailed = () => {
 
   return useMutation({
     mutationKey: ["transactions", "success"],
-    mutationFn: async (transactionId: string) =>
-      handleSuccessTransaction({ transactionId }),
+    mutationFn: async (params: { transactionId: string; orderId: number }) =>
+      handleSuccessTransaction(params),
 
     onSuccess: (data) => {
       client.invalidateQueries({

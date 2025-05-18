@@ -33,13 +33,16 @@ export const usePlaceOrder = () => {
       open(data.checkoutLink);
 
       setTimeout(() => {
-        console.log(data.transactionId);
-        mutate(data.transactionId);
-      }, 30000);
+        mutate({
+          transactionId: data.transactionId,
+          orderId: data.orderId,
+        });
+      }, 35000);
     },
 
     onError: (error: AxiosError<{ message: string }>) => {
       const data = error.response?.data;
+      console.log(error);
 
       if (data?.message) {
         toast.error(data.message);

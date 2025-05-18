@@ -23,7 +23,7 @@ class InvoiceRepository
     }
 
 
-    public function createInvoice(int $orderId, int $transactionId, string $description, string $remarks)
+    public function createInvoice(int $orderId, string $transactionId, string $description, string $remarks)
     {
         $stmt = $this->database->prepare(
             "INSERT INTO invoices(

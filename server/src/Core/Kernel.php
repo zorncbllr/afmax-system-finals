@@ -29,7 +29,10 @@ class Kernel
                 break;
             case "enable":
                 if ($this->argv[2] == "images") {
-                    shell_exec("mkdir ./public/images && sudo chown -R \$USER:82 ./public/images && sudo chmod -R 775 ./public/images");
+                    shell_exec("sudo chown -R \$USER:82 ./public/images && sudo chmod -R 775 ./public/images");
+                }
+                if ($this->argv[2] == "logs") {
+                    shell_exec("sudo chown -R \$USER:82 ./src/Logs && sudo chmod -R 775 ./src/Logs");
                 }
                 break;
         }

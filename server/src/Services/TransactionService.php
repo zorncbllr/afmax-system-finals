@@ -91,15 +91,26 @@ class TransactionService
             ]);
 
             $paymentData = json_decode($response->getBody(), false);
+
+            if (isset($paymentData->errors)) {
+
+                throw new ServiceException(
+                    $paymentData->errors[0]->detail,
+                    $paymentData->errors[0]->code
+                );
+            }
+
             $attributes = $paymentData->data->attributes;
+
+            $method = $attributes->payments[0]->data->attributes->source->type;
 
             try {
                 $paymentMethod = $this->paymentMethodRepository
-                    ->createPaymentMethod($attributes->source->type);
+                    ->createPaymentMethod($method);
             } catch (PDOException $_) {
 
                 $paymentMethod = $this->paymentMethodRepository
-                    ->getMethodByName($attributes->source->type);
+                    ->getMethodByName($method);
             }
 
             $payment = $this->paymentRepository
@@ -109,7 +120,7 @@ class TransactionService
                 );
 
             $transaction = $this->transactionRepository
-                ->createTransaction($payment->paymentId, $orderId);
+                ->createTransaction($transactionId, $payment->paymentId, $orderId);
 
             $invoice = $this->invoiceRepository
                 ->createInvoice(
@@ -133,10 +144,11 @@ class TransactionService
 
             // TODO: INTEGRATE SYMPHONY MAILER & PDF GENERATOR
 
-            $this->$this->database->commit();
+            $this->database->commit();
         } catch (PDOException $e) {
 
             $this->database->rollBack();
+            throw new ServiceException($e->getMessage());
         }
     }
 
