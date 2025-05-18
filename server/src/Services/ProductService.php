@@ -325,7 +325,12 @@ class ProductService
     protected function getHashedImages(Request $request): array
     {
         $hashedImages = [];
-        $images = $request->files->images;
+        $images = $request->files->images ?? [];
+
+        if (empty($images)) {
+            return [];
+        }
+
         $uploadDir = parseDir(__DIR__) . "/../../public/images";
 
         if (!is_dir($uploadDir)) mkdir($uploadDir);

@@ -81,9 +81,12 @@ export const useUpdateProduct = () => {
       toast.success(data.message, {
         position: "top-right",
       });
+
+      console.log(data);
     },
 
-    onError: (_) => {
+    onError: (error) => {
+      console.log(error);
       toast.error("Product update failed.", { position: "top-right" });
     },
   });

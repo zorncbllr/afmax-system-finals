@@ -10,6 +10,7 @@ class ProductValidator extends Middleware
 {
     public function runnable(Request $request, callable $next)
     {
+        $existingImages = $request->existingImages ?? null;
         $validator = new Validator();
 
         $data = [
@@ -34,7 +35,8 @@ class ProductValidator extends Middleware
 
         $validation = $validator->validate($data, $rules);
 
-        if ($validation->fails()) {
+
+        if ($validation->fails() && $existingImages == null) {
 
             status(400);
             return json($validation->errors()->firstOfAll());
