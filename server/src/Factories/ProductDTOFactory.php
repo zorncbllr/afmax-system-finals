@@ -53,6 +53,7 @@ class ProductDTOFactory
 
         $product->images = $row['images'] !== null ? explode(",", $row["images"]) : [];
         $product->categories = $row['categories'] !== null ? explode(",", $row["categories"]) : [];
+        $product->units = $row['units'] !== null ? explode(",", $row["units"]) : [];
 
         return $product;
     }

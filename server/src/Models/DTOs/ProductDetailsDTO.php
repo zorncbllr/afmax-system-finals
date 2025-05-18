@@ -17,4 +17,7 @@ class ProductDetailsDTO
 
     /** @var array<string> $categories */
     public array $categories;
+
+    /** @var array<string> $units */
+    public array $units;
 }

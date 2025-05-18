@@ -43,23 +43,26 @@ class ProductRepository
     {
         $stmt = $this->database->prepare(
             "SELECT 
-            p.productId,
-            p.productName,
-            p.description,
-            p.price,
-            p.isFeatured,
-            p.createdAt,
-            p.updatedAt,
-            b.brandName AS brand,
-            GROUP_CONCAT(DISTINCT pi.imagePath) AS images,
-            GROUP_CONCAT(DISTINCT c.categoryName) AS categories
-        FROM products p
-        JOIN brands b ON p.brandId = b.brandId
-        LEFT JOIN productImages pi ON p.productId = pi.productId
-        LEFT JOIN productCategories pc ON p.productId = pc.productId
-        LEFT JOIN categories c ON pc.categoryId = c.categoryId
-        WHERE p.productId = :productId
-        GROUP BY p.productId;"
+                p.productId,
+                p.productName,
+                p.description,
+                p.price,
+                p.isFeatured,
+                p.createdAt,
+                p.updatedAt,
+                b.brandName AS brand,
+                GROUP_CONCAT(DISTINCT pi.imagePath) AS images,
+                GROUP_CONCAT(DISTINCT c.categoryName) AS categories,
+                GROUP_CONCAT(DISTINCT u.unitName) AS units
+            FROM products p
+            JOIN brands b ON p.brandId = b.brandId
+            LEFT JOIN productImages pi ON p.productId = pi.productId
+            LEFT JOIN productCategories pc ON p.productId = pc.productId
+            LEFT JOIN categories c ON pc.categoryId = c.categoryId
+            LEFT JOIN inventories i ON i.productId = p.productId
+            LEFT JOIN units u ON u.unitId = i.unitId
+            WHERE p.productId = :productId
+            GROUP BY p.productId;"
         );
 
         $stmt->execute(["productId" => $productId]);

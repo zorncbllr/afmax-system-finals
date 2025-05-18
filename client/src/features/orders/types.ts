@@ -7,7 +7,7 @@ export interface Order {
 }
 
 export interface PlaceOrderResponse {
-  checkOutLink: string;
+  checkoutLink: string;
   transactionId: string;
   message: string;
 }

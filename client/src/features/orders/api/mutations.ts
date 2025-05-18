@@ -30,7 +30,7 @@ export const usePlaceOrder = () => {
 
       setTransactionId(data.transactionId);
 
-      open(data.checkOutLink);
+      open(data.checkoutLink);
 
       setTimeout(() => {
         mutate(data.transactionId);
