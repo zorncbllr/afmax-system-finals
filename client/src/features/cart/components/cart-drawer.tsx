@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { useFetchCartItems } from "../api/queries";
 import { useRemoveToCart, useUpdateCartItem } from "../api/mutations";
 import { usePlaceOrder } from "@/features/orders/api/mutations";
+import { SERVER_BASEURL } from "@/lib/api";
 
 export default function CartDrawer() {
   const { isOpen, setIsOpen } = useCartDrawer();
@@ -62,7 +63,7 @@ export default function CartDrawer() {
                             <div className="size-24 shrink-0 overflow-hidden rounded-md border border-gray-200">
                               <img
                                 alt="Cart Item"
-                                src={`http://localhost:8000${item.product.image}`}
+                                src={SERVER_BASEURL + item.product.image}
                                 className="size-full object-cover rounded-lg"
                               />
                             </div>
