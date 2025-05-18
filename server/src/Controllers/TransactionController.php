@@ -19,7 +19,7 @@ class TransactionController
     public function retrieveSuccessTransaction(Request $request)
     {
         try {
-            $transactionId = $request->body->transactionId;
+            $transactionId = $request->body->transactionId ?? null;
 
             if (!$transactionId) {
                 status(400);
@@ -40,7 +40,7 @@ class TransactionController
     public function retrieveFailedTransaction(Request $request)
     {
         try {
-            $transactionId = $request->body->transactionId;
+            $transactionId = $request->body->transactionId ?? null;
 
             if (!$transactionId) {
                 status(400);

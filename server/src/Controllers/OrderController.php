@@ -2,7 +2,6 @@
 
 namespace Src\Controllers;
 
-use PDOException;
 use Src\Core\Exceptions\ServiceException;
 use Src\Core\Request;
 use Src\Providers\OrderServiceProvider;
