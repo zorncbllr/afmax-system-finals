@@ -1,5 +1,5 @@
 import { SERVER_BASEURL } from "@/lib/api";
-import { FlameIcon, HeartIcon } from "lucide-react";
+import { FlameIcon } from "lucide-react";
 import React from "react";
 import { useNavigate } from "react-router";
 

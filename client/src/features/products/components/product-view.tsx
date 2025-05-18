@@ -6,9 +6,9 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useAutoResizeTextarea } from "../hooks/autoresize-hook";
 import { FlameIcon } from "lucide-react";
 import { ProductDetails } from "../types";
-import { useAuthStore } from "@/features/auth/store";
-import { useNavigate } from "react-router";
-import { useAddToCart } from "@/features/cart/api/mutations";
+// import { useAuthStore } from "@/features/auth/store";
+// import { useNavigate } from "react-router";
+// import { useAddToCart } from "@/features/cart/api/mutations";
 import { useCartFormStore } from "@/features/cart/stores/cart-form-store";
 import { SERVER_BASEURL } from "@/lib/api";
 
@@ -76,21 +76,22 @@ export const ProductViewSkeleton = () => {
 
 const ProductView = ({ product }: { product: ProductDetails }) => {
   const [mainImage, setMainImage] = useState<string>("");
+  const { setIsOpen } = useCartFormStore();
   const textareaRef = useAutoResizeTextarea("");
-  const { isAuthenticated, user } = useAuthStore();
-  const { mutate } = useAddToCart();
-  const navigate = useNavigate();
-  const { isOpen, setIsOpen } = useCartFormStore();
 
-  const addItemToCart = () => {
-    if (!isAuthenticated) {
-      navigate("/auth/sign-in");
-    }
+  // const { isAuthenticated, user } = useAuthStore();
+  // const { mutate } = useAddToCart();
+  // const navigate = useNavigate();
 
-    if (user?.role != "User") return;
+  // const addItemToCart = () => {
+  //   if (!isAuthenticated) {
+  //     navigate("/auth/sign-in");
+  //   }
 
-    mutate({ productId: product.productId, quantity: 1 });
-  };
+  //   if (user?.role != "User") return;
+
+  //   mutate({ productId: product.productId, quantity: 1 });
+  // };
 
   const formattedPrice = new Intl.NumberFormat("fil-PH", {
     style: "currency",

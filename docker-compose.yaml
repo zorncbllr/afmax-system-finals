@@ -7,11 +7,16 @@ services:
       - "80:80"
     volumes:
       - ./nginx/conf.d/default.conf:/etc/nginx/conf.d/default.conf
+      - ./server/public:/var/www/html/public
+    depends_on:
+      - server
 
   # php
   server:
     build:
       dockerfile: ./server/Dockerfile
+    volumes:
+      - ./server/public:/var/www/html/public
     env_file:
       - ./server/.env
 

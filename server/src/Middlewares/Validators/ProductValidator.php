@@ -35,6 +35,7 @@ class ProductValidator extends Middleware
         $validation = $validator->validate($data, $rules);
 
         if ($validation->fails()) {
+
             status(400);
             return json($validation->errors()->firstOfAll());
         }
